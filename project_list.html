@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Categories</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        li {
+            margin: 10px 0;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #ddd;
+        }
+
+        span {
+            font-size: 16px;
+            color: #333;
+            flex-grow: 1;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin-left: 8px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Список проектов</h2>
+<ul id="categoryList">
+    <!-- سيتم عرض العناصر هنا -->
+</ul>
+
+<script>
+    async function fetchCategories() {
+        try {
+            const response = await fetch('http://127.0.0.1:8001/get-categories');
+            const data = await response.json();
+
+            const list = document.getElementById('categoryList');
+
+            if (data.category && Array.isArray(data.category)) {
+                data.category.forEach(title => {
+                    const li = document.createElement('li');
+
+                    // النص
+                    const span = document.createElement('span');
+                    span.textContent = title;
+
+                    // الزر الأول: عرض الورديات
+                    const button1 = document.createElement('button');
+                    button1.textContent = "Информация";
+                    button1.onclick = () => {
+                        const url = `show_project.html?title=${encodeURIComponent(title)}`;
+                        window.location.href = url;
+                    };
+
+                    // الزر الثاني: توليد الرمز
+                    const button2 = document.createElement('button');
+                    button2.textContent = "Сгенерировать QR-код";
+                    button2.onclick = () => {
+                        const url = `work_shift.html?title=${encodeURIComponent(title)}`;
+                        window.location.href = url;
+                    };
+
+                    // ترتيب الإضافات
+                    li.appendChild(span);
+                    li.appendChild(button1);
+                    li.appendChild(button2);
+                    list.appendChild(li);
+                });
+            } else {
+                list.innerHTML = "<li>لم يتم العثور على بيانات.</li>";
+            }
+        } catch (error) {
+            console.error("خطأ أثناء جلب البيانات:", error);
+        }
+    }
+
+    fetchCategories();
+</script>
+
+</body>
+</html>

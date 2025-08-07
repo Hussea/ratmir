@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>QR Code Generator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    input { width: 300px; padding: 8px; font-size: 16px; }
+    button { padding: 8px 12px; font-size: 16px; margin-left: 5px; }
+    #qrcode { margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+  <h2>QR Code Generator</h2>
+  <input type="text" id="text" placeholder="ضع الرابط هنا">
+  <button onclick="generateQRCode()">توليد QR</button>
+  <button onclick="downloadQRCode()">تحميل الرمز</button>
+
+  <div id="qrcode"></div>
+
+  <script>
+    var qrcode; // تخزين الكائن حتى نتمكن من حفظ الصورة لاحقًا
+
+    function generateQRCode() {
+      // مسح الرمز السابق
+      document.getElementById("qrcode").innerHTML = "";
+
+      var text = document.getElementById("text").value;
+
+      if (text.trim() !== "") {
+        qrcode = new QRCode(document.getElementById("qrcode"), {
+          text: text,
+          width: 200,
+          height: 200
+        });
+      } else {
+        alert("الرجاء إدخال رابط أو نص أولاً.");
+      }
+    }
+
+    function downloadQRCode() {
+      // التأكد من وجود الرمز
+      const img = document.querySelector("#qrcode img");
+      if (img) {
+        const link = document.createElement("a");
+        link.href = img.src;
+        link.download = "qrcode.png";
+        link.click();
+      } else {
+        alert("يرجى توليد رمز QR أولاً.");
+      }
+    }
+  </script>
+
+</body>
+</html>

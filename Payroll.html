@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>Payroll</title>
+  <style>
+    body { font-family: Arial;  padding: 20px; }
+    table, th, td { border: 1px solid #aaa; border-collapse: collapse; padding: 8px; }
+    table { width: 45%; margin-top: 20px; }
+    th { background-color: #f0f0f0; }
+    #status { margin-top: 10px; font-weight: bold; color: #444; }
+    #show_pay_list_month_div{
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  position: fixed;
+  top: 10px;
+  left: 52%;
+  width: 35%;
+  height: 5%;
+  background-color: rgb(248, 208, 208);
+  overflow: hidden;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  font-family: sans-serif;
+    }
+    #divPiy {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  position: fixed;
+  top: 15%;
+  left: 52%;
+  width: 45%;
+  height: 75%;
+  background-color: rgb(208, 237, 248);
+  overflow: hidden;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  font-family: sans-serif;
+}
+
+#divPiy label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+#divPiy input,
+#divPiy select {
+  width: 50%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+#notes {
+  flex-grow: 1; /* يجعل textarea يأخذ المساحة المتبقية */
+  resize: none;
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+  min-height: 100px;
+}
+
+#divPiy button {
+  width: 100%;
+  padding: 10px;
+  background-color: #3498db;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#divPiy button:hover {
+  background-color: #2980b9;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.form-row label {
+  width: 100px; /* عرض ثابت لليبل */
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.form-row input {
+  flex: 1;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+#show_pay_list_month {
+ display: flex;
+  flex-direction: column;
+  padding: 20px;
+  position: fixed;
+  top: 10px;
+  left:91%;
+  width: 8%;
+  height: 11%;
+  background-color: rgb(179, 241, 163);
+  overflow: hidden;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  font-family: sans-serif;
+}
+
+#show_pay_list_month:hover {
+  background-color: #45a049; /* لون عند التمرير */
+}
+
+  </style>
+</head>
+<body>
+
+<h2>Просмотр данных смены</h2>
+
+    <label for="start_day"> введите год и месяц:</label>
+    <input type="month" id="start_day" />
+  
+    
+    <button onclick="loadData()">Просмотреть данные</button>
+    
+
+<p id="status"> Укажите месяц и год ⚠️</p>
+<p id="info_line">
+  <span><strong> ФИО:</strong> <span id="show_employee_name"></span></span> |
+  <br>
+  <span><strong> В Обект:</strong> <span id="show_projact_name"></span></span> |
+  <span><strong> ЗП :</strong> <span id="show_employee_sel"></span></span> |
+  <span><strong> смена:</strong> <span id="show_shift"></span></span> |
+  <span><strong> сума :</strong> <span id="show_sum"></span></span> 
+</p>
+
+<table id="data-table">
+  <thead>
+    <tr>
+      <td>Дата начала</td>
+      <td>Время начала</td>
+      <td>Дата окончания</td>
+      <td>Время окончания</td>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+
+
+<script>
+  // استخراج البارامترات من رابط الصفحة
+  const params = new URLSearchParams(window.location.search);
+  
+
+  function loadData() {
+    const empId = params.get("employee_id_input");
+    const projId = params.get("project_id_input");
+    const startDay = document.getElementById('start_day').value;
+    document.getElementById("emp_id_send").value = params.get("employee_id_input");
+    document.getElementById("proj_id_send").value = params.get("project_id_input");
+    if (!empId || !projId || !startDay) {
+      document.getElementById('status').textContent = 'Укажите месяц и год ❗';
+      return;
+    }
+
+    let apiUrl = `http://127.0.0.1:8001/show_work_shift?employee_id_input=${empId}&project_id_input=${projId}`;
+    if (startDay) {
+      apiUrl += `&start_day=${startDay}-01`;
+    }
+
+    
+    document.getElementById('status').textContent = 'Загрузка данных 🔄...';
+    document.getElementById('data-table').style.display = 'none';
+    document.querySelector('#data-table tbody').innerHTML = '';
+
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(data => {
+        if (!data || data.length === 0) {
+          document.getElementById('status').textContent = ' Нет соответствующих данных ❌';
+          return;
+        }
+
+        const tbody = document.querySelector('#data-table tbody');
+        let total = 0;
+
+        data.forEach(item => {
+          const row = document.createElement('tr');
+          const selEmp = Number(item.projuct_sel_emp || 0);
+          total += selEmp;
+
+          row.innerHTML = `
+            <td>${item.start_day}</td>
+            <td>${item.start_time}</td>
+            <td>${item.end_day}</td>
+            <td>${item.end_time}</td>
+          `;
+          tbody.appendChild(row);
+          document.getElementById('show_employee_name').textContent = `${item.employee_name}`;
+          document.getElementById('show_projact_name').textContent = `${item.projuct_title}`;
+          document.getElementById('show_employee_sel').textContent = `${item.projuct_sel_emp}`;
+        });
+
+        document.getElementById('data-table').style.display = 'table';
+        document.getElementById('status').style.display = 'none';
+        document.getElementById('show_shift').textContent = `${data.length}`;
+        document.getElementById('show_sum').textContent = `${total}`;
+
+      })
+      .catch(err => {
+        document.getElementById('status').textContent = 'Нет соответствующих данных ❌';
+        console.error(err);
+      });
+      
+  }
+</script>
+<form id="employee-form" onsubmit="submitForm(event)">
+
+   
+  <input type="number" id="emp_id_send" name="emp_id_send" style="display: none;"/>
+  <input type="number" id="proj_id_send" name="proj_id_send" style="display: none;"/>
+
+<div id="divPiy" >
+  <div class="form-row"> 
+    <label for="sum_pay">сумма платежа:</label>
+  <input type="number" id="sum_pay" name="sum_pay" />
+  </div>
+  
+<div class="form-row"> 
+  <label for="pay_month" >За месяц:</label>
+  <input type="month" id="pay_month" name="pay_month"/>
+
+</div>
+  <div class="form-row">
+    <label for="mySelect">тип зарплата:</label>
+  <select id="mySelect" required name="mySelect">
+    <option value="" disabled selected hidden>Выбирать тип зарплата</option>
+    <option value="зарплата">зарплата</option>
+    <option value="аванс">аванс</option>
+    <option value="други">други</option>
+  </select>
+  </div>
+  
+
+  <label for="notes">Примечание:</label>
+  <textarea id="notes" name="notes"></textarea>
+
+   <input type="submit" value="отправлять">
+   </form>
+</div>
+
+<div id="show_pay_list_month_div" >
+
+<p id="info_line1">
+  <span><strong> тип:</strong> <span id="show_employee_name_salry"></span></span> |
+  <span><strong> За:</strong> <span id="show_projact_name_salry"></span></span> |
+  <span><strong> сума :</strong> <span id="show_sum_salry"></span></span> 
+</p>
+
+<table id="data_table_salry">
+  <tbody></tbody>
+</table>
+<script>
+  // استخراج البارامترات من رابط الصفحة
+  
+ function lost_salry() {
+  const empId = params.get("employee_id_input");
+  const projId = params.get("project_id_input");
+  let apiUrl = `http://127.0.0.1:8001/show_salary_history?employee_id_input=${empId}&project_id_input=${projId}`;
+  fetch(apiUrl)
+    .then(res => res.json())
+    .then(data => {
+      // ✅ نأخذ فقط السطر الأخير
+      const lastItem = data[data.length - 1];
+      const tbody = document.querySelector('#data_table_salry tbody');
+      const selEmp = Number(lastItem.sum || 0);
+      const row = document.createElement('tr');
+      tbody.appendChild(row);
+
+      // ✅ تعبئة باقي المعلومات
+      document.getElementById('show_employee_name_salry').textContent = `${lastItem.pay_method}`;
+      document.getElementById('show_projact_name_salry').textContent = `${lastItem.pay_for}`;
+      document.getElementById('show_sum_salry').textContent = `${lastItem.sum}`;
+    })
+    .catch(err => {
+      document.getElementById('status').textContent = '❌ خطأ في تحميل البيانات.';
+      console.error(err);
+    });
+}
+
+// ✅ تنفيذ الدالة تلقائياً عند تحميل الصفحة
+window.onload = lost_salry;
+
+
+</script>
+</div>
+  <button onclick="goToPage()" id="show_pay_list_month">историю платежей</button>
+
+  <script>
+    function goToPage() {
+      const employeeId = params.get("employee_id_input");
+      const projectId = params.get("project_id_input");
+      
+
+      const url = `show_salary_history.html?employee_id_input=${employeeId}&project_id_input=${projectId}`;
+      window.location.href = url;
+    }
+  </script>
+
+ 
+<script>
+   
+
+    // إرسال النموذج
+    function submitForm(event) {
+      event.preventDefault();
+
+      const form = document.getElementById("employee-form");
+      const formData = new FormData(form);
+
+      fetch("http://127.0.0.1:8001/salary_history", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("form-message").textContent = "Отправлено успешно";
+        console.log(data);
+      })
+      .catch(error => {
+        document.getElementById("form-message").textContent = "Произошла ошибка при отправке.";
+        console.error(error);
+      });
+    }
+  </script>
+
+</body>
+</html>

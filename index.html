@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>إدخال بيانات</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+      direction: rtl;
+    }
+
+    .tabs {
+      display: flex;
+      background-color: #1e293b;
+      overflow-x: auto;
+    }
+
+    .tabs button {
+      flex: 1;
+      padding: 16px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .tabs button:hover,
+    .tabs button.active {
+      background-color: #334155;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 40px;
+      background-color: #fff;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .form-container {
+      max-width: 1000px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-container h2 {
+      margin-bottom: 20px;
+      color: #1e293b;
+      font-size: 24px;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 6px;
+      color: #475569;
+      font-weight: 500;
+    }
+
+    form input,
+    form select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 16px;
+    }
+
+    form input[type="submit"] {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    form input[type="submit"]:hover {
+      background-color: #1d4ed8;
+    }
+
+    /* تصميم خاص لصفحة المنتج */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .full-width-form {
+      max-width: none;
+      width: 100%;
+    }
+  </style>
+  <script>
+    function openTab(evt, tabName) {
+      document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
+      document.querySelectorAll(".tabs button").forEach(btn => btn.classList.remove("active"));
+      document.getElementById(tabName).classList.add("active");
+      evt.currentTarget.classList.add("active");
+    }
+
+    function submitForm(event, formId, apiUrl) {
+      event.preventDefault();
+      const formData = new FormData(document.getElementById(formId));
+      fetch(apiUrl, {
+        method: 'POST',
+        body: formData,
+      })
+      .then(response => response.json())
+      .then(data => alert("تم إرسال البيانات بنجاح!"))
+      .catch(error => alert("حدث خطأ: " + error));
+    }
+
+    function loadSelectOptions(selectId, apiUrl, keyName) {
+      const select = document.getElementById(selectId);
+      select.innerHTML = "<option>جار التحميل...</option>";
+      fetch(apiUrl)
+        .then(res => res.json())
+        .then(data => {
+          select.innerHTML = "";
+          (data[keyName] || []).forEach(value => {
+            const opt = document.createElement("option");
+            opt.value = value;
+            opt.textContent = value;
+            select.appendChild(opt);
+          });
+        })
+        .catch(() => {
+          select.innerHTML = "<option>خطأ في التحميل</option>";
+        });
+    }
+
+    window.onload = function () {
+      document.querySelector(".tabs button").click();
+      loadSelectOptions("categorySelect", "http://127.0.0.1:8001/get-categories", "category");
+      loadSelectOptions("storageSelect", "http://127.0.0.1:8001/get-storage", "storage");
+      loadSelectOptions("supplierSelect", "http://127.0.0.1:8001/get-supplier", "supplier");
+      loadSelectOptions("empSelect", "http://127.0.0.1:8001/get-emp", "emp");
+    };
+  </script>
+</head>
+<body>
+
+  <div class="tabs">
+    <button onclick="openTab(event, 'emp')">الموظف</button>
+    <button onclick="openTab(event, 'category')">الصنف</button>
+    <button onclick="openTab(event, 'storage')">المستودع</button>
+    <button onclick="openTab(event, 'supplier')">المورد</button>
+    <button onclick="openTab(event, 'product')">المنتج</button>
+  </div>
+
+  <div id="emp" class="tab-content">
+    <div class="form-container">
+      <h2>إدخال بيانات الموظف</h2>
+      <form id="empForm" onsubmit="submitForm(event, 'empForm', 'http://127.0.0.1:8001/add-emp')">
+        <label>name:</label>
+        <input type="text" name="name">
+        <label>num_T :</label>
+        <input type="text" name="num_T">
+        <label>data_prth:</label>
+        <input type="text" name="data_prth">
+        <label>address:</label>
+        <input type="text" name="address">
+        <label>Salary :</label>
+        <input type="text" name="Salary">
+        <label>Job:</label>
+        <input type="text" name="Job">
+         <label>nots:</label>
+        <input type="text" name="nots">
+        <input type="submit" value="إرسال">
+      </form>
+    </div>
+  </div>
+
+  <div id="category" class="tab-content">
+    <div class="form-container">
+      <h2>إدخال بيانات الصنف</h2>
+      <form id="categoryForm" onsubmit="submitForm(event, 'categoryForm', 'http://127.0.0.1:8001/add-category')">
+        <label>	title:</label>
+        <input type="text" name="title">
+
+        <label>address:</label>
+        <input type="text" name="address">
+
+        <label>q_person:</label>
+        <input type="number" name="q_person">
+
+        <label>	ses_work:</label>
+        <input type="text" name="ses_work">
+
+        <label>sum_of_proj:</label>
+        <input type="number" name="sum_of_proj">
+
+        <label>pers_of_proj:</label>
+        <input type="text" name="pers_of_proj">
+
+        <label>n_phone:</label>
+        <input type="text" name="n_phone">
+        
+        <label>sel_emp:</label>
+        <input type="number" name="sel_emp">
+
+        <label>nots:</label>
+        <input type="text" name="nots">
+
+        <input type="submit" value="إرسال">
+      </form>
+    </div>
+  </div>
+
+  <div id="storage" class="tab-content">
+    <div class="form-container">
+      <h2>إدخال بيانات المستودع</h2>
+      <form id="storageForm" onsubmit="submitForm(event, 'storageForm', 'http://127.0.0.1:8001/add-storage')">
+        <label>مكان التخزين:</label>
+        <input type="text" name="storage_location">
+        <label>الوصف:</label>
+        <input type="text" name="description">
+        <input type="submit" value="إرسال">
+      </form>
+    </div>
+  </div>
+
+  <div id="supplier" class="tab-content">
+    <div class="form-container">
+      <h2>إدخال بيانات المورد</h2>
+      <form id="supplierForm" onsubmit="submitForm(event, 'supplierForm', 'http://127.0.0.1:8001/add-supplier')">
+        <label>اسم الشركة:</label>
+        <input type="text" name="name_com">
+        <label>اسم الشخص:</label>
+        <input type="text" name="name_per">
+        <label>البريد الإلكتروني:</label>
+        <input type="text" name="email">
+        <label>الهاتف:</label>
+        <input type="text" name="phone">
+        <label>العنوان:</label>
+        <input type="text" name="adres">
+        <input type="submit" value="إرسال">
+      </form>
+    </div>
+  </div>
+
+  <div id="product" class="tab-content">
+    <div class="form-container full-width-form">
+      <h2>إدخال بيانات المنتج</h2>
+      <form id="productForm" onsubmit="submitForm(event, 'productForm', 'http://127.0.0.1:8001/add-product')">
+        <div class="product-grid">
+          <div>
+            <label>رقم المنتج:</label>
+            <input type="text" name="product_NO">
+          </div>
+          <div>
+            <label>الاسم:</label>
+            <input type="text" name="name">
+          </div>
+          <div>
+            <label>سعر الشراء:</label>
+            <input type="number" name="purchase_price">
+          </div>
+          <div>
+            <label>سعر البيع:</label>
+            <input type="number" name="sale_price">
+          </div>
+          <div>
+            <label>تاريخ الشراء:</label>
+            <input type="text" name="DAT">
+          </div>
+          <div>
+            <label>تاريخ الانتهاء:</label>
+            <input type="text" name="expiration_date">
+          </div>
+          <div>
+            <label>الوصف:</label>
+            <input type="text" name="description">
+          </div>
+          <div>
+            <label>الكمية:</label>
+            <input type="number" name="quantity">
+          </div>
+          <div>
+            <label>الصنف:</label>
+            <select name="category" id="categorySelect"></select>
+          </div>
+          <div>
+            <label>المستودع:</label>
+            <select name="storage_location" id="storageSelect"></select>
+          </div>
+          <div>
+            <label>المورد:</label>
+            <select name="supplier" id="supplierSelect"></select>
+          </div>
+          <div>
+            <label>الموظف:</label>
+            <select name="emp" id="empSelect"></select>
+          </div>
+        </div>
+        <input type="submit" value="إرسال">
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>

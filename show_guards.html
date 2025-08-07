@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+ /* لعرض الأقسام جنباً إلى جنب */
+.details-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+/* تنسيق لكل قسم (موقع أو حارس) */
+.form-container {
+  background-color: #b788f5;
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 8px;
+  width: 48%;
+  box-sizing: border-box;
+}
+
+.form-container h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+/* شبكة داخلية لكل نموذج */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 16px;
+}
+
+.form-grid label {
+  display: block;
+  font-size: 13px;
+  color: #333;
+  margin-bottom: 3px;
+}
+
+.form-grid input[type="text"] {
+  width: 100%;
+  padding: 6px;
+  font-size: 13px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* استجابة للشاشات الصغيرة */
+@media (max-width: 768px) {
+  .details-wrapper {
+    flex-direction: column;
+  }
+
+  .form-container {
+    width: 100%;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* أسفل الصفحة - الفورم */
+#project-guards {
+  margin-top: 30px;
+}
+
+#add-project-guards input[type="text"] {
+  width: 100%;
+  padding: 6px;
+  margin-bottom: 8px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+#add-project-guards input[type="submit"] {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#add-project-guards input[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+ table {
+    width: 50%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+  }
+
+  th, td {
+    padding: 8px 12px;
+    text-align: left;
+  }
+
+  th {
+    font-weight: bold;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  tr:hover {
+    background-color: #eef;
+  }
+
+  #result-count {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+  }
+</style>
+<body>
+    <h2> استخراج بيانات الحارس </h2>
+<input type="text" id="guards" placeholder="اكتب اسم الحارس">
+<button onclick="searchProduct()">بحث</button>
+<hr>
+
+    <div class="details-wrapper">
+ 
+   <!-- قسم بيانات الحارس -->
+  <div class="form-container">
+    <h4>بيانات الحارس</h4>
+    <div class="form-grid">
+      <div ><label>ID:</label><input type="text" id="id2"></div>
+      <div><label>name:</label><input type="text" id="name2"></div>
+      <div><label>num_T:</label><input type="text" id="num_T2"></div>
+      <div><label>data_prth:</label><input type="text" id="data_prth2"></div>
+      <div><label>address:</label><input type="text" id="address2"></div>
+      <div><label>Salary:</label><input type="text" id="Salary2"></div>
+      <div><label>Job:</label><input type="text" id="Job2"></div>
+      <div><label>nots:</label><input type="text" id="nots2"></div>
+    </div>
+    <!--الزر الذ من خلاله عرض معلومات الحرس المرتبطين بالمشروع , وهو مخفي -->
+    <button onclick="fetchProducts()" id="hiddenBox" style="display: none;">Search</button>
+    <p id="result-count"></p>
+  </div>
+  
+    
+  
+  
+</body>
+</html>
+<!-- داله الجافاسكربت التي بمساعدتها اضهار معلومات الحرس من قاعده البيانات و وضع البيانات 
+ في الخانات المطلوبه  -->
+<script>
+    let totalResults = 0;
+function searchProduct() {
+    let Ename = document.getElementById("guards").value;
+    if (!Ename) {
+        alert("الرجاء إدخال اسم المنتج");
+        return;
+    }
+
+    let url = `http://127.0.0.1:8001/get-guards-by-name/?Ename=${encodeURIComponent(Ename)}`;
+
+    let request = new XMLHttpRequest();
+    request.open("GET", url);
+    request.responseType = "json";
+    request.send();
+
+    request.onload = function () {
+        if (request.status >= 200 && request.status < 300) {
+            let result = request.response;
+
+            if (!result || Object.keys(result).length === 0) {
+                alert("لم يتم العثور على المنتج.");
+            } else {
+                // تعبئة الخانات الثابتة
+                document.getElementById("id2").value = result.id || "";
+                document.getElementById("name2").value = result.name || "";
+                document.getElementById("num_T2").value = result.num_T || "";
+                document.getElementById("data_prth2").value = result.data_prth || "";
+                document.getElementById("address2").value = result.address || "";
+                document.getElementById("Salary2").value = result.Salary || "";
+                document.getElementById("Job2").value = result.Job || "";
+                document.getElementById("nots2").value = result.nots || "";
+                totalResults = result.id || "";
+                // اسناد رقم الايدي للحارس الى totalResults
+                   document.getElementById("employee_id").value = totalResults;
+                 // اضهار زر الذي من خلاله يمكن جلب معلومات المشاريع التابعين للحارس
+                document.getElementById("hiddenBox").style.display = "block";
+            }
+        } else {
+            alert("خطأ في جلب البيانات");
+        }
+    };
+    
+}
+
+</script>
+  <!--اضهار معلومات المشاريع التابعه للحارس و اخذ رقم الايدي التابع لها , وهذه الخانات تكون مخفيه -->
+<table>
+    <thead>
+        <tr>
+            <th><input type="text" placeholder="Product NO" oninput="fetchProducts()" id="project_id" style="display: none;"/></th>
+            <th><input type="text" placeholder="Name" oninput="fetchProducts()" id="employee_id" style="display: none;"/></th>
+            <th><input type="text" placeholder="Purchase Price" oninput="fetchProducts()" id="nots0" style="display: none;"/></th>
+        </tr>
+        <tr id="table-headers"></tr>
+    </thead>
+    <tbody id="product-table">
+        <!-- data will appear here -->
+    </tbody>
+</table>
+
+<script>
+    
+  function fetchProducts() {
+    const params = new URLSearchParams();
+
+    const fields = [
+         "project_id", "employee_id", "nots0"
+    ];
+
+    for (let field of fields) {
+        let value = document.getElementById(field).value;
+        if (value) {
+            params.append(field, value);
+        }
+    }
+
+    fetch(`http://127.0.0.1:8001/get_guards?${params.toString()}`)
+        .then(res => res.json())
+        .then(data => {
+            const table = document.getElementById("product-table");
+            const resultCount = document.getElementById("result-count");
+            const headerRow = document.getElementById("table-headers");
+            table.innerHTML = "";
+            headerRow.innerHTML = "";
+
+            // حدد الأعمدة التي تريد عرضها
+            const displayFields = [ "project_name","employee_name", "nots"];
+
+            if (data.length > 0) {
+                // إنشاء رؤوس الجدول حسب الحقول المطلوبة فقط
+                for (let key of displayFields) {
+                    headerRow.innerHTML += `<th>${key}</th>`;
+                }
+
+                // إنشاء الصفوف
+                for (let row of data) {
+                    let tr = "<tr>";
+                    for (let key of displayFields) {
+                        tr += `<td>${row[key] ?? ""}</td>`;
+                    }
+                    tr += "</tr>";
+                    table.innerHTML += tr;
+                }
+
+                resultCount.textContent = `عدد النتائج: ${data.length}`;
+            } else {
+                table.innerHTML = "<tr><td colspan='13'>No results found.</td></tr>";
+                resultCount.textContent = "عدد النتائج: 0";
+            }
+        });
+}
+
+    // تحميل البيانات مباشرة عند الفتح
+    
+</script>

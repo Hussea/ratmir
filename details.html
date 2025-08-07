@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تفاصيل الموظف</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 6px;
+      font-weight: bold;
+      font-size: 14px;
+      color: #222;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="time"],
+    input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    input[type="submit"] {
+      background-color: #28a745;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #218838;
+    }
+
+    .message {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+      color: red;
+    }
+
+    /* استجابة الشاشات الصغيرة */
+    @media (max-width: 768px) {
+      .container {
+        margin: 20px;
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 20px;
+      }
+
+      label, input {
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      input[type="date"],
+      input[type="time"],
+      input[type="submit"] {
+        font-size: 13px;
+        padding: 10px;
+      }
+
+      h1 {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>تفاصيل الموظف</h1>
+
+    <form id="employee-form" onsubmit="submitForm(event)">
+        
+     
+      <input type="text" id="employee_id_input" name="employee_id_input" style="display: none;">
+      <input type="text" id="project_id_input" name="project_id_input" style="display: none;">
+      
+      <label for="project_name">project name :</label>
+      <input type="text" id="project_name" name="project_name">
+
+      <label for="employee_name">employee_name :</label>
+      <input type="text" id="employee_name" name="employee_name">
+
+      <label for="start_date">يوم بدء المناوبة:</label>
+      <input type="date" id="start_date" name="start_date" required>
+
+      <label for="start_time">وقت بدء المناوبة:</label>
+      <input type="time" id="start_time" name="start_time" required>
+
+      <label for="end_date">يوم انتهاء المناوبة:</label>
+      <input type="date" id="end_date" name="end_date" required>
+
+      <label for="end_time">وقت انتهاء المناوبة:</label>
+      <input type="time" id="end_time" name="end_time" required>
+
+      <input type="submit" value="إرسال">
+
+      <div class="message" id="form-message"></div>
+    </form>
+  </div>
+
+  <script>
+    // التقاط بارامترات URL وتحديث الحقول
+    const params = new URLSearchParams(window.location.search);
+    const employeeId = params.get("employee_id");
+    const projectId = params.get("project_id");
+    const projectName = params.get("project_name");
+    const employeeName = params.get("employee_name");
+
+    if (employeeId) {
+      document.getElementById("employee_id_input").value = employeeId;
+    } else {
+      document.getElementById("form-message").textContent = "لا يوجد معرّف موظف في الرابط.";
+    }
+
+    if (projectId) {
+      document.getElementById("project_id_input").value = projectId;
+    }
+    if (projectName) {
+      document.getElementById("project_name").value = projectName;
+    }else {
+      document.getElementById("form-message").textContent = "لا يوجد معرّف موظف في الرابط.";
+    }
+    if (employeeName) {
+      document.getElementById("employee_name").value = employeeName;
+    }
+
+    // إرسال النموذج
+    function submitForm(event) {
+      event.preventDefault();
+
+      const form = document.getElementById("employee-form");
+      const formData = new FormData(form);
+
+      fetch("http://127.0.0.1:8001/add_work_shifts", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("form-message").textContent = "تم الإرسال بنجاح!";
+        console.log(data);
+      })
+      .catch(error => {
+        document.getElementById("form-message").textContent = "حدث خطأ أثناء الإرسال.";
+        console.error(error);
+      });
+    }
+  </script>
+
+</body>
+</html>
