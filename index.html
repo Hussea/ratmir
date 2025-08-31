@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html>
 <head>
-  <meta charset="UTF-8" />
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>إدخال بيانات</title>
   <style>
@@ -9,7 +9,7 @@
       margin: 0;
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f4f6f8;
-      direction: rtl;
+    
     }
 
     .tabs {
@@ -99,6 +99,7 @@
       max-width: none;
       width: 100%;
     }
+    
   </style>
   <script>
     function openTab(evt, tabName) {
@@ -116,13 +117,13 @@
         body: formData,
       })
       .then(response => response.json())
-      .then(data => alert("تم إرسال البيانات بنجاح!"))
-      .catch(error => alert("حدث خطأ: " + error));
+      .then(data => alert("Данные успешно отправлены!"))
+      .catch(error => alert("Произошла ошибка: " + error));
     }
 
     function loadSelectOptions(selectId, apiUrl, keyName) {
       const select = document.getElementById(selectId);
-      select.innerHTML = "<option>جار التحميل...</option>";
+      select.innerHTML = "<option>Загрузка...</option>";
       fetch(apiUrl)
         .then(res => res.json())
         .then(data => {
@@ -135,178 +136,100 @@
           });
         })
         .catch(() => {
-          select.innerHTML = "<option>خطأ في التحميل</option>";
+          select.innerHTML = "<option>Ошибка загрузки</option>";
         });
     }
 
     window.onload = function () {
       document.querySelector(".tabs button").click();
       loadSelectOptions("categorySelect", "http://127.0.0.1:8001/get-categories", "category");
-      loadSelectOptions("storageSelect", "http://127.0.0.1:8001/get-storage", "storage");
-      loadSelectOptions("supplierSelect", "http://127.0.0.1:8001/get-supplier", "supplier");
-      loadSelectOptions("empSelect", "http://127.0.0.1:8001/get-emp", "emp");
+      
     };
   </script>
 </head>
 <body>
 
   <div class="tabs">
-    <button onclick="openTab(event, 'emp')">الموظف</button>
-    <button onclick="openTab(event, 'category')">الصنف</button>
-    <button onclick="openTab(event, 'storage')">المستودع</button>
-    <button onclick="openTab(event, 'supplier')">المورد</button>
-    <button onclick="openTab(event, 'product')">المنتج</button>
+    <button onclick="openTab(event, 'emp')">Сотрудники</button>
+    <button onclick="openTab(event, 'category')">Добавить проект</button>
+    <button onclick="show_guards()">Информация о хранителе</button>
+    <button onclick="show()">Интеграция</button>
+    <button onclick="project_list()">Список проектов</button>
   </div>
-
+<script>
+function show_guards() {
+  window.location.href = "show_guards.html"; // غيّر للرابط المطلوب
+  }
+function show() {
+  window.location.href = "show.html";
+  }
+function project_list() {
+  window.location.href = "project_list.html";
+  }
+</script>
   <div id="emp" class="tab-content">
     <div class="form-container">
-      <h2>إدخال بيانات الموظف</h2>
+      <h2>Введите данные сотрудника</h2>
       <form id="empForm" onsubmit="submitForm(event, 'empForm', 'http://127.0.0.1:8001/add-emp')">
-        <label>name:</label>
-        <input type="text" name="name">
-        <label>num_T :</label>
-        <input type="text" name="num_T">
-        <label>data_prth:</label>
-        <input type="text" name="data_prth">
-        <label>address:</label>
-        <input type="text" name="address">
-        <label>Salary :</label>
-        <input type="text" name="Salary">
-        <label>Job:</label>
-        <input type="text" name="Job">
-         <label>nots:</label>
-        <input type="text" name="nots">
-        <input type="submit" value="إرسال">
+        <label>ИФО:</label>
+        <input type="text" name="name"  required>
+        <label>номер телефона :</label>
+        <input type="text" name="num_T" required>
+        <label>Дата рождения:</label>
+        <input type="text" name="data_prth" required>
+        <label>адрес:</label>
+        <input type="text" name="address" required>
+        <label>Зарплата :</label>
+        <input type="text" name="Salary" required>
+        <label>должность:</label>
+        <input type="text" name="Job" required>
+         <label>комментарии:</label>
+        <input type="text" name="nots" required>
+        <!-- ✅ اختيار أو التقاط صورة -->
+      <label>📷 Фото сотрудника:</label>
+      <input type="file" name="image" accept="image/*" capture="environment" required>
+
+        <input type="submit" value="отправлять">
       </form>
     </div>
   </div>
-
+  
   <div id="category" class="tab-content">
     <div class="form-container">
-      <h2>إدخال بيانات الصنف</h2>
+      <h2>Введите данные проекта</h2>
       <form id="categoryForm" onsubmit="submitForm(event, 'categoryForm', 'http://127.0.0.1:8001/add-category')">
-        <label>	title:</label>
-        <input type="text" name="title">
+        <label>	название проекта:</label>
+        <input type="text" name="title" required>
 
-        <label>address:</label>
-        <input type="text" name="address">
+        <label>адрес:</label>
+        <input type="text" name="address" required>
 
-        <label>q_person:</label>
-        <input type="number" name="q_person">
+        <label>Количество охранников, необходимых для проекта:</label>
+        <input type="number" name="q_person" required>
 
-        <label>	ses_work:</label>
-        <input type="text" name="ses_work">
+        <label>Рабочая система:</label>
+        <input type="text" name="ses_work" required>
 
-        <label>sum_of_proj:</label>
-        <input type="number" name="sum_of_proj">
+        <label>Сумма от проекта:</label>
+        <input type="number" name="sum_of_proj" required>
 
-        <label>pers_of_proj:</label>
-        <input type="text" name="pers_of_proj">
+        <label>Руководитель проекта:</label>
+        <input type="text" name="pers_of_proj" required>
 
-        <label>n_phone:</label>
-        <input type="text" name="n_phone">
+        <label>номер телефона:</label>
+        <input type="text" name="n_phone" required>
         
-        <label>sel_emp:</label>
-        <input type="number" name="sel_emp">
+        <label>Зарплата охранника проекта:</label>
+        <input type="number" name="sel_emp" required>
 
-        <label>nots:</label>
-        <input type="text" name="nots">
+        <label>комментарии:</label>
+        <input type="text" name="nots" required>
 
-        <input type="submit" value="إرسال">
+        <input type="submit" value="отправлять">
       </form>
     </div>
   </div>
 
-  <div id="storage" class="tab-content">
-    <div class="form-container">
-      <h2>إدخال بيانات المستودع</h2>
-      <form id="storageForm" onsubmit="submitForm(event, 'storageForm', 'http://127.0.0.1:8001/add-storage')">
-        <label>مكان التخزين:</label>
-        <input type="text" name="storage_location">
-        <label>الوصف:</label>
-        <input type="text" name="description">
-        <input type="submit" value="إرسال">
-      </form>
-    </div>
-  </div>
-
-  <div id="supplier" class="tab-content">
-    <div class="form-container">
-      <h2>إدخال بيانات المورد</h2>
-      <form id="supplierForm" onsubmit="submitForm(event, 'supplierForm', 'http://127.0.0.1:8001/add-supplier')">
-        <label>اسم الشركة:</label>
-        <input type="text" name="name_com">
-        <label>اسم الشخص:</label>
-        <input type="text" name="name_per">
-        <label>البريد الإلكتروني:</label>
-        <input type="text" name="email">
-        <label>الهاتف:</label>
-        <input type="text" name="phone">
-        <label>العنوان:</label>
-        <input type="text" name="adres">
-        <input type="submit" value="إرسال">
-      </form>
-    </div>
-  </div>
-
-  <div id="product" class="tab-content">
-    <div class="form-container full-width-form">
-      <h2>إدخال بيانات المنتج</h2>
-      <form id="productForm" onsubmit="submitForm(event, 'productForm', 'http://127.0.0.1:8001/add-product')">
-        <div class="product-grid">
-          <div>
-            <label>رقم المنتج:</label>
-            <input type="text" name="product_NO">
-          </div>
-          <div>
-            <label>الاسم:</label>
-            <input type="text" name="name">
-          </div>
-          <div>
-            <label>سعر الشراء:</label>
-            <input type="number" name="purchase_price">
-          </div>
-          <div>
-            <label>سعر البيع:</label>
-            <input type="number" name="sale_price">
-          </div>
-          <div>
-            <label>تاريخ الشراء:</label>
-            <input type="text" name="DAT">
-          </div>
-          <div>
-            <label>تاريخ الانتهاء:</label>
-            <input type="text" name="expiration_date">
-          </div>
-          <div>
-            <label>الوصف:</label>
-            <input type="text" name="description">
-          </div>
-          <div>
-            <label>الكمية:</label>
-            <input type="number" name="quantity">
-          </div>
-          <div>
-            <label>الصنف:</label>
-            <select name="category" id="categorySelect"></select>
-          </div>
-          <div>
-            <label>المستودع:</label>
-            <select name="storage_location" id="storageSelect"></select>
-          </div>
-          <div>
-            <label>المورد:</label>
-            <select name="supplier" id="supplierSelect"></select>
-          </div>
-          <div>
-            <label>الموظف:</label>
-            <select name="emp" id="empSelect"></select>
-          </div>
-        </div>
-        <input type="submit" value="إرسال">
-      </form>
-    </div>
-  </div>
-
+ 
 </body>
 </html>

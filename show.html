@@ -89,14 +89,14 @@
     color: #555;
   }
 
-  .form-grid input[type="text"],
+  .form-grid input[type="text"],select,
 .form-grid textarea {
   padding: 6px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-family: inherit;
   font-size: 14px;
-  width: 100%;
+  width: 90%;
   box-sizing: border-box;
 }
 
@@ -157,11 +157,18 @@
 <body>
 
 <h2>соединить охрану с субъектом</h2>
-<input type="text" id="productName" placeholder="Название проекта">
+ 
 <button onclick="searchProduct()">Поиск</button>
-
-<input type="text" id="guards" placeholder="Имя охранника">
+<select id="productDropdown">
+    <option value="">выберите проекта ....</option>
+</select>
+<br>
+ <br>
 <button onclick="searchguards()">Поиск</button>
+<select id="employeeDropdown">
+    <option value="">выберите охранника .....</option>
+</select>
+
 <hr>
 <!-- الخانات التي تضهر فيها معلومات الموقع-->
 <!-- ============================================= -->
@@ -223,9 +230,9 @@
         
         <input type="text" name="end_date"style="display: none;">
         <label>emp :</label>
-        <input type="text" name="emp">
+        <input type="text" name="emp"  required>
          <label>примечания:</label>
-        <textarea name="nots"></textarea>
+        <textarea name="nots"  required></textarea>
         <input type="submit" value="отправлять">
       </form>
     </div>
@@ -262,8 +269,24 @@
 <!-- داله الجافاسكربت التي من خلالها يتم ارجاع بيانات المشروع عند البحث عن
  طريق اسم المشروع و اضهار بيانته في الخانات المحدده  -->
 <script>
+  async function loadProducts() {
+    const response = await fetch("http://127.0.0.1:8001/Dropdown_project");
+    const data = await response.json();
+
+    const dropdown = document.getElementById("productDropdown");
+    data.forEach(p => {
+        const option = document.createElement("option");
+        option.value = p.id;
+        option.textContent = p.title;
+        dropdown.appendChild(option);
+    });
+}
+loadProducts();
+let dropdown = document.getElementById("productDropdown");
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 function searchProduct() {
-    let title = document.getElementById("productName").value;
+    let title = dropdown.options[dropdown.selectedIndex].text;
     if (!title) {
         alert("الرجاء إدخال اسم المنتج");
         return;
@@ -309,8 +332,23 @@ function searchProduct() {
 <!-- داله الجافاسكربت التي بمساعدتها اضهار معلومات الحرس من قاعده البيانات و وضع البيانات 
  في الخانات المطلوبه  -->
 <script>
+  async function loademployee() {
+    const response = await fetch("http://127.0.0.1:8001/Dropdown_employee");
+    const data = await response.json();
+
+    const dropdown = document.getElementById("employeeDropdown");
+    data.forEach(p => {
+        const option = document.createElement("option");
+        option.value = p.id;
+        option.textContent = p.name;
+        dropdown.appendChild(option);
+    });
+}
+loademployee();
+let dropemployee = document.getElementById("employeeDropdown");
+//+++++++++++++++++++++++++++++++++++++++++++++
 function searchguards() {
-    let Ename = document.getElementById("guards").value;
+    let Ename = dropemployee.options[dropemployee.selectedIndex].text;
     if (!Ename) {
         alert("الرجاء إدخال اسم المنتج");
         return;

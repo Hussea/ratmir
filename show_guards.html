@@ -1,165 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    /* الحاوية */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 45px;
+      height: 20px;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #e74c3c;
+      transition: 0.4s;
+      border-radius: 20px;
+    }
+    .slider:before {
+      position: absolute; content: "";
+      height: 14px; width: 14px;
+      left: 4px; bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider { background-color: #2ecc71; }
+    input:checked + .slider:before { transform: translateX(24px); }
+
+    .details-wrapper.details-wrapper2 {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; gap: 20px;
+      flex-wrap: wrap; margin-bottom: 30px;
+    }
+    .form-container {
+      background-color: #e9dff7;
+      border: 1px solid #ccc;
+      padding: 15px;
+      border-radius: 8px;
+      width: 48%; box-sizing: border-box;
+    }
+    h2 { font-size: 24px; margin-bottom: 15px; color: #333; }
+    button {
+      padding: 8px 16px; font-size: 14px;
+      background-color: #007bff; border: none;
+      color: white; border-radius: 4px; cursor: pointer;
+    }
+    button:hover { background-color: #0056b3; }
+    .form-container h4 { margin: 0 0 10px; font-size: 16px; color: #333; }
+    .form-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px;
+    }
+    .form-grid label { display: block; font-size: 13px; margin-bottom: 3px; }
+    .form-grid input[type="text"] {
+      width: 100%; padding: 6px; font-size: 13px;
+      border: 1px solid #aaa; border-radius: 4px; box-sizing: border-box;
+    }
+    @media (max-width: 768px) {
+      .details-wrapper { flex-direction: column; }
+      .form-container { width: 100%; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+    table {
+      width: 30%; border-collapse: collapse; margin-top: 15px;
+      font-family: Arial, sans-serif; font-size: 14px;
+    }
+    th, td { padding: 8px 12px; text-align: left; }
+    th { font-weight: bold; }
+    tr:nth-child(even) { background-color: #f9f9f9; }
+    tr:hover { background-color: #eef; }
+    #result-count { font-weight: bold; margin-top: 10px; display: block; }
+  </style>
 </head>
-<style>
- /* لعرض الأقسام جنباً إلى جنب */
-.details-wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-bottom: 30px;
-}
-
-/* تنسيق لكل قسم (موقع أو حارس) */
-.form-container {
-  background-color: #b788f5;
-  border: 1px solid #ccc;
-  padding: 15px;
-  border-radius: 8px;
-  width: 48%;
-  box-sizing: border-box;
-}
-
-.form-container h4 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  font-size: 16px;
-  color: #333;
-}
-
-/* شبكة داخلية لكل نموذج */
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px 16px;
-}
-
-.form-grid label {
-  display: block;
-  font-size: 13px;
-  color: #333;
-  margin-bottom: 3px;
-}
-
-.form-grid input[type="text"] {
-  width: 100%;
-  padding: 6px;
-  font-size: 13px;
-  border: 1px solid #aaa;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-/* استجابة للشاشات الصغيرة */
-@media (max-width: 768px) {
-  .details-wrapper {
-    flex-direction: column;
-  }
-
-  .form-container {
-    width: 100%;
-  }
-
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* أسفل الصفحة - الفورم */
-#project-guards {
-  margin-top: 30px;
-}
-
-#add-project-guards input[type="text"] {
-  width: 100%;
-  padding: 6px;
-  margin-bottom: 8px;
-  border: 1px solid #aaa;
-  border-radius: 4px;
-  font-size: 13px;
-}
-
-#add-project-guards input[type="submit"] {
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-#add-project-guards input[type="submit"]:hover {
-  background-color: #0056b3;
-}
-
- table {
-    width: 50%;
-    border-collapse: collapse;
-    margin-top: 15px;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-  }
-
-  th, td {
-    padding: 8px 12px;
-    text-align: left;
-  }
-
-  th {
-    font-weight: bold;
-  }
-
-  tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-
-  tr:hover {
-    background-color: #eef;
-  }
-
-  #result-count {
-    font-weight: bold;
-    margin-top: 10px;
-    display: block;
-  }
-</style>
 <body>
-    <h2> استخراج بيانات الحارس </h2>
-<input type="text" id="guards" placeholder="اكتب اسم الحارس">
-<button onclick="searchProduct()">بحث</button>
-<hr>
+  <h2>Данные охранника</h2>
+  <button onclick="show_hade_edt_info()" id="bill">Редактировать информацию</button>
+  <button onclick="searchProduct()">Поиск</button>
+  <select id="guards">
+    <option value="">выберите охранника .....</option>
+  </select>
+  <hr>
 
+  <!-- القسم الأول -->
+  <div id="genral_conter">
     <div class="details-wrapper">
- 
-   <!-- قسم بيانات الحارس -->
-  <div class="form-container">
-    <h4>بيانات الحارس</h4>
-    <div class="form-grid">
-      <div ><label>ID:</label><input type="text" id="id2"></div>
-      <div><label>name:</label><input type="text" id="name2"></div>
-      <div><label>num_T:</label><input type="text" id="num_T2"></div>
-      <div><label>data_prth:</label><input type="text" id="data_prth2"></div>
-      <div><label>address:</label><input type="text" id="address2"></div>
-      <div><label>Salary:</label><input type="text" id="Salary2"></div>
-      <div><label>Job:</label><input type="text" id="Job2"></div>
-      <div><label>nots:</label><input type="text" id="nots2"></div>
+      <div class="form-container">
+        <h3><strong>статус охранника:- </strong><span id="status0">..............</span></h3>
+        <div class="form-grid">
+          <div><label>ID:</label><input type="text" id="id2"></div>
+          <div><label>ФИО:</label><input type="text" id="name2"></div>
+          <div><label>номер телефона:</label><input type="text" id="num_T2"></div>
+          <div><label>Дата рождения:</label><input type="text" id="data_prth2"></div>
+          <div><label>адрес:</label><input type="text" id="address2"></div>
+          <div><label>Зарплата:</label><input type="text" id="Salary2"></div>
+          <div><label>должность:</label><input type="text" id="Job2"></div>
+          <div><label>комментарии:</label><input type="text" id="nots2"></div>
+        </div>
+        <button onclick="fetchProducts()" id="hiddenBox" style="display: none;">Посмотреть проекты, связанные с охраной</button>
+        <p id="result-count"></p>
+      </div>
     </div>
-    <!--الزر الذ من خلاله عرض معلومات الحرس المرتبطين بالمشروع , وهو مخفي -->
-    <button onclick="fetchProducts()" id="hiddenBox" style="display: none;">Search</button>
-    <p id="result-count"></p>
   </div>
-  
-    
-  
-  
-</body>
+
+  <img id="myImage" src="" alt="صورة الموظف" width="200">
+  <table>
+    <thead>
+      <tr>
+        <th><input type="text" id="project_id" style="display: none;"/></th>
+        <th><input type="text" id="employee_id" style="display: none;"/></th>
+        <th><input type="text" id="nots0" style="display: none;"/></th>
+      </tr>
+      <tr id="table-headers"></tr>
+    </thead>
+    <tbody id="product-table"></tbody>
+  </table>
+
 </html>
+<!-- داله الجافاسكربت التي بمساعدتها اضهار معلومات الحرس من قاعده البيانات و وضع البيانات 
+ في الخانات المطلوبه  -->
+<script>
+  async function loademployee() {
+    const response = await fetch("http://127.0.0.1:8001/Dropdown_employee");
+    const data = await response.json();
+
+    const dropdown = document.getElementById("guards");
+    data.forEach(p => {
+        const option = document.createElement("option");
+        option.value = p.name;
+        option.textContent = p.name;
+        dropdown.appendChild(option);
+    });
+}
+loademployee();
+let dropemployee = document.getElementById("guards");
+//+++++++++++++++++++++++++++++++++++++++++++++
+</script>
 <!-- داله الجافاسكربت التي بمساعدتها اضهار معلومات الحرس من قاعده البيانات و وضع البيانات 
  في الخانات المطلوبه  -->
 <script>
@@ -187,13 +165,41 @@ function searchProduct() {
             } else {
                 // تعبئة الخانات الثابتة
                 document.getElementById("id2").value = result.id || "";
+                document.getElementById("id2_up").value = result.id || "";
                 document.getElementById("name2").value = result.name || "";
+                document.getElementById("name2_up").value = result.name || "";
                 document.getElementById("num_T2").value = result.num_T || "";
+                document.getElementById("num_T2_up").value = result.num_T || "";
                 document.getElementById("data_prth2").value = result.data_prth || "";
+                document.getElementById("data_prth2_up").value = result.data_prth || "";
                 document.getElementById("address2").value = result.address || "";
+                document.getElementById("address2_up").value = result.address || "";
                 document.getElementById("Salary2").value = result.Salary || "";
+                document.getElementById("Salary2_up").value = result.Salary || "";
                 document.getElementById("Job2").value = result.Job || "";
+                document.getElementById("Job2_up").value = result.Job || "";
                 document.getElementById("nots2").value = result.nots || "";
+                document.getElementById("nots2_up").value = result.nots || "";
+                document.getElementById("image_path_up").value = result.image_path || "";
+                document.getElementById("is_active_up").value = result.is_active || "";
+
+                // التحكم في السويتش (checkbox)
+                const switchEl = document.getElementById("mySwitch");
+                const statusEl = document.getElementById("status");
+               // تغيير النص حسب القيمة
+                if (result.is_active == 1) {
+                    switchEl.checked = true;
+                    document.getElementById("status").innerText = "активный ✅";
+                    document.getElementById("status0").innerText = "активный ✅";
+                    
+                } else {
+                    switchEl.checked = false;
+                    document.getElementById("status").innerText = "неактивный ❌";
+                    document.getElementById("status0").innerText = "неактивный ❌";
+                    
+                }
+                const img = document.getElementById("myImage");
+                img.src = result.image_path; // هنا نربط المتغير بالـ src
                 totalResults = result.id || "";
                 // اسناد رقم الايدي للحارس الى totalResults
                    document.getElementById("employee_id").value = totalResults;
@@ -208,21 +214,7 @@ function searchProduct() {
 }
 
 </script>
-  <!--اضهار معلومات المشاريع التابعه للحارس و اخذ رقم الايدي التابع لها , وهذه الخانات تكون مخفيه -->
-<table>
-    <thead>
-        <tr>
-            <th><input type="text" placeholder="Product NO" oninput="fetchProducts()" id="project_id" style="display: none;"/></th>
-            <th><input type="text" placeholder="Name" oninput="fetchProducts()" id="employee_id" style="display: none;"/></th>
-            <th><input type="text" placeholder="Purchase Price" oninput="fetchProducts()" id="nots0" style="display: none;"/></th>
-        </tr>
-        <tr id="table-headers"></tr>
-    </thead>
-    <tbody id="product-table">
-        <!-- data will appear here -->
-    </tbody>
-</table>
-
+  
 <script>
     
   function fetchProducts() {
@@ -249,7 +241,7 @@ function searchProduct() {
             headerRow.innerHTML = "";
 
             // حدد الأعمدة التي تريد عرضها
-            const displayFields = [ "project_name","employee_name", "nots"];
+            const displayFields = [ "project_name", "nots"];
 
             if (data.length > 0) {
                 // إنشاء رؤوس الجدول حسب الحقول المطلوبة فقط
@@ -267,10 +259,10 @@ function searchProduct() {
                     table.innerHTML += tr;
                 }
 
-                resultCount.textContent = `عدد النتائج: ${data.length}`;
+                resultCount.textContent = `проекты: ${data.length}`;
             } else {
                 table.innerHTML = "<tr><td colspan='13'>No results found.</td></tr>";
-                resultCount.textContent = "عدد النتائج: 0";
+                resultCount.textContent = "проекты: 0";
             }
         });
 }
@@ -278,3 +270,84 @@ function searchProduct() {
     // تحميل البيانات مباشرة عند الفتح
     
 </script>
+   <!--------------------------updete----------------------------------------->
+<!-- القسم الثاني (مخفي) -->
+  <form id="updateForm" style="display: none;">
+    <div class="details-wrapper2">
+      <div class="form-container">
+        <center><h3><strong>Редактирование или удаление данных охранника</strong></h3></center>
+        <h3><strong>статус охранника:- </strong><span id="status">активный ✅</span></h3>
+        <div class="form-grid">
+          <div><label>ID:</label><input type="text" id="id2_up"></div>
+          <div><label>ФИО:</label><input type="text" id="name2_up"></div>
+          <div><label>номер телефона:</label><input type="text" id="num_T2_up"></div>
+          <div><label>Дата рождения:</label><input type="text" id="data_prth2_up"></div>
+          <div><label>адрес:</label><input type="text" id="address2_up"></div>
+          <div><label>Зарплата:</label><input type="text" id="Salary2_up"></div>
+          <div><label>должность:</label><input type="text" id="Job2_up"></div>
+          <div><label>комментарии:</label><input type="text" id="nots2_up"></div>
+          <div><label>image_path:</label><input type="text" id="image_path_up"></div>
+          <div><label>is_active:</label><input type="text" id="is_active_up"></div>
+        </div>
+        <label>Изменить статус: активен / нет:</label>
+        <label class="switch">
+          <input type="checkbox" id="mySwitch">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+    <button type="submit" style="background-color: green; width: 500px;">Сохранить изменения</button>
+  </form>
+
+<script>
+  
+const checkbox = document.getElementById("mySwitch");
+const hiddenInput = document.getElementById("is_active_up");
+const statusText = document.getElementById("status");
+
+checkbox.addEventListener("change", function() {
+    if (checkbox.checked) {
+        hiddenInput.value = 1;                     // القيمة 1 عند التفعيل
+        statusText.textContent = "активный ✅";
+    } else {
+        hiddenInput.value = 0;                     // القيمة 0 عند الإيقاف
+        statusText.textContent = "не активный ❌";
+    }
+});
+
+</script>
+<script>
+document.getElementById("updateForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    let data = {
+        id: document.getElementById("id2_up").value,
+        name: document.getElementById("name2_up").value,
+        num_T: document.getElementById("num_T2_up").value,
+        data_prth: document.getElementById("data_prth2_up").value,
+        address: document.getElementById("address2_up").value,
+        Salary: document.getElementById("Salary2_up").value,
+        Job: document.getElementById("Job2_up").value,
+        nots: document.getElementById("nots2_up").value,
+        image_path: document.getElementById("image_path_up").value,
+        is_active: document.getElementById("is_active_up").value   // ✅ الحقل الجديد
+    };
+
+    let response = await fetch("http://127.0.0.1:8001/update_guard", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+
+    let result = await response.json();
+    document.getElementById("status").textContent = result.message || result.error;
+});
+////////////اضهار و اخفاء  قسم تعديل البيانات ////////////
+     
+    function show_hade_edt_info() {
+  document.getElementById("genral_conter").style.display = "none";
+  document.getElementById("updateForm").style.display = "block";
+}
+
+</script>
+   <!--------------------------end_updete----------------------------------------->

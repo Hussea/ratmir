@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Войти на смену</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 6px;
+      font-weight: bold;
+      font-size: 14px;
+      color: #222;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="time"],
+    input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    input[type="submit"] {
+      background-color: #28a745;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #218838;
+    }
+
+    .message {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+      color: red;
+    }
+
+    /* استجابة الشاشات الصغيرة */
+    @media (max-width: 768px) {
+      .container {
+        margin: 20px;
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 20px;
+      }
+
+      label, input {
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      input[type="date"],
+      input[type="time"],
+      input[type="submit"] {
+        font-size: 13px;
+        padding: 10px;
+      }
+
+      h1 {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+    <center>
+ <div class="container">
+  <h3><span id="fixedText">создать QR-code для обхода в проект </span> <span id="Postitle"></span></h3>
+    <form id="chick_point_form" onsubmit="submitForm(event)">
+
+       
+      <input type="text" id="name_projct" name="name_projct" required style="display: none;">
+
+      <label for="name_point">name point :</label>
+      <input type="text" id="name_point" name="name_point" required>
+
+      <label for="crrdint">crrdint :</label>
+      <input type="text" id="crrdint" name="crrdint" required>
+
+      <label for="id_entry_emp">id_entry_emp :</label>
+      <input type="text" id="id_entry_emp" name="id_entry_emp" required>
+
+
+      <input type="submit" value="создать">
+
+      <div class="message" id="form-message"></div>
+    </form>
+  </div>
+    </center>
+     
+</body>
+</html>
+<script>
+    // استخراج البارامتر من الرابط
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    const name = params.get("name");
+    // وضع القيمة داخل input
+    document.getElementById("name_projct").value = id ? decodeURIComponent(id) : "Заголовок не указан";
+    document.getElementById("Postitle").textContent = name;
+    ///////////////////////////////////////////////////////////////////
+
+
+
+    function submitForm(event) {
+  event.preventDefault();
+
+  const form = document.getElementById("chick_point_form");
+  const formData = new FormData(form);
+
+  // تحقق من أن جميع الحقول غير فارغة
+  for (let [name, value] of formData.entries()) {
+    if (!value.trim()) {
+      document.getElementById("form-message").textContent = `Заполните дату и время смены.`;
+      return; // إيقاف الإرسال
+    }
+  }
+
+  // إذا الكل صحيح، نرسل الفورم
+  fetch("http://127.0.0.1:8001/add_chick_point", {
+    method: "POST",
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById("form-message").textContent = "Отправлено успешно!";
+    console.log(data);
+  })
+  .catch(error => {
+    document.getElementById("form-message").textContent = "Произошла ошибка при отправке";
+    console.error(error);
+  });
+}
+</script>

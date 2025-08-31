@@ -324,10 +324,12 @@ function searchProduct() {
                 resultCount.textContent = "Количество охранников : 0";
             }
         });
+            
 }
 
     
 </script>
+  <button id="new_chick_point">creet QR-code for chick point</button>
   <button onclick="generateQRCode()" id="QRBUT">Сгенерировать QR-код</button>
   <input type="text" id="pageUrl" readonly style="display: none;">
   
@@ -344,6 +346,30 @@ function searchProduct() {
 </div>
 
    <script>
+    /////////////داله الانتقال الى صفحه تسجيل نقطه تفتيش جديده للمشروع
+
+    // الدالة لإنشاء الرابط مع الباراميترات
+        function goToPageWithParams(page, params) {
+            const queryString = new URLSearchParams(params).toString();
+            window.location.href = page + "?" + queryString;
+        }
+
+        // عند الضغط على الزر
+        document.getElementById("new_chick_point").addEventListener("click", function() {
+            let projectValue = document.getElementById("project_id").value;
+            let productNameValue = document.getElementById("productName").value;
+
+            // الانتقال باستخدام الدالة
+            goToPageWithParams("new_chick_point.html", {
+                id: projectValue,
+                name: productNameValue
+            });
+        });
+
+    ////////////
+
+
+
     var qrcode; // تخزين الكائن حتى نتمكن من حفظ الصورة لاحقًا
 
     function generateQRCode() {
@@ -381,3 +407,11 @@ function searchProduct() {
       }
     }
   </script>
+<script>
+  //let role = sessionStorage.getItem("role");
+   //             if (role === "admin") {
+   //               document.getElementById("QRBUT").style.display = "none";
+   //             } else {
+   //             window.location.href = "log_in.html";
+   //             }
+</script>

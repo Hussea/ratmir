@@ -12,7 +12,52 @@ body {
   margin: 20px;
 
 }
+/* الحاوية */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 45px;  /* عرض أكبر */
+  height: 20px; /* ارتفاع مناسب */
+}
 
+/* إخفاء الـ checkbox الأصلي */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* الشريط الخلفي */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #e74c3c; /* لون افتراضي أحمر */
+  transition: 0.4s;
+  border-radius: 20px; /* حواف مستديرة */
+}
+
+/* الدائرة */
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+/* عند التفعيل */
+input:checked + .slider {
+  background-color: #2ecc71; /* أخضر عند التفعيل */
+}
+
+input:checked + .slider:before {
+  transform: translateX(24px); /* حركة الدائرة يمين */
+}
 /* تنسيق العنوان وزر البحث */
 h2 {
   font-size: 24px;
@@ -147,18 +192,21 @@ tr:hover {
 
 </style>
 <body>
-  <h2>проект</h2>
-  <h2 id="Postitle"></h2>
-  
+  <h3><span id="fixedText">Информация о проекте</span> <span id="Postitle"></span></h3>
+  <div id="genral_conter">
   <input type="text" id="productName"  style="display:none;" />
   <hr/>
 <button onclick="show_hade()" id="pig_data">Показать охранников проекта</button>
+<button onclick="show_hade()" id="id_qrcode">Показать QR_code проекта</button>
+<button onclick="show_hade()" id="id_qrcode1">Показать обход в проекта</button>
+<button onclick="show_hade()" id="bill">Ежемесячный счет</button>
+<button onclick="show_hade_edt_info()" id="bill">Редактировать информацию</button>
 <br>
-<button onclick="hade_show()" id="min_data" style="display: none;">detils projcts </button>
+<button onclick="hade_show()" id="min_data" style="display: none;">информационный проект</button>
 <br>
   <div class="details-wrapper">
     <div class="form-container" id="idForm">
-      <h4>Информация о проекте</h4>
+      
       <div class="form-grid" >
         <div><label style="display: none;">ID:</label><input type="text" id="id" readonly style="display: none;"/></div>
         <div><label style="display: none;">Название:</label><input type="text" id="title" readonly style="display: none;"/></div>
@@ -188,8 +236,162 @@ tr:hover {
     </thead>
     <tbody id="product-table" ></tbody>
   </table>
+</div>
+   <!--------------------------updete----------------------------------------->
+   
+   <form id="updateForm" style="display: none;">
+    
+  <div class="details-wrapper" id="idForm">
+    <div class="form-container">
+      <center><span><h3><strong>Редактирование или удаление данных проекта</strong></h3></span></center>
+      <span><h3><strong>статус проек:- </strong><span id="status">активный ✅</span></h3></span>
+       
+      <div class="form-grid" >
+        <input type="hidden" id="is_active_up" value="1" />
+        <div><label style="display: none;">ID:</label><input type="text" id="id_up" readonly style="display: none;"/></div>
+        <div><label style="display: none;">Название:</label><input type="text" id="title_up" readonly style="display: none;"/></div>
+        <div><label>адрес:</label><input type="text" id="address_up" /></div>
+        <div><label>Необходимое количество охранников:</label><input type="text" id="q_person_up" /></div>
+        <div><label>Система смен:</label><input type="text" id="ses_work_up" /></div>
+        <div><label>Сумма, выплаченная проектом:</label><input type="text" id="sum_of_proj_up" /></div>
+        <div><label>Ответственный от проекта:</label><input type="text" id="pers_of_proj_up" /></div>
+        <div><label>Зарплата за смену:</label><input type="text" id="sel_emp_up" /></div>
+        <div><label>номер телефона:</label><input type="text" id="n_phone_up" /></div>
+        <div><label>Примечания:</label><input type="text" id="nots_up" /></div>
+        
+      </div>
+      <br/>
+       <label>Изменить статус: активен / нет:</label>
+      <label class="switch">
+      <input type="checkbox" id="mySwitch" checked>  <!-- checked تعني مفعل افتراضي -->
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+  <br>
+   <center>
+  <button type="submit" style="background-color: green; width: 500px; ">Сохранить изменения</button>
+  <button onclick="show_hade_edt_info()" id="go_to_list_proj" style="background-color: rgb(33, 123, 226); width: 500px;">вернуться</button>
+   </center>
+</form>
+
+
+<script>
+  const checkbox = document.getElementById("mySwitch");
+const hiddenInput = document.getElementById("is_active_up");
+const statusText = document.getElementById("status");
+
+checkbox.addEventListener("change", function() {
+    if (checkbox.checked) {
+        hiddenInput.value = 1;                     // القيمة 1 عند التفعيل
+        statusText.textContent = "активный ✅";
+    } else {
+        hiddenInput.value = 0;                     // القيمة 0 عند الإيقاف
+        statusText.textContent = "не активный ❌";
+    }
+});
+
+</script>
+<script>
+document.getElementById("updateForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    let data = {
+        id: document.getElementById("id_up").value,
+        title: document.getElementById("title_up").value,
+        address: document.getElementById("address_up").value,
+        q_person: document.getElementById("q_person_up").value,
+        ses_work: document.getElementById("ses_work_up").value,
+        sum_of_proj: document.getElementById("sum_of_proj_up").value,
+        pers_of_proj: document.getElementById("pers_of_proj_up").value,
+        sel_emp: document.getElementById("sel_emp_up").value,
+        n_phone: document.getElementById("n_phone_up").value,
+        nots: document.getElementById("nots_up").value,
+        is_active: document.getElementById("is_active_up").value   // ✅ الحقل الجديد
+    };
+
+    let response = await fetch("http://127.0.0.1:8001/update_category", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+
+    let result = await response.json();
+    document.getElementById("status").textContent = result.message || result.error;
+});
+
+</script>
+   <!--------------------------End_updete----------------------------------------->
 
   <script>
+     /////////////داله الانتقال الى صفحه تسجيل نقطه تفتيش جديده للمشروع
+
+    // الدالة لإنشاء الرابط مع الباراميترات
+        function goToPageWithParams(page, params) {
+            const queryString = new URLSearchParams(params).toString();
+            window.location.href = page + "?" + queryString;
+        }
+
+        // عند الضغط على الزر  
+        document.getElementById("id_qrcode").addEventListener("click", function() {
+            let projectValue = document.getElementById("id").value;
+            
+
+            // الانتقال باستخدام الدالة
+            goToPageWithParams("show_info_chick_point.htm", {
+                id: projectValue
+                
+            });
+        });
+
+    ////////////---------------------------------------------
+    // عند الضغط على الزر bill
+        document.getElementById("bill").addEventListener("click", function() {
+            let projectValue = document.getElementById("id").value;
+            
+
+            // الانتقال باستخدام الدالة
+            goToPageWithParams("project_salary_history.html", {
+                id: projectValue
+                
+            });
+        });
+
+    ////////////---------------------------------------------
+    // عند الضغط على الزر go_to_list_proj
+        document.getElementById("go_to_list_proj").addEventListener("click", function() {
+             
+            
+
+            // الانتقال باستخدام الدالة
+            goToPageWithParams("project_list.html", {
+                 
+                
+            });
+        });
+
+    ////////////---------------------------------------------
+    
+    // الدالة لإنشاء الرابط مع الباراميترات
+        function goToPageWithParams(page, params) {
+            const queryString = new URLSearchParams(params).toString();
+            window.location.href = page + "?" + queryString;
+        }
+
+        // عند الضغط على الزر  
+        document.getElementById("id_qrcode1").addEventListener("click", function() {
+            let projectValue = document.getElementById("id").value;
+            const titleParam = getQueryParam("title");
+            
+
+            // الانتقال باستخدام الدالة
+            goToPageWithParams("show_obxod.html", {
+                id: projectValue ,
+                tet: titleParam
+            });
+        });
+
+    ////////////اضهار و اخفاء ازرار العمليات ////////////
      function show_hade() {
     document.getElementById("idTable").style.display = "block";
     document.getElementById("idForm").style.display = "none";
@@ -202,6 +404,14 @@ tr:hover {
     document.getElementById("pig_data").style.display = "block";
     document.getElementById("min_data").style.display = "none";
     }
+    //////////// انهاء اضهار و اخفاء ازرار العمليات ////////////
+    ////////////اضهار و اخفاء  قسم تعديل البيانات ////////////
+     function show_hade_edt_info() {
+    document.getElementById("updateForm").style.display = "block";
+    document.getElementById("genral_conter").style.display = "none";
+    
+    }
+   ////////////انهاء اضهار و اخفاء  قسم تعديل البيانات ////////////
     let totalResults = 0;
 
     function getQueryParam(param) {
@@ -229,16 +439,19 @@ tr:hover {
           if (!result || Object.keys(result).length === 0) {
             alert("Нет соответствующих данных ❌");
           } else {
-            document.getElementById("id").value = result.id || "";
-            document.getElementById("title").value = result.title || "";
-            document.getElementById("address").value = result.address || "";
-            document.getElementById("q_person").value = result.q_person || "";
-            document.getElementById("ses_work").value = result.ses_work || "";
-            document.getElementById("sum_of_proj").value = result.sum_of_proj || "";
-            document.getElementById("pers_of_proj").value = result.pers_of_proj || "";
-            document.getElementById("n_phone").value = result.n_phone || "";
-            document.getElementById("sel_emp").value = result.sel_emp || "";
-            document.getElementById("nots").value = result.nots || "";
+            //اعطاء قيمه الى خانتين مختلفتين من نفس المصدر
+          const fields = ["id", "title", "address", "q_person", "ses_work", "sum_of_proj", "pers_of_proj", "n_phone", "sel_emp", "nots"];
+
+          fields.forEach(field => {
+              // الحقل الأساسي
+              let el = document.getElementById(field);
+              if (el) el.value = result[field] || "";
+
+              // الحقل "_up"
+              let elUp = document.getElementById(field + "_up");
+              if (elUp) elUp.value = result[field] || "";
+          });
+          ////////////////////////////
 
             totalResults = result.id || "";
             document.getElementById("project_id").value = totalResults;
@@ -302,7 +515,7 @@ tr:hover {
         headerRow.innerHTML = "";
 
         const displayFields = {
-          project_name: "اسم المشروع",
+         
           employee_name: "Имя охранника",
           nots: "Примечания",
         };
@@ -311,29 +524,72 @@ tr:hover {
           for (let key in displayFields) {
             headerRow.innerHTML += `<th>${displayFields[key]}</th>`; 
           }
-          headerRow.innerHTML += `<th>Количество смен</th><th>Общая сумма</th><th>историю платежей</th><th> история смены</th>`;
+          headerRow.innerHTML += `<th>Количество смен</th><th>Общая сумма</th><th>историю платежей</th><th> история смены</th><th>статус ОХ в ОБ</th>`;
 
-          for (let row of data) {
-            const employeeId = row["employee_id"];
-            const projectId = row["project_id"];
-            const workShiftData = await fetchWorkShiftData(employeeId, projectId);
+        for (let row of data) {
+    const rowId = row["id"];
+    const employeeId = row["employee_id"];
+    const projectId = row["project_id"];
+    const workShiftData = await fetchWorkShiftData(employeeId, projectId);
 
-            let tr = "<tr>";
-            for (let key in displayFields) {
-              tr += `<td>${row[key] ?? ""}</td>`;
+    let tr = "<tr>";
+    for (let key in displayFields) {
+      tr += `<td>${row[key] ?? ""}</td>`;
+    }
+
+    tr += `<td>${workShiftData.shiftCount}</td>`;
+    tr += `<td>${workShiftData.totalValue}</td>`;
+
+    // ✅ لو is_active == 1 نخلي checkbox مفعل
+    const checkedAttr = row.is_active == 1 ? "checked" : "";
+
+    tr += `
+    
+      <td><a href="show_salary_history.html?employee_id_input=${employeeId}&project_id_input=${projectId}"><button>историю платежей</button></a></td>
+      <td><a href="Payroll.html?employee_id_input=${employeeId}&project_id_input=${projectId}"><button>Дата</button></a></td>
+      <td>
+        <label class="switch">
+          <input type="checkbox" class="mySwitch" data-emp-id="${rowId}" ${checkedAttr}>
+          <span class="slider"></span>
+        </label>
+      </td>
+    `;
+    tr += "</tr>";
+    table.innerHTML += tr;
+}
+
+// ✅ بعد توليد الجدول، نربط event لكل checkbox
+document.querySelectorAll(".mySwitch").forEach(cb => {
+    cb.addEventListener("change", async function () {
+        const id =  this.getAttribute("data-emp-id");
+        const is_active = this.checked ? 1 : 0;
+
+        try {
+            const response = await fetch("http://127.0.0.1:8001/update_project_guards", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    id: id,
+                    is_active: is_active
+                })
+            });
+            const result = await response.json();
+            console.log("✅ Updated:", result);
+
+            if (result.success) {
+                alert(`تم تحديث الموظف ${id} إلى الحالة: ${is_active}`);
+            } else {
+                alert("❌ خطأ أثناء تحديث قاعدة البيانات");
             }
+        } catch (err) {
+            console.error("❌ Error:", err);
+        }
+    });
+});
 
-            tr += `<td>${workShiftData.shiftCount}</td>`;
-            tr += `<td>${workShiftData.totalValue}</td>`;
-            tr += `
-              <td><a href="show_salary_history.html?employee_id_input=${employeeId}&project_id_input=${projectId}"><button>историю платежей</button></a></td>
-              <td><a href="Payroll.html?employee_id_input=${employeeId}&project_id_input=${projectId}"><button> Дата</button></a></td>
-            `;
-            tr += "</tr>";
-            table.innerHTML += tr;
-          }
 
-          resultCount.textContent = ` gardes : ${data.length}`;
+
+          resultCount.textContent = ` В проекте ${data.length} охранника`;
         } else {
           table.innerHTML = "<tr><td colspan='100%'>لا توجد نتائج.</td></tr>";
           resultCount.textContent = "عدد النتائج: 0";

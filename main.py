@@ -4,6 +4,9 @@ from fastapi import FastAPI, Form
 from fastapi.middleware.cors import CORSMiddleware
 import mysql.connector
 from datetime import datetime, date, time
+from fastapi import FastAPI, UploadFile, File, Form
+import base64, os, re
+from pydantic import BaseModel
 
 
 app = FastAPI()
@@ -29,21 +32,50 @@ def get_db_connection():
 
 #====================================================
 @app.post("/add-emp")
-def add_employee(id: int = Form(0), 
-                 name: str = Form(...), 
-                 num_T: str = Form(...),
-                 data_prth: str = Form(...),
-                 address: str = Form(...),
-                 Salary: str = Form(...), 
-                 Job: str = Form(...), 
-                 nots: str = Form(...)):
+def add_employee(
+    id: int = Form(0), 
+    name: str = Form(...), 
+    num_T: str = Form(...),
+    data_prth: str = Form(...),
+    address: str = Form(...),
+    Salary: str = Form(...), 
+    Job: str = Form(...), 
+    nots: str = Form(...),
+    image: UploadFile = File(None)
+):
     try:
+        image_path = None
+
+        if image:
+            os.makedirs("uploads", exist_ok=True)
+
+            # احصل على التاريخ والوقت الحالي بصيغة: YYYYMMDD_HHMMSS
+            now = datetime.now().strftime("%Y-%m-%d-T-%H-%M")
+
+            # أنشئ اسم ملف جديد: مثلا name_YYYYMMDD_HHMMSS.jpg
+            extension = os.path.splitext(image.filename)[1]  # .jpg أو .png
+            filename = f"{name}-DT{now}{extension}"
+
+            # مسار حفظ الصورة
+            image_path = f"uploads/{filename}"
+
+            # حفظ الصورة في المجلد
+            with open(image_path, "wb") as f:
+                f.write(image.file.read())
+
+        # حفظ البيانات في قاعدة البيانات
         conn = get_db_connection()
         cur = conn.cursor()
-        query = "INSERT INTO employee (id, name, num_T, data_prth, address, Salary, Job, nots) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-        cur.execute(query, (id, name, num_T, data_prth, address, Salary, Job, nots))
+        query = """
+            INSERT INTO employee (id, name, num_T, data_prth, address, Salary, Job, nots, image_path)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        cur.execute(query, (id, name, num_T, data_prth, address, Salary, Job, nots, image_path))
         conn.commit()
-        return {"message": "تمت الإضافة بنجاح ✅"}
+        conn.close()
+
+        return {"message": "تمت الإضافة بنجاح ✅", "image_saved": image_path}
+
     except mysql.connector.Error as e:
         return {"error": str(e)}
 #====================================================
@@ -67,6 +99,98 @@ def add_category(id: int = Form(0),
         return {"message": "تمت الإضافة بنجاح ✅"}
     except mysql.connector.Error as e:
         return {"error": str(e)}
+#====================================================
+class UpdateCategory(BaseModel):
+    id: int
+    title: str
+    address: str
+    q_person: str
+    ses_work: str
+    sum_of_proj: str
+    pers_of_proj: str
+    sel_emp: str
+    n_phone: str
+    nots: str
+    is_active: bool   # ✅ الحقل الجديد
+
+
+@app.put("/update_category")
+def update_category(data: UpdateCategory):
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        query = """
+            UPDATE projuct
+            SET title=%s, address=%s, q_person=%s, ses_work=%s,
+                sum_of_proj=%s, pers_of_proj=%s, sel_emp=%s,
+                n_phone=%s, nots=%s, is_active=%s
+            WHERE id=%s
+        """
+        cur.execute(query, (
+            data.title, data.address, data.q_person, data.ses_work,
+            data.sum_of_proj, data.pers_of_proj, data.sel_emp,
+            data.n_phone, data.nots, data.is_active, data.id
+        ))
+        conn.commit()
+        return {"message": "تم التحديث بنجاح ✅"}
+    except Exception as e:
+        return {"error": str(e)}
+#====================================================
+class UpdateCategory(BaseModel):
+    id: int
+    name: str
+    num_T: str
+    data_prth: str
+    address: str
+    Salary: str
+    Job: str
+    nots: str
+    image_path: str
+    is_active: bool   # ✅ الحقل الجديد
+
+
+@app.put("/update_guard")
+def update_guard(data: UpdateCategory):
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        query = """
+            UPDATE employee
+            SET name=%s, num_T=%s, data_prth=%s, address=%s,
+                Salary=%s, Job=%s, nots=%s,
+                image_path=%s, is_active=%s
+            WHERE id=%s
+        """
+        cur.execute(query, (
+            data.name, data.num_T, data.data_prth, data.address,
+            data.Salary, data.Job, data.nots,
+            data.image_path, data.is_active, data.id
+        ))
+        conn.commit()
+        return {"message": "تم التحديث بنجاح ✅"}
+    except Exception as e:
+        return {"error": str(e)}
+#====================================================
+# ✅ موديل بيانات الاستقبال
+class GuardUpdate(BaseModel):
+    id: int
+    is_active: int
+    # ✅ API لتحديث الحالة
+@app.put("/update_project_guards")
+def update_project_guards(data: GuardUpdate):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    sql = "UPDATE project_guards SET is_active = %s WHERE id = %s"
+    cursor.execute(sql, (data.is_active, data.id))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return {"success": True, "id": data.id, "new_state": data.is_active}
+    
+
 #====================================================
 @app.post("/add-project-guards")
 def add_project_guards(
@@ -138,7 +262,7 @@ def get_categories():
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT title FROM projuct")  # أو اسم العمود اللي تريده
+        cur.execute("SELECT title FROM projuct WHERE is_active = TRUE")  # أو اسم العمود اللي تريده
         rows = cur.fetchall()
         category = [row[0] for row in rows]
         return {"category": category}
@@ -156,7 +280,7 @@ def get_guards(
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
     
-    query = "SELECT * FROM project_guards WHERE 1=1"
+    query = "SELECT * FROM project_guards WHERE is_active = TRUE"
     values = []
 
     if id is not None:
@@ -171,6 +295,33 @@ def get_guards(
     if nots is not None:
         query += " AND nots = %s"
         values.append(nots)
+
+    cursor.execute(query, values)
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    
+    return results
+#===============================================
+@app.get("/get_check_point")
+def get_check_point(
+  
+    check_point_id: Optional[int] = Query(None),
+    project_check_point_id: Optional[int] = Query(None)
+):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    query = "SELECT * FROM points_chick WHERE 1=1"
+    values = []
+
+    if check_point_id is not None:
+        query += " AND id = %s"
+        values.append(check_point_id)
+
+    if project_check_point_id is not None:
+        query += " AND id_project = %s"
+        values.append(project_check_point_id)
 
     cursor.execute(query, values)
     results = cursor.fetchall()
@@ -251,22 +402,69 @@ def add_work_shifts(
     start_date: date = Form(...),
     start_time: time = Form(...),
     end_date: date = Form(...),
-    end_time: time = Form(...)
+    end_time: time = Form(...),
+    image: str = Form(...)
 ):
     try:
-        print("🚀 بدء حفظ البيانات...")
-        print("الموظف:", employee_id_input)
-        print("المشروع:", project_id_input)
-        print("التواريخ:", start_date, start_time, end_date, end_time)
+        if not image:
+              return {"error": "لم يتم التقاط الصورة"}
+
+        # إزالة بادئة Base64
+        img_data = re.sub('^data:image/.+;base64,', '', image)
+        img_bytes = base64.b64decode(img_data)
+
+        os.makedirs("obxod", exist_ok=True)
+        # احصل على التاريخ والوقت الحالي بصيغة: YYYYMMDD_HHMMSS
+        now = datetime.now().strftime("%Y-%m-%d-T-%H-%M")
+
+        # أنشئ اسم ملف جديد: مثلا name_YYYYMMDD_HHMMSS.jpg
+        
+        filename = f"id{employee_id_input}-DT{now}"
+        
+        file_path = f"obxod/{filename}.jpg"
+        with open(file_path, "wb") as f:
+            f.write(img_bytes)
+        # //////////////////////////////
 
         conn = get_db_connection()
         cur = conn.cursor()
         query = """
             INSERT INTO work_shifts 
-            (employee_id_input, project_id_input, start_day, start_time, end_day, end_time) 
-            VALUES (%s, %s, %s, %s, %s, %s)
+            (employee_id_input, project_id_input, start_day, start_time, end_day, end_time, file_path) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
-        cur.execute(query, (employee_id_input, project_id_input, start_date, start_time, end_date, end_time))
+        cur.execute(query, (employee_id_input, project_id_input, start_date, start_time, end_date, end_time, file_path))
+        conn.commit()
+        print("✅ تم الحفظ بنجاح")
+        return {"message": "تمت الإضافة بنجاح ✅"}
+    except mysql.connector.Error as e:
+        print("❌ خطأ في قاعدة البيانات:", str(e))
+        return {"error": str(e)}
+    finally:
+        cur.close()
+        conn.close()
+        #====================================================
+@app.post("/add_chick_point")
+def add_chick_point(
+    name_projct: int = Form(...), 
+    name_point: str = Form(...), 
+    crrdint: str = Form(...),
+    id_entry_emp: int = Form(...)
+):
+    try:
+        print("🚀 بدء حفظ البيانات...")
+        print("id projact:", name_projct)
+        print("name point:", name_point)
+        print("cardinat & id emp:", crrdint, id_entry_emp)
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+        query = """
+            INSERT INTO points_chick 
+            (id_project, name_point, Coordinates, id_entry_emp) 
+            VALUES (%s, %s, %s, %s)
+        """
+        cur.execute(query, (name_projct, name_point, crrdint, id_entry_emp))
         conn.commit()
         print("✅ تم الحفظ بنجاح")
         return {"message": "تمت الإضافة بنجاح ✅"}
@@ -294,6 +492,7 @@ def get_show_work_shift(
             work_shifts.start_time,
             work_shifts.end_day,
             work_shifts.end_time,
+            work_shifts.file_path,
             employee.name AS employee_name,
             projuct.title AS projuct_title,
             projuct.sel_emp AS projuct_sel_emp
@@ -323,11 +522,43 @@ def get_show_work_shift(
     conn.close()
     return results
 #===============================================
+@app.get("/show_info_chick_point")
+def show_info_chick_point(
+    employee_id_input: Optional[str] = Query(None)
+):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    query = """
+        SELECT 
+            points_chick.id,
+            points_chick.id_project,
+            points_chick.name_point,
+            points_chick.Coordinates,
+            projuct.title AS projuct_title
+           
+        FROM points_chick
+        JOIN projuct ON points_chick.id_project = projuct.id
+        
+        WHERE 1=1
+    """
+    values = []
+
+    if employee_id_input:
+        query += " AND points_chick.id_project = %s"
+        values.append(employee_id_input)
+
+    cursor.execute(query, values)
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return results
+#===============================================
 @app.get("/show_salary_history")
 def get_show_salary_history(
     employee_id_input: Optional[str] = Query(None),
     project_id_input: Optional[str] = Query(None),
-    start_day: Optional[date] = Query(None)
+    datas: Optional[str] = Query(None)
 ):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
@@ -350,6 +581,8 @@ def get_show_salary_history(
         JOIN employee ON salary_history.emp_id = employee.id
         JOIN projuct ON salary_history.project_id = projuct.id
         WHERE 1=1
+         AND employee.is_active = TRUE
+         AND projuct.is_active = TRUE
     """
     values = []
 
@@ -361,6 +594,10 @@ def get_show_salary_history(
         query += " AND salary_history.project_id = %s"
         values.append(project_id_input)
 
+    if datas:
+        query += " AND salary_history.pay_for = %s"
+        values.append(datas)
+
     
 
     cursor.execute(query, values)
@@ -369,7 +606,124 @@ def get_show_salary_history(
     conn.close()
     return results
 
+#=========================================================
+@app.post("/login")
+def login(username: str = Form(...), password: str = Form(...)):
+    conn = get_db_connection()
+    cur = conn.cursor(dictionary=True)
 
+    query = "SELECT * FROM users WHERE username = %s AND password = %s"
+    cur.execute(query, (username, password))
+    user = cur.fetchone()
+
+    cur.close()
+    conn.close()
+
+    if user:
+        return {
+            "success": True,
+            "message": "تم تسجيل الدخول بنجاح ✅",
+            "role": user["role"]  # ترجع دور المستخدم هنا
+        }
+    else:
+        return {
+            "success": False,
+            "error": "❌ اسم المستخدم أو كلمة المرور غير صحيحة"
+        }
+     #====================================================
+@app.post("/add_chickd_point_datatame")
+def add_chickd_point_datatame(id_check_point: int = Form(...)):
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        query = """
+            INSERT INTO list_points_checkd (id_check_point) 
+            VALUES (%s)
+        """
+        cur.execute(query, (id_check_point,))
+        conn.commit()
+        print("✅ تم الحفظ بنجاح")
+        return {"message": "تمت الإضافة بنجاح ✅"}
+    except mysql.connector.Error as e:
+        print("❌ خطأ في قاعدة البيانات:", str(e))
+        return {"error": str(e)}
+    finally:
+        cur.close()
+        conn.close()
+
+
+
+#=========================================================
+@app.get("/search_points")
+def get_search_points(
+    project_id_input: Optional[int] = Query(None),
+    data_tame_input: Optional[str] = Query(None)
+):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    query = """
+       SELECT 
+    p.id,
+    p.name_point,
+    p.Coordinates,
+    p.id_project,
+    DATE(l.dataD) AS dataD,
+    TIME(l.timeD) AS timeD
+    FROM list_points_checkd l
+    JOIN points_chick p ON l.id_check_point = p.id
+    """
+    values = []
+
+    # لو أدخل المستخدم id_project
+    if project_id_input:
+        query += " AND p.id_project = %s"
+        values.append(project_id_input)
+
+    # لو أدخل المستخدم data_tame
+    if data_tame_input:
+        query += " AND l.dataD = %s"
+        values.append(data_tame_input)
+
+    cursor.execute(query, values)
+    results = cursor.fetchall()
+     # 📌 هنا تضيف الكود اللي ينسّق الوقت
+    from datetime import timedelta
+    for row in results:
+        if isinstance(row["timeD"], timedelta):
+            seconds = row["timeD"].seconds
+            h = seconds // 3600
+            m = (seconds % 3600) // 60
+            s = seconds % 60
+            row["timeD"] = f"{h:02}:{m:02}:{s:02}"
+
+    cursor.close()
+    conn.close()
+    return results
+
+#=========================================================
+# Endpoint لجلب كل project (Dropdown)
+@app.get("/Dropdown_project")
+def get_all_products():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT id, title FROM projuct")
+    products = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return products  # FastAPI ترجع JSON تلقائيًا
+
+#=========================================================
+# Endpoint لجلب كل emplye (Dropdown)
+@app.get("/Dropdown_employee")
+def get_all_products():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT id, name	 FROM employee")
+    products = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return products  # FastAPI ترجع JSON تلقائيًا
 #=========================================================
 
        # حساب مجموع sale_price
@@ -381,7 +735,7 @@ def get_show_salary_history(
 
 r"""
 uvicorn main:app --reload
-cd C:\Users\Acer\Desktop\work\working
+cd C:\Users\Acer\Desktop\work\ratmir
 uvicorn main:app --host 127.0.0.1 --port 8001
 in link add /docs
 """
