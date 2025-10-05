@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar Example</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    /* ====== NAVBAR ====== */
+    .navbar {
+      position: fixed;   /* يبقى ثابت بالأعلى */
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #007bff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px 0;
+      z-index: 1000;
+    }
+
+    .navbar ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap; /* لو الشاشة صغيرة يلف الأقسام */
+    }
+
+    .navbar li {
+      margin: 0 15px;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    .navbar a:hover {
+      color: #ffcc00;
+    }
+
+    /* ====== MAIN CONTENT ====== */
+    .content {
+      margin-top: 70px; /* عشان ما يتغطى بالمينيو */
+      padding: 20px;
+      text-align: center;
+    }
+
+    /* ====== RESPONSIVE ====== */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 10px;
+      }
+      .navbar li {
+        margin: 10px 8px;
+      }
+      .navbar a {
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar ul {
+        flex-direction: column;
+        text-align: center;
+      }
+      .navbar li {
+        margin: 8px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">القسم الأول</a></li>
+      <li><a href="page2.html">القسم الثاني</a></li>
+      <li><a href="page3.html">القسم الثالث</a></li>
+      <li><a href="page4.html">القسم الرابع</a></li>
+      <li><a href="page5.html">القسم الخامس</a></li>
+      <li><a href="page6.html">القسم السادس</a></li>
+    </ul>
+  </nav>
+
+  <!-- CONTENT -->
+  <div class="content">
+    <h1>مرحباً بك</h1>
+    <p>هذا المحتوى التجريبي للصفحة الرئيسية.</p>
+    <p>اضغط على أي قسم من الشريط العلوي للانتقال لصفحة أخرى.</p>
+  </div>
+
+</body>
+</html>

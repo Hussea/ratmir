@@ -195,6 +195,8 @@
       <div><label>Название:</label><br><input type="text" id="title"></div>
       <div><label>адрес:</label><br><input type="text" id="address"></div>
       <div><label>Рабочая система:</label><br><input type="text" id="ses_work"></div>
+      <div><label>дату начала смену:</label><br><input type="text" id="ses_work0"></div>
+       
     </div><br>
     <!--الزر الذ من خلاله عرض معلومات الحرس المرتبطين بالمشروع , وهو مخفي -->
     <button onclick="fetchProducts()" id="hiddenBox" style="display: none;">Показать охранников</button>
@@ -204,7 +206,10 @@
 </body>
 </html>
 <script>
-  let totalResults = 0;
+let totalResults = 0;
+let time0 = ""; // متغير عالمي للوصول إليه من أي دالة
+let ses_work0 = ""; // متغير عالمي للوصول إليه من أي دالة
+
 function searchProduct() {
     let title = document.getElementById("productName").value;
     if (!title) {
@@ -231,52 +236,36 @@ function searchProduct() {
                 document.getElementById("title").value = result.title || "";
                 document.getElementById("address").value = result.address || "";
                 document.getElementById("ses_work").value = result.ses_work || "";
-                
-                totalResults = result.id || "";
-                // اسناد رقم الايدي للمشروع الى totalResults
-                   document.getElementById("project_id").value = totalResults;
-                // اضهار زر الذي من خلاله يمكن جلب معلومات الحرس التابعين للمشروع
-                   document.getElementById("hiddenBox").style.display = "block";
+                document.getElementById("ses_work0").value = result.start_time_work || "";
 
+                totalResults = result.id || "";
+                document.getElementById("project_id").value = totalResults;
+
+                // تخزين الوقت في المتغير العالمي
+                time0 = result.start_time_work || "";
+                ses_work0 = result.ses_work || "";
+                // إظهار الزر
+                document.getElementById("hiddenBox").style.display = "block";
             }
         } else {
             alert("Ошибка извлечения данных");
         }
     };
-   
 }
-  function getPageURL() {
-      var url = window.location.href; // الرابط الكامل للصفحة الحالية
-      document.getElementById("pageUrl").value = url;
-    }
 
- // تنفذ تلقائيًا عند تحميل الصفحة
+function getPageURL() {
+    var url = window.location.href; // الرابط الكامل للصفحة الحالية
+    document.getElementById("pageUrl").value = url;
+}
 
-      window.onload = function() {
-      searchProduct();
-      getPageURL();
-    };
-    
-</script>
-  <!--اضهار معلومات الحرس التابع للمشروع-->
-<table>
-    <thead>
-        <tr>
-            <th><input type="text" placeholder="Product NO" oninput="fetchProducts()" id="project_id"  style="display: none;"/></th>
-            <th><input type="text" placeholder="Name" oninput="fetchProducts()" id="employee_id"  style="display: none;"/></th>
-            <th><input type="text" placeholder="Purchase Price" oninput="fetchProducts()" id="nots0"  style="display: none;"/></th>
-        </tr>
-        <tr id="table-headers"></tr>
-    </thead>
-    <tbody id="product-table">
-        <!-- data will appear here -->
-    </tbody>
-</table>
+// تنفيذ تلقائي عند تحميل الصفحة
+window.onload = function() {
+    searchProduct();
+    getPageURL();
+};
 
-<script>
-  function fetchProducts() {
+function fetchProducts() {
     const params = new URLSearchParams();
-
     const fields = ["project_id", "employee_id", "nots0"];
 
     for (let field of fields) {
@@ -295,7 +284,7 @@ function searchProduct() {
             table.innerHTML = "";
             headerRow.innerHTML = "";
 
-            const displayFields = [ "project_name","employee_name"];
+            const displayFields = ["project_name", "employee_name"];
 
             if (data.length > 0) {
                 // إنشاء رؤوس الجدول
@@ -307,12 +296,12 @@ function searchProduct() {
                 for (let row of data) {
                     let tr = "<tr>";
                     for (let key of displayFields) {
-                        if (key === "project_name","employee_name") {
-                            // اجعل اسم الموظف رابطًا
-                            tr += `<td><a href="details.html?employee_id=${row.employee_id}&project_id=${row.project_id}&project_name=${row.project_name}&employee_name=${row.employee_name}">${row[key] ?? ""}</a></td>`;
-                        } else {
-                            tr += `<td>${row[key] ?? ""}</td>`;
-                        }
+                        let value = row[key] ?? "";
+
+                        // كل خلية ستكون رابطًا
+                        tr += `<td>
+                                  <a href="details.html?employee_id=${encodeURIComponent(row.employee_id)}&project_id=${encodeURIComponent(row.project_id)}&project_name=${encodeURIComponent(row.project_name)}&employee_name=${encodeURIComponent(row.employee_name)}&time=${encodeURIComponent(time0)}&time0=${encodeURIComponent(ses_work0)}">${value}</a>
+                               </td>`;
                     }
                     tr += "</tr>";
                     table.innerHTML += tr;
@@ -324,8 +313,26 @@ function searchProduct() {
                 resultCount.textContent = "Количество охранников : 0";
             }
         });
-            
 }
+</script>
+
+  <!--اضهار معلومات الحرس التابع للمشروع-->
+<table>
+    <thead>
+        <tr>
+            <th><input type="text" placeholder="Product NO" oninput="fetchProducts()" id="project_id"  style="display: none;"/></th>
+            <th><input type="text" placeholder="Name" oninput="fetchProducts()" id="employee_id"  style="display: none;"/></th>
+            <th><input type="text" placeholder="Purchase Price" oninput="fetchProducts()" id="nots0"  style="display: none;"/></th>
+        </tr>
+        <tr id="table-headers"></tr>
+    </thead>
+    <tbody id="product-table">
+        <!-- data will appear here -->
+    </tbody>
+</table>
+
+<script>
+   
 
     
 </script>

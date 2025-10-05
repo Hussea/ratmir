@@ -85,6 +85,7 @@ def add_category(id: int = Form(0),
                  address: str = Form(...),
                  q_person: str = Form(...), 
                  ses_work: str = Form(...), 
+                 start_time_work: int = Form(...), 
                  sum_of_proj: str = Form(...), 
                  pers_of_proj: str = Form(...), 
                  n_phone: str = Form(...), 
@@ -93,8 +94,8 @@ def add_category(id: int = Form(0),
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        query = "INSERT INTO projuct (id, title, address, q_person, ses_work, sum_of_proj, pers_of_proj, n_phone, sel_emp, nots) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-        cur.execute(query, (id, title, address, q_person, ses_work, sum_of_proj, pers_of_proj, n_phone, sel_emp, nots))
+        query = "INSERT INTO projuct (id, title, address, q_person, ses_work, start_time_work, sum_of_proj, pers_of_proj, n_phone, sel_emp, nots) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        cur.execute(query, (id, title, address, q_person, ses_work, start_time_work, sum_of_proj, pers_of_proj, n_phone, sel_emp, nots))
         conn.commit()
         return {"message": "تمت الإضافة بنجاح ✅"}
     except mysql.connector.Error as e:
@@ -132,7 +133,7 @@ def update_category(data: UpdateCategory):
             data.n_phone, data.nots, data.is_active, data.id
         ))
         conn.commit()
-        return {"message": "تم التحديث بنجاح ✅"}
+        return {"message": "Обновлено успешно ✅"}
     except Exception as e:
         return {"error": str(e)}
 #====================================================
@@ -167,7 +168,7 @@ def update_guard(data: UpdateCategory):
             data.image_path, data.is_active, data.id
         ))
         conn.commit()
-        return {"message": "تم التحديث بنجاح ✅"}
+        return {"message": "Обновлено успешно ✅"}
     except Exception as e:
         return {"error": str(e)}
 #====================================================
@@ -400,7 +401,7 @@ def add_work_shifts(
     employee_id_input: int = Form(...), 
     project_id_input: int = Form(...), 
     start_date: date = Form(...),
-    start_time: time = Form(...),
+    start_time: str = Form(...),
     end_date: date = Form(...),
     end_time: time = Form(...),
     image: str = Form(...)
