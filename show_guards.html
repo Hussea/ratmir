@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    /* الحاوية */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 45px;
+      height: 20px;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #e74c3c;
+      transition: 0.4s;
+      border-radius: 20px;
+    }
+    .slider:before {
+      position: absolute; content: "";
+      height: 14px; width: 14px;
+      left: 4px; bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider { background-color: #2ecc71; }
+    input:checked + .slider:before { transform: translateX(24px); }
+
+    .details-wrapper.details-wrapper2 {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; gap: 20px;
+      flex-wrap: wrap; margin-bottom: 30px;
+    }
+    .form-container {
+      background-color: #e9dff7;
+      border: 1px solid #ccc;
+      padding: 15px;
+      border-radius: 8px;
+      width: 48%; box-sizing: border-box;
+    }
+    h2 { font-size: 24px; margin-bottom: 15px; color: #333; }
+    button {
+      padding: 8px 16px; font-size: 14px;
+      background-color: #007bff; border: none;
+      color: white; border-radius: 4px; cursor: pointer;
+    }
+    button:hover { background-color: #0056b3; }
+    .form-container h4 { margin: 0 0 10px; font-size: 16px; color: #333; }
+    .form-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px;
+    }
+    .form-grid label { display: block; font-size: 13px; margin-bottom: 3px; }
+    .form-grid input[type="text"] {
+      width: 100%; padding: 6px; font-size: 13px;
+      border: 1px solid #aaa; border-radius: 4px; box-sizing: border-box;
+    }
+    @media (max-width: 768px) {
+      .details-wrapper { flex-direction: column; }
+      .form-container { width: 100%; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+    table {
+      width: 30%; border-collapse: collapse; margin-top: 15px;
+      font-family: Arial, sans-serif; font-size: 14px;
+    }
+    th, td { padding: 8px 12px; text-align: left; }
+    th { font-weight: bold; }
+    tr:nth-child(even) { background-color: #f9f9f9; }
+    tr:hover { background-color: #eef; }
+    #result-count { font-weight: bold; margin-top: 10px; display: block; }
+    /*==================== bar style start ================================ */
+     body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+    
+    }
+
+    .tabs {
+      display: flex;
+      background-color: #1e293b;
+      overflow-x: auto;
+    }
+
+    .tabs button {
+      flex: 1;
+      padding: 16px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .tabs button:hover,
+    .tabs button.active {
+      background-color: #334155;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 40px;
+      background-color: #fff;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .form-container {
+      max-width: 1000px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-container h2 {
+      margin-bottom: 20px;
+      color: #1e293b;
+      font-size: 24px;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 6px;
+      color: #475569;
+      font-weight: 500;
+    }
+
+    form input,
+    form select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 16px;
+    }
+
+    form input[type="submit"] {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    form input[type="submit"]:hover {
+      background-color: #1d4ed8;
+    }
+
+    /* تصميم خاص لصفحة المنتج */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .full-width-form {
+      max-width: none;
+      width: 100%;
+    }
+    
+  </style>
+  
+  
+</head>
+<body>
+  <!--bar show start -->
+   <script src="header.js" defer></script>
+ <my-header></my-header>
+<!--bar show end -->
+<center>
+  <h2>Данные охранника</h2>
+  <button onclick="show_hade_edt_info()" id="bill">Редактировать информацию</button>
+  <button onclick="searchProduct()">Поиск</button>
+  <select id="guards">
+    <option value="">выберите охранника .....</option>
+  </select>
+</center>
+  
+  <hr>
+
+  <!-- القسم الأول -->
+  <div id="genral_conter">
+    <div class="details-wrapper">
+      <div class="form-container">
+        <h3><strong>статус охранника:- </strong><span id="status0">..............</span></h3>
+        <div class="form-grid">
+          <div><label>ID:</label><input type="text" id="id2" readonly></div>
+          <div><label>ФИО:</label><input type="text" id="name2" readonly></div>
+          <div><label>номер телефона:</label><input type="text" id="num_T2" readonly></div>
+          <div><label>Дата рождения:</label><input type="text" id="data_prth2" readonly></div>
+          <div><label>адрес:</label><input type="text" id="address2" readonly></div>
+          <div><label>Зарплата:</label><input type="text" id="Salary2" readonly></div>
+          <div><label>должность:</label><input type="text" id="Job2" readonly></div>
+          <div><label>комментарии:</label><input type="text" id="nots2" readonly></div>
+        </div>
+        <center>
+
+       
+        <br>
+        <button onclick="fetchProducts()" id="hiddenBox" style="display: none;">Посмотреть проекты, связанные с охраной</button>
+        <p id="result-count"></p>
+         </center>
+      </div>
+    </div>
+  </div>
+<center>
+  <br>
+    <img id="myImage" src="" alt="Фото сотрудника" width="200">
+
+  <table>
+    <thead>
+      <tr>
+        <th><input type="text" id="project_id" style="display: none;"/></th>
+        <th><input type="text" id="employee_id" style="display: none;"/></th>
+        <th><input type="text" id="nots0" style="display: none;"/></th>
+      </tr>
+      <tr id="table-headers"></tr>
+    </thead>
+    <tbody id="product-table"></tbody>
+  </table>
+</center>
+<br>
+</html>
+<!-- داله الجافاسكربت التي بمساعدتها اضهار معلومات الحرس من قاعده البيانات و وضع البيانات 
+ في الخانات المطلوبه  -->
+<script>
+  async function loademployee() {
+    const response = await fetch("http://127.0.0.1:8001/Dropdown_employee");
+    const data = await response.json();
+
+    const dropdown = document.getElementById("guards");
+    data.forEach(p => {
+        const option = document.createElement("option");
+        option.value = p.name;
+        option.textContent = p.name;
+        dropdown.appendChild(option);
+    });
+}
+loademployee();
+let dropemployee = document.getElementById("guards");
+//+++++++++++++++++++++++++++++++++++++++++++++
+</script>
+<!-- داله الجافاسكربت التي بمساعدتها اضهار معلومات الحرس من قاعده البيانات و وضع البيانات 
+ في الخانات المطلوبه  -->
+<script>
+    let totalResults = 0;
+function searchProduct() {
+    let Ename = document.getElementById("guards").value;
+    if (!Ename) {
+        alert("الرجاء إدخال اسم المنتج");
+        return;
+    }
+
+    let url = `http://127.0.0.1:8001/get-guards-by-name/?Ename=${encodeURIComponent(Ename)}`;
+
+    let request = new XMLHttpRequest();
+    request.open("GET", url);
+    request.responseType = "json";
+    request.send();
+
+    request.onload = function () {
+        if (request.status >= 200 && request.status < 300) {
+            let result = request.response;
+
+            if (!result || Object.keys(result).length === 0) {
+                alert("لم يتم العثور على المنتج.");
+            } else {
+                // تعبئة الخانات الثابتة
+                document.getElementById("id2").value = result.id || "";
+                document.getElementById("id2_up").value = result.id || "";
+                document.getElementById("name2").value = result.name || "";
+                document.getElementById("name2_up").value = result.name || "";
+                document.getElementById("num_T2").value = result.num_T || "";
+                document.getElementById("num_T2_up").value = result.num_T || "";
+                document.getElementById("data_prth2").value = result.data_prth || "";
+                document.getElementById("data_prth2_up").value = result.data_prth || "";
+                document.getElementById("address2").value = result.address || "";
+                document.getElementById("address2_up").value = result.address || "";
+                document.getElementById("Salary2").value = result.Salary || "";
+                document.getElementById("Salary2_up").value = result.Salary || "";
+                document.getElementById("Job2").value = result.Job || "";
+                document.getElementById("Job2_up").value = result.Job || "";
+                document.getElementById("nots2").value = result.nots || "";
+                document.getElementById("nots2_up").value = result.nots || "";
+                document.getElementById("image_path_up").value = result.image_path || "";
+                document.getElementById("is_active_up").value = result.is_active || "";
+
+                // التحكم في السويتش (checkbox)
+                const switchEl = document.getElementById("mySwitch");
+                const statusEl = document.getElementById("status");
+               // تغيير النص حسب القيمة
+                if (result.is_active == 1) {
+                    switchEl.checked = true;
+                    document.getElementById("status").innerText = "активный ✅";
+                    document.getElementById("status0").innerText = "активный ✅";
+                    
+                } else {
+                    switchEl.checked = false;
+                    document.getElementById("status").innerText = "неактивный ❌";
+                    document.getElementById("status0").innerText = "неактивный ❌";
+                    
+                }
+                const img = document.getElementById("myImage");
+                img.src = result.image_path; // هنا نربط المتغير بالـ src
+                totalResults = result.id || "";
+                // اسناد رقم الايدي للحارس الى totalResults
+                   document.getElementById("employee_id").value = totalResults;
+                 // اضهار زر الذي من خلاله يمكن جلب معلومات المشاريع التابعين للحارس
+                document.getElementById("hiddenBox").style.display = "block";
+            }
+        } else {
+            alert("خطأ في جلب البيانات");
+        }
+    };
+    
+}
+
+</script>
+  
+<script>
+    
+  function fetchProducts() {
+    const params = new URLSearchParams();
+
+    const fields = [
+         "project_id", "employee_id", "nots0"
+    ];
+
+    for (let field of fields) {
+        let value = document.getElementById(field).value;
+        if (value) {
+            params.append(field, value);
+        }
+    }
+
+    fetch(`http://127.0.0.1:8001/get_guards?${params.toString()}`)
+        .then(res => res.json())
+        .then(data => {
+            const table = document.getElementById("product-table");
+            const resultCount = document.getElementById("result-count");
+            const headerRow = document.getElementById("table-headers");
+            table.innerHTML = "";
+            headerRow.innerHTML = "";
+
+            // حدد الأعمدة التي تريد عرضها
+            const displayFields = [ "project_name", "nots", "emp"];
+
+            if (data.length > 0) {
+                // إنشاء رؤوس الجدول حسب الحقول المطلوبة فقط
+                for (let key of displayFields) {
+                    headerRow.innerHTML += `<th>${key}</th>`;
+                }
+
+                // إنشاء الصفوف
+                for (let row of data) {
+                    let tr = "<tr>";
+                    for (let key of displayFields) {
+                        tr += `<td>${row[key] ?? ""}</td>`;
+                    }
+                    tr += "</tr>";
+                    table.innerHTML += tr;
+                }
+
+                resultCount.textContent = `проекты: ${data.length}`;
+            } else {
+                table.innerHTML = "<tr><td colspan='13'>No results found.</td></tr>";
+                resultCount.textContent = "проекты: 0";
+            }
+        });
+}
+
+    // تحميل البيانات مباشرة عند الفتح
+    
+</script>
+   <!--------------------------updete----------------------------------------->
+<!-- القسم الثاني (مخفي) -->
+  <form id="updateForm" style="display: none;">
+    <div class="details-wrapper2" >
+      <div class="form-container" style=" background-color: #c1f393;">
+        <center><h3><strong>Редактирование или удаление данных охранника</strong></h3></center>
+        <h3><strong>статус охранника:- </strong><span id="status">активный ✅</span></h3>
+        <div class="form-grid">
+          <div><label>ID:</label><input type="text" id="id2_up" readonly></div>
+          <div><label>ФИО:</label><input type="text" id="name2_up"></div>
+          <div><label>номер телефона:</label><input type="text" id="num_T2_up"></div>
+          <div><label>Дата рождения:</label><input type="text" id="data_prth2_up"></div>
+          <div><label>адрес:</label><input type="text" id="address2_up"></div>
+          <div><label>Зарплата:</label><input type="text" id="Salary2_up"></div>
+          <div><label>должность:</label><input type="text" id="Job2_up"></div>
+          <div><label>комментарии:</label><input type="text" id="nots2_up"></div>
+          <div><label>image_path:</label><input type="text" id="image_path_up" readonly></div>
+          <div><label>is_active:</label><input type="text" id="is_active_up" readonly></div>
+        </div>
+        <label>Изменить статус: активен / нет:</label>
+        <label class="switch">
+          <input type="checkbox" id="mySwitch">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+    <br>
+    <center>
+    <button type="submit" style="background-color: green; width: 500px;">Сохранить изменения</button>
+    </center>
+    <br>
+  </form>
+
+<script>
+  
+const checkbox = document.getElementById("mySwitch");
+const hiddenInput = document.getElementById("is_active_up");
+const statusText = document.getElementById("status");
+
+checkbox.addEventListener("change", function() {
+    if (checkbox.checked) {
+        hiddenInput.value = 1;                     // القيمة 1 عند التفعيل
+        statusText.textContent = "активный ✅";
+    } else {
+        hiddenInput.value = 0;                     // القيمة 0 عند الإيقاف
+        statusText.textContent = "не активный ❌";
+    }
+});
+
+</script>
+<script>
+document.getElementById("updateForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    let data = {
+        id: document.getElementById("id2_up").value,
+        name: document.getElementById("name2_up").value,
+        num_T: document.getElementById("num_T2_up").value,
+        data_prth: document.getElementById("data_prth2_up").value,
+        address: document.getElementById("address2_up").value,
+        Salary: document.getElementById("Salary2_up").value,
+        Job: document.getElementById("Job2_up").value,
+        nots: document.getElementById("nots2_up").value,
+        image_path: document.getElementById("image_path_up").value,
+        is_active: document.getElementById("is_active_up").value   // ✅ الحقل الجديد
+    };
+
+    let response = await fetch("http://127.0.0.1:8001/update_guard", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+
+    let result = await response.json();
+    document.getElementById("status").textContent = result.message || result.error;
+});
+////////////اضهار و اخفاء  قسم تعديل البيانات ////////////
+     
+    function show_hade_edt_info() {
+  document.getElementById("genral_conter").style.display = "none";
+  document.getElementById("updateForm").style.display = "block";
+}
+
+</script>
+   <!--------------------------end_updete----------------------------------------->
+<script>
+  let role = sessionStorage.getItem("role");
+                if (role === "admin") {
+                   
+                } else if(role === "supadmin") {
+                   
+                   
+                }else if(role === "emp") {
+                    window.location.href = "log_in.html";
+                }else if (!role) {  // الشرط الذي أضفته أنت
+                    window.location.href = "log_in.html";
+                }
+</script>

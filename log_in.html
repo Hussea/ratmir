@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>تسجيل الدخول</title>
+</head>
+<body>
+    <center>
+           <h2>Авторизация в системе </h2>
+    <form id="loginForm">
+        <label> Логин:</label>
+        <input type="text" name="username" required><br><br>
+        <label> Пароль:</label>
+        <input type="password" name="password" required><br><br>
+        <button type="submit">Войти</button>
+    </form>
+    <p id="result"></p>
+    </center>
+ 
+
+   <script>
+document.getElementById("loginForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+    const endpointUrl = "http://127.0.0.1:8001/login";
+
+    const res = await fetch(endpointUrl, {
+        method: "POST",
+        body: formData
+    });
+
+    const data = await res.json();
+    document.getElementById("result").textContent = data.message || data.error;
+
+    // إذا كان تسجيل الدخول ناجح
+    if (data.success) {
+    // خزن اسم المستخدم في sessionStorage
+    sessionStorage.setItem("role", data.role);
+
+    // خزن اسم المستخدم في sessionStorage
+    sessionStorage.setItem("username", data.username);
+
+    if (data.role === "admin") {
+        window.location.href = "index.html";
+    } else if(data.role === "supadmin") {
+        window.location.href = "show.html";
+    }else if(data.role === "emp") {
+        window.location.href = "project_list.html";
+    }
+}
+   
+
+});
+
+
+</script>
+
+</body>
+</html>
+

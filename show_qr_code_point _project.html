@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+ /* لعرض الأقسام جنباً إلى جنب */
+.details-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+/* تنسيق لكل قسم (موقع أو حارس) */
+.form-container {
+  background-color: #b788f5;
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 8px;
+  width: 48%;
+  box-sizing: border-box;
+}
+
+.form-container h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+/* شبكة داخلية لكل نموذج */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 16px;
+}
+
+.form-grid label {
+  display: block;
+  font-size: 13px;
+  color: #333;
+  margin-bottom: 3px;
+}
+
+.form-grid input[type="text"] {
+  width: 100%;
+  padding: 6px;
+  font-size: 13px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* استجابة للشاشات الصغيرة */
+@media (max-width: 768px) {
+  .details-wrapper {
+    flex-direction: column;
+  }
+
+  .form-container {
+    width: 100%;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* أسفل الصفحة - الفورم */
+#project-guards {
+  margin-top: 30px;
+}
+
+#add-project-guards input[type="text"] {
+  width: 100%;
+  padding: 6px;
+  margin-bottom: 8px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+#add-project-guards input[type="submit"] {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#add-project-guards input[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+ table {
+    width: 50%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+  }
+
+  th, td {
+    padding: 8px 12px;
+    text-align: left;
+  }
+
+  th {
+    font-weight: bold;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  tr:hover {
+    background-color: #eef;
+  }
+
+  #result-count {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+  }
+</style>
+<body>
+   
+  
+  
+</body>
+</html>
+
+
+</script>
+  <!--اضهار معلومات المشاريع التابعه للحارس و اخذ رقم الايدي التابع لها , وهذه الخانات تكون مخفيه -->
+<table>
+    <thead>
+        <tr>
+            <th><input type="text" placeholder="Product NO" oninput="fetchProducts()" id="project_check_point_id" /></th>
+        </tr>
+        <tr id="table-headers"></tr>
+    </thead>
+    <tbody id="product-table">
+        <!-- data will appear here -->
+    </tbody>
+</table>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  document.getElementById("project_check_point_id").value = params.get("id");
+
+  function fetchProducts() {
+    const params = new URLSearchParams();
+
+    const fields = [
+         "project_check_point_id"
+    ];
+
+    for (let field of fields) {
+        let value = document.getElementById(field).value;
+        if (value) {
+            params.append(field, value);
+        }
+    }
+
+    fetch(`http://127.0.0.1:8001/get_check_point?${params.toString()}`)
+        .then(res => res.json())
+        .then(data => {
+            const table = document.getElementById("product-table");
+            const resultCount = document.getElementById("result-count");
+            const headerRow = document.getElementById("table-headers");
+            table.innerHTML = "";
+            headerRow.innerHTML = "";
+
+            // حدد الأعمدة التي تريد عرضها
+            const displayFields = [ "id_project","name_point", "Coordinates"];
+
+            if (data.length > 0) {
+                // إنشاء رؤوس الجدول حسب الحقول المطلوبة فقط
+                for (let key of displayFields) {
+                    headerRow.innerHTML += `<th>${key}</th>`;
+                }
+
+                // إنشاء الصفوف
+                for (let row of data) {
+                    let tr = "<tr>";
+
+                    // نفترض أن الباراميتر هو row.id
+                    const link = `show_qr_code_fro_check_point.html?id=${encodeURIComponent(row.id)}`;
+
+                    for (let key of displayFields) {
+                        tr += `<td><a href="${link}" style="text-decoration:none; color:inherit;">${row[key] ?? ""}</a></td>`;
+                    }
+
+                    tr += "</tr>";
+                    table.innerHTML += tr;
+                }
+
+
+                resultCount.textContent = `عدد النتائج: ${data.length}`;
+            } else {
+                table.innerHTML = "<tr><td colspan='13'>No results found.</td></tr>";
+                resultCount.textContent = "عدد النتائج: 0";
+            }
+        });
+}
+
+// ✅ تنفيذ الدالة تلقائياً عند تحميل الصفحة
+window.onload = fetchProducts;    
+</script>

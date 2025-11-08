@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>إدخال بيانات</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+       
+    
+    }
+    .tabs {
+      display: flex;
+      background-color: #1e293b;
+      overflow-x: auto;
+    }
+
+    .tabs button {
+      flex: 1;
+      padding: 16px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .tabs button:hover,
+    .tabs button.active {
+      background-color: #334155;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 40px;
+      background-color: #fff;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .form-container {
+      max-width: 1000px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    #pasword{
+      width: 70%;
+      
+    }
+    #generateBtn{
+      width: 27%;
+      height: 40px;
+      border-radius: 5px;
+      
+    }
+
+    .form-container h2 {
+      margin-bottom: 20px;
+      color: #1e293b;
+      font-size: 24px;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 6px;
+      color: #475569;
+      font-weight: 500;
+    }
+
+    form input,
+    form select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 16px;
+    }
+
+    form input[type="submit"] {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    form input[type="submit"]:hover {
+      background-color: #1d4ed8;
+    }
+
+    /* تصميم خاص لصفحة المنتج */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .full-width-form {
+      max-width: none;
+      width: 100%;
+    }
+    
+  </style>
+  <script>
+    function openTab(evt, tabName) {
+      document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
+      document.querySelectorAll(".tabs button").forEach(btn => btn.classList.remove("active"));
+      document.getElementById(tabName).classList.add("active");
+      evt.currentTarget.classList.add("active");
+    }
+
+    function submitForm(event, formId, apiUrl) {
+      event.preventDefault();
+      const formData = new FormData(document.getElementById(formId));
+      fetch(apiUrl, {
+        method: 'POST',
+        body: formData,
+      })
+      .then(response => response.json())
+      .then(data => alert("Данные успешно отправлены!"))
+      .catch(error => alert("Произошла ошибка: " + error));
+    }
+
+    function loadSelectOptions(selectId, apiUrl, keyName) {
+      const select = document.getElementById(selectId);
+      select.innerHTML = "<option>Загрузка...</option>";
+      fetch(apiUrl)
+        .then(res => res.json())
+        .then(data => {
+          select.innerHTML = "";
+          (data[keyName] || []).forEach(value => {
+            const opt = document.createElement("option");
+            opt.value = value;
+            opt.textContent = value;
+            select.appendChild(opt);
+          });
+        })
+        .catch(() => {
+          select.innerHTML = "<option>Ошибка загрузки</option>";
+        });
+    }
+
+    window.onload = function () {
+      document.querySelector(".tabs button").click();
+      loadSelectOptions("categorySelect", "http://127.0.0.1:8001/get-categories", "category");
+      
+    };
+  </script>
+</head>
+<body>
+
+  <div class="tabs">
+    <button onclick="openTab(event, 'add_admin')">Права доступа</button>
+    <button onclick="openTab(event, 'emp')">Сотрудники</button>
+    <button onclick="openTab(event, 'category')">Добавить проект</button>
+    <button onclick="show_guards()">Данные охранника</button>
+    <button onclick="show()">Интеграция</button>
+    <button onclick="project_list()">Список проектов</button>
+     
+  </div>
+<script>
+function show_guards() {
+  window.location.href = "show_guards.html"; // غيّر للرابط المطلوب
+  }
+function show() {
+  window.location.href = "show.html";
+  }
+function project_list() {
+  window.location.href = "project_list.html";
+  }
+</script>
+<div id="add_admin" class="tab-content" >
+  
+ <div class="form-container">
+      <h2>Предоставление прав доступа сотрудникам</h2>
+      <form id="userForm" onsubmit="submitForm(event, 'userForm', 'http://127.0.0.1:8001/add_admin')">
+        <label>Имя пользователя:</label>
+        <input type="text" name="name"  required>
+
+        <div class="form-row">
+          <label for="mySelect">Роль:</label>
+          <select id="mySelect" required name="rool">
+            <option value="" disabled selected hidden>Выберите роль сотрудника</option>
+            <option value="admin">директора</option>
+            <option value="supadmin">Зам. директора</option>
+            <option value="emp">Бухгалтер</option>
+          </select>
+        </div>
+
+        <label>Пароль :</label>
+        <input type="text" id="pasword" name="pasword"  required placeholder=" Введите Пароль или нажмите «Сгенерировать пароль»">
+        <button type="button" id="generateBtn">🔁 Сгенерировать пароль</button>
+
+        
+        <input type="submit" value="отправлять">
+        <input type="submit" value="Список прав пользователей" style="background-color: #0b6a00; color: white;" onclick="window.location.href='show_admin.html'; return false;">
+      </form>
+      
+    </div>
+  </div>
+ 
+   
+  <script>
+      document.getElementById("generateBtn").addEventListener("click", generateUniquePassword);
+
+    async function generateUniquePassword() {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      let password;
+      let exists = true;
+
+      while (exists) {
+        // توليد كلمة مرور جديدة
+        password = "";
+        for (let i = 0; i < 6; i++) {
+          password += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+
+        // تحقق من قاعدة البيانات عبر السيرفر
+        const res = await fetch("http://127.0.0.1:8001/check_password", {
+          method: "POST",
+          body: new URLSearchParams({ password })
+        });
+
+        const data = await res.json();
+        exists = data.exists; // لو موجودة نعيد المحاولة
+      }
+
+      // عرض الكلمة في الحقل
+      document.getElementById("pasword").value = password;
+      document.getElementById("pasword").style.boxShadow = "0 2px 10px rgba(57, 243, 11, 0.945)";
+    }
+
+  </script>
+ <!----------------------------------------------------------------------------------------->
+  <div id="emp" class="tab-content">
+    <div class="form-container">
+      <h2>Введите данные сотрудника</h2>
+      <form id="empForm" onsubmit="submitForm(event, 'empForm', 'http://127.0.0.1:8001/add-emp')">
+        <label>ИФО:</label>
+        <input type="text" name="name"  required>
+        <label>номер телефона :</label>
+        <input type="text" name="num_T" required>
+        <label>Дата рождения:</label>
+        <input type="text" name="data_prth" required>
+        <label>адрес:</label>
+        <input type="text" name="address" required>
+        <label>Зарплата :</label>
+        <input type="text" name="Salary" required>
+        <label>должность:</label>
+        <input type="text" name="Job" required>
+         <label>комментарии:</label>
+        <input type="text" name="nots" required>
+        <!-- ✅ اختيار أو التقاط صورة -->
+      <label>📷 Фото сотрудника:</label>
+      <input type="file" name="image" accept="image/*" capture="environment" required>
+
+        <input type="submit" value="отправлять">
+      </form>
+    </div>
+  </div>
+  <!----------------------------------------------------------------------------------------->
+  <div id="category" class="tab-content">
+    <div class="form-container">
+      <h2>Введите данные проекта</h2>
+      <form id="categoryForm" onsubmit="submitForm(event, 'categoryForm', 'http://127.0.0.1:8001/add-category')">
+        <label>	название проекта:</label>
+        <input type="text" name="title" required>
+
+        <label>адрес:</label>
+        <input type="text" name="address" required>
+
+        <label>Coordinates:</label>
+        <input type="text" name="Coordinates" required>
+
+        <label>Количество охранников, необходимых для проекта:</label>
+        <input type="number" name="q_person" required>
+
+        <label>Рабочая система:</label>
+        <input type="number" name="ses_work" required>
+
+        <label>время начала смену:</label>
+        <input type="number" name="start_time_work" required>
+
+        <label>Сумма от проекта:</label>
+        <input type="number" name="sum_of_proj" required>
+
+        <label>Руководитель проекта:</label>
+        <input type="text" name="pers_of_proj" required>
+
+        <label>номер телефона:</label>
+        <input type="text" name="n_phone" required>
+        
+        <label>Зарплата охранника проекта:</label>
+        <input type="number" name="sel_emp" required>
+
+        <label>комментарии:</label>
+        <input type="text" name="nots" required>
+
+        <input type="submit" value="отправлять">
+      </form>
+    </div>
+  </div>
+
+ 
+</body>
+</html>
+<script>
+  let role = sessionStorage.getItem("role");
+                if (role === "admin") {
+                   
+                } else if(role === "supadmin") {
+                  document.getElementById("category").style.display = "none";
+                  //alert("🚫 У вас нет прав для выполнения этого действия.(Добавить проект)");
+                }else if(role === "emp") {
+                    window.location.href = "log_in.html";
+                }else if (!role) {  // الشرط الذي أضفته أنت
+                    window.location.href = "log_in.html";
+                }
+</script>

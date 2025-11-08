@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <meta charset="UTF-8">
+  <title>Payroll</title>
+  <style>
+     
+    table, th, td { border: 1px solid #888686; border-collapse: collapse; padding: 8px; }
+    table { width: 70%; margin-top: 20px; }
+    th { background-color: #f0f0f0; }
+    #status { margin-top: 10px; font-weight: bold; color: #444; }
+    #info_line { margin-top: 15px; }
+
+    #info_line span {
+      margin-right: 15px;
+    }
+     /* نافذة QR Code */
+  #qrModal {
+    display: none;
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  #qrContent {
+    background:#fff;
+    padding:20px;
+    text-align:center;
+    border-radius:8px;
+    position: relative;
+  }
+  #qrContent button {
+    margin:5px;
+    padding:5px 10px;
+  }
+ /*==================== bar style start ================================ */
+     body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+    
+    }
+
+    .tabs {
+      display: flex;
+      background-color: #1e293b;
+      overflow-x: auto;
+    }
+
+    .tabs button {
+      flex: 1;
+      padding: 16px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .tabs button:hover,
+    .tabs button.active {
+      background-color: #334155;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 40px;
+      background-color: #fff;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .form-container {
+      max-width: 1000px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-container h2 {
+      margin-bottom: 20px;
+      color: #1e293b;
+      font-size: 24px;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 6px;
+      color: #475569;
+      font-weight: 500;
+    }
+
+    form input,
+    form select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 16px;
+    }
+
+    form input[type="submit"] {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    form input[type="submit"]:hover {
+      background-color: #1d4ed8;
+    }
+
+    /* تصميم خاص لصفحة المنتج */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .full-width-form {
+      max-width: none;
+      width: 100%;
+    }
+    /*==================== bar style end ================================ */
+</style>
+<body>
+   <!--bar show start -->
+
+<script src="header.js" defer></script>
+ <my-header></my-header>
+<!--bar show end -->
+<center>
+<h2>Просмотр данных QR-кодов</h2>
+
+<!-- إدخال رقم الموظف -->
+ 
+<input type="text" id="serch_id" style="display: none;">
+ 
+
+<!-- حالة النظام -->
+<p id="status"> Укажите месяц и год ⚠️</p>
+
+<!-- معلومات إضافية -->
+<p id="info_line">
+  <span><strong>Есть:</strong><span id="show_shift"></span></span>
+  <span><strong>QR-кодов для обход в Проект:</strong> <span id="show_projact_name">---</span></span>
+</p>
+
+<!-- جدول عرض البيانات -->
+<table id="data-table" style="display:none;">
+  <thead></thead>
+  <tbody></tbody>
+</table>
+<div id="qrModal">
+  <div id="qrContent">
+    <div id="qrcode"></div>
+    <br>
+    <button onclick="downloadQRCode()">скачать QR</button>
+    <button onclick="hideQRCode()">закрытие</button>
+  </div>
+</div>
+</center>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  document.getElementById("serch_id").value = params.get("id");
+  function loadData() {
+    const serch_id = document.getElementById('serch_id').value;
+    if (!serch_id) {
+      document.getElementById('status').textContent = 'Укажите месяц и год ❗';
+      return;
+    }
+
+    let apiUrl = `http://127.0.0.1:8001/show_info_chick_point?employee_id_input=${serch_id}`;
+
+    document.getElementById('status').textContent = 'Загрузка данных 🔄...';
+    document.getElementById('data-table').style.display = 'none';
+    document.querySelector('#data-table tbody').innerHTML = '';
+
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(data => {
+        if (!data || data.length === 0) {
+          document.getElementById('status').textContent = 'Ошибка данных';
+          return;
+        }
+
+        const table = document.getElementById("data-table");
+        const thead = table.querySelector("thead");
+        const tbody = table.querySelector("tbody");
+
+        thead.innerHTML = "";
+        tbody.innerHTML = "";
+
+        // الحقول اللي راح تظهر بالجدول
+        const displayFields = [ "name_point", "Coordinates"];
+
+        // إنشاء رؤوس الجدول
+        const headerRow = document.createElement("tr");
+        for (let key of displayFields) {
+          const th = document.createElement("th");
+          th.textContent = key;
+          headerRow.appendChild(th);
+        }
+        thead.appendChild(headerRow);
+
+        // إنشاء الصفوف
+        for (let row of data) {
+          const tr = document.createElement("tr");
+
+          // نبني الرابط مع الباراميتر id
+          const link = `show_qr_code_fro_check_point.html?id=${encodeURIComponent(row.id)}`;
+
+          for (let key of displayFields) {
+            const td = document.createElement("td");
+            td.innerHTML = `<a href="${link}" style="text-decoration:none; color:inherit;">${row[key] ?? ""}</a>`;
+            tr.appendChild(td);
+          }
+
+          tbody.appendChild(tr);
+
+          // تحديث اسم المشروع آخر مرة
+          document.getElementById('show_projact_name').textContent = row.projuct_title || "---";
+        }
+
+        // إظهار عدد السجلات
+        document.getElementById('show_shift').textContent = data.length;
+
+        // عرض الجدول
+        table.style.display = "table";
+        document.getElementById('status').style.display = 'none';
+      })
+      .catch(err => {
+        document.getElementById('status').textContent = 'Ошибка данных';
+        console.error(err);
+      });
+  }
+
+  ///////
+   // دوال التحكم بالـ QR
+  function showQRCode(link) {
+    document.getElementById('qrModal').style.display = 'flex';
+    document.getElementById('qrcode').innerHTML = "";
+    new QRCode(document.getElementById('qrcode'), {
+      text: link,
+      width: 200,
+      height: 200,
+      colorDark: "#000000",
+      colorLight: "#ffffff"
+    });
+  }
+
+  function hideQRCode() {
+    document.getElementById('qrModal').style.display = 'none';
+  }
+
+  function downloadQRCode() {
+    const qrImg = document.querySelector('#qrcode img');
+    if (qrImg) {
+      const link = document.createElement('a');
+      link.href = qrImg.src;
+      link.download = 'qrcode.png';
+      link.click();
+    }
+  }
+
+  // تعديل loadData لتفعيل QR عند الضغط على الرابط
+  function loadData() {
+    const serch_id = document.getElementById('serch_id').value;
+    if (!serch_id) {
+      document.getElementById('status').textContent = 'Ошибка данных ❗';
+      return;
+    }
+
+    let apiUrl = `http://127.0.0.1:8001/show_info_chick_point?employee_id_input=${serch_id}`;
+    document.getElementById('status').textContent = 'Загрузка данных 🔄...';
+    document.getElementById('data-table').style.display = 'none';
+    document.querySelector('#data-table tbody').innerHTML = '';
+
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(data => {
+        if (!data || data.length === 0) {
+          document.getElementById('status').textContent = 'Ошибка данных';
+          return;
+        }
+
+        const table = document.getElementById("data-table");
+        const thead = table.querySelector("thead");
+        const tbody = table.querySelector("tbody");
+
+        thead.innerHTML = "";
+        tbody.innerHTML = "";
+
+        const displayFields = ["name_point", "Coordinates", "id_entry_emp"];
+
+        const headerRow = document.createElement("tr");
+        for (let key of displayFields) {
+          const th = document.createElement("th");
+          th.textContent = key;
+          headerRow.appendChild(th);
+        }
+        thead.appendChild(headerRow);
+
+        for (let row of data) {
+          const tr = document.createElement("tr");
+
+          const link = `file:///C:/Users/Acer/Desktop/work/ratmir/show_qr_code_fro_check_point.html?id=${encodeURIComponent(row.id)}`;
+
+          for (let key of displayFields) {
+            const td = document.createElement("td");
+            td.innerHTML = `<a href="javascript:void(0)" style="text-decoration:none; color:inherit;">${row[key] ?? ""}</a>`;
+            td.querySelector('a').onclick = () => showQRCode(link);
+            tr.appendChild(td);
+          }
+
+          tbody.appendChild(tr);
+          document.getElementById('show_projact_name').textContent = row.projuct_title || "---";
+        }
+
+        document.getElementById('show_shift').textContent = data.length;
+        table.style.display = "table";
+        document.getElementById('status').style.display = 'none';
+      })
+      .catch(err => {
+        document.getElementById('status').textContent = 'Ошибка данных';
+        console.error(err);
+      });
+  }
+  // ✅ تنفيذ الدالة تلقائياً عند تحميل الصفحة
+window.onload = loadData;
+</script>
+
+</body>
+</html>
+<script>
+  let role = sessionStorage.getItem("role");
+                if (role === "admin") {
+                   
+                } else if(role === "supadmin") {
+                  
+                }else if(role === "emp") {
+                   
+                }else if (!role) {  // الشرط الذي أضفته أنت
+                    window.location.href = "log_in.html";
+                }
+</script>

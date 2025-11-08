@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Войти на смену</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 6px;
+      font-weight: bold;
+      font-size: 14px;
+      color: #222;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="time"],
+    input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    input[type="submit"] {
+      background-color: #28a745;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #218838;
+    }
+
+    .message {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+      color: red;
+    }
+
+    /* استجابة الشاشات الصغيرة */
+    @media (max-width: 768px) {
+      .container {
+        margin: 20px;
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 20px;
+      }
+
+      label, input {
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      input[type="date"],
+      input[type="time"],
+      input[type="submit"] {
+        font-size: 13px;
+        padding: 10px;
+      }
+
+      h1 {
+        font-size: 18px;
+      }
+    }
+    
+/*==================== bar style start ================================ */
+     body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+    
+    }
+
+    .tabs {
+      display: flex;
+      background-color: #1e293b;
+      overflow-x: auto;
+    }
+
+    .tabs button {
+      flex: 1;
+      padding: 16px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .tabs button:hover,
+    .tabs button.active {
+      background-color: #334155;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 40px;
+      background-color: #fff;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .form-container {
+      max-width: 1000px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-container h2 {
+      margin-bottom: 20px;
+      color: #1e293b;
+      font-size: 24px;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 6px;
+      color: #475569;
+      font-weight: 500;
+    }
+
+    form input,
+    form select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 16px;
+    }
+
+    form input[type="submit"] {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    form input[type="submit"]:hover {
+      background-color: #1d4ed8;
+    }
+
+    /* تصميم خاص لصفحة المنتج */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .full-width-form {
+      max-width: none;
+      width: 100%;
+    }
+    /*==================== bar style end ================================ */
+  </style>
+</head>
+<body>
+   <!--bar show start -->
+   
+<script src="header.js" defer></script>
+ <my-header></my-header>
+<!--bar show end -->
+    <center>
+ <div class="container">
+  <h3><span id="fixedText">создать QR-code для обхода в проект </span> <span id="Postitle"></span></h3>
+    <form id="chick_point_form" onsubmit="submitForm(event)">
+
+       
+      <input type="text" id="name_projct" name="name_projct" required style="display: none;">
+
+      <label for="name_point">name point :</label>
+      <input type="text" id="name_point" name="name_point" required>
+
+      <label for="crrdint">crrdint :</label>
+      <input type="text" id="crrdint" name="crrdint" required>
+
+    
+      <input type="text" id="id_entry_emp" name="id_entry_emp" style="display: none;">
+
+
+      <input type="submit" value="создать">
+
+      <div class="message" id="form-message"></div>
+    </form>
+  </div>
+    </center>
+     
+</body>
+</html>
+<script>
+    // استخراج البارامتر من الرابط
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    const name = params.get("name");
+    // وضع القيمة داخل input
+    document.getElementById("name_projct").value = id ? decodeURIComponent(id) : "Заголовок не указан";
+    document.getElementById("Postitle").textContent = name;
+    ///////////////////////////////////////////////////////////////////
+
+
+
+    function submitForm(event) {
+  event.preventDefault();
+
+  const form = document.getElementById("chick_point_form");
+  const formData = new FormData(form);
+
+  // تحقق من أن جميع الحقول غير فارغة
+  for (let [name, value] of formData.entries()) {
+    if (!value.trim()) {
+      document.getElementById("form-message").textContent = `Заполните дату и время смены.`;
+      return; // إيقاف الإرسال
+    }
+  }
+
+  // إذا الكل صحيح، نرسل الفورم
+  fetch("http://127.0.0.1:8001/add_chick_point", {
+    method: "POST",
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById("form-message").textContent = "Отправлено успешно!";
+    console.log(data);
+  })
+  .catch(error => {
+    document.getElementById("form-message").textContent = "Произошла ошибка при отправке";
+    console.error(error);
+  });
+}
+</script>
+<script>
+  let role = sessionStorage.getItem("role");
+  let user = sessionStorage.getItem("username");
+  document.getElementById("id_entry_emp").value = role +" "+ user;
+                if (role === "admin") {
+                    
+                } else if(role === "supadmin") {
+                   
+                }else if(role === "emp") {
+                    window.location.href = "log_in.html";
+                }else if (!role) {  // الشرط الذي أضفته أنت
+                    window.location.href = "log_in.html";
+                }
+</script>

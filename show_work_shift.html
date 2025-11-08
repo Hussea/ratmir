@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <title>Work Shifts</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 4px;
+            
+        }
+        input {
+            width: 90%;
+        }
+      
+    </style>
+</head>
+<body>
+
+<h2>Search Work Shifts</h2>
+<button onclick="show_hade()" id="pig_data">pig data</button>
+<button onclick="hade_show()" id="min_data" style="display: none;">min data</button>
+<p id="result-count"></p>
+ <th><input type="text" placeholder="employee_id_input" oninput="fetchProducts()" id="employee_id_input" /></th>
+ <th><input type="text" placeholder="project_id_input" oninput="fetchProducts()" id="project_id_input" /></th>
+
+<table id="gen_table" style="display: none;">
+    <thead>
+        <tr>
+            <th><input type="text" placeholder="employee_id_input" oninput="fetchProducts()" id="employee_id_input" /></th>
+            <th><input type="text" placeholder="project_id_input" oninput="fetchProducts()" id="project_id_input" /></th>
+            <th><input type="text" placeholder="start_day" oninput="fetchProducts()" id="start_day" /></th>
+            <th><input type="text" placeholder="start_time" oninput="fetchProducts()" id="start_time" /></th>
+            <th><input type="text" placeholder="end_day" oninput="fetchProducts()" id="end_day" /></th>
+            <th><input type="text" placeholder="end_time" oninput="fetchProducts()" id="end_time" /></th>
+        </tr>
+        <tr id="tipl" >
+            <th>Employee Name</th>
+            <th>Project Title</th>
+            <th>Start Day</th>
+            <th>Start Time</th>
+            <th>End Day</th>
+            <th>End Time</th>
+            <th>salry</th>
+        </tr>
+    </thead>
+    <tbody id="product-table" >
+        <!-- rows will appear here -->
+    </tbody>
+</table>
+
+<table style="margin-top: 20px;"id="min_table">
+    <thead>
+        <tr >
+            <th>Employee Name</th>
+            <th>Project Title</th>
+        </tr>
+    </thead>
+    <input type="text" id="sel_emp_input">
+    <tbody id="extra-table">
+        <!-- extra info -->
+    </tbody>
+</table>
+
+<script>
+    function fetchProducts() {
+        const params = new URLSearchParams();
+        const fields = ["employee_id_input", "project_id_input", "start_day", "start_time", "end_day", "end_time"];
+
+        for (let field of fields) {
+            let value = document.getElementById(field).value;
+            if (value) {
+                params.append(field, value);
+            }
+        }
+
+        fetch(`http://127.0.0.1:8001/show_work_shift?${params.toString()}`)
+            .then(res => res.json())
+            .then(data => {
+                const table = document.getElementById("product-table");
+                const extra = document.getElementById("extra-table");
+                const resultCount = document.getElementById("result-count");
+                table.innerHTML = "";
+                extra.innerHTML = "";
+
+                if (data.length > 0) {
+                    for (let row of data) {
+                        let tr = "<tr>";
+                        tr += `<td>${row.employee_name || ""}</td>`;
+                        tr += `<td>${row.projuct_title || ""}</td>`;
+                        tr += `<td>${row.start_day || ""}</td>`;
+                        tr += `<td>${row.start_time || ""}</td>`;
+                        tr += `<td>${row.end_day || ""}</td>`;
+                        tr += `<td>${row.end_time || ""}</td>`;
+                        tr += `<td>${row.projuct_sel_emp || ""}</td>`;
+                        tr += "</tr>";
+                        table.innerHTML += tr;
+
+                        let trExtra = "<tr>";
+                        trExtra += `<td>${row.employee_name || ""}</td>`;
+                        trExtra += `<td>${row.projuct_title || ""}</td>`;
+                        trExtra += "</tr>";
+                        extra.innerHTML += trExtra;
+                    }
+
+                    resultCount.textContent = `عدد النتائج: ${data.length}`;
+                    
+
+
+                } else {
+                    table.innerHTML = "<tr><td colspan='6'>No results found.</td></tr>";
+                    extra.innerHTML = "<tr><td colspan='2'>No results.</td></tr>";
+                    resultCount.textContent = "عدد النتائج: 0";
+                    
+                }
+                
+            });
+            
+    }
+    function show_hade() {
+    document.getElementById("gen_table").style.display = "block";
+    document.getElementById("min_table").style.display = "none";
+    document.getElementById("min_data").style.display = "block";
+    document.getElementById("pig_data").style.display = "none";
+    }
+    function hade_show() {
+    document.getElementById("gen_table").style.display = "none";
+    document.getElementById("min_table").style.display = "block";
+    document.getElementById("pig_data").style.display = "block";
+    document.getElementById("min_data").style.display = "none";
+    }
+
+  
+</script>
+
+</body>
+</html>

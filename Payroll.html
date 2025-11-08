@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>Payroll</title>
+  <style>
+     
+    table, th, td { border: 1px solid #888686; border-collapse: collapse; padding: 8px; }
+    table { width: 45%; margin-top: 20px; }
+    th { background-color: #f0f0f0; }
+    #status { margin-top: 10px; font-weight: bold; color: #444; }
+    #show_pay_list_month_div{
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  position: fixed;
+  top: 10px;
+  left: 52%;
+  width: 35%;
+  height: 5%;
+  background-color: rgb(179, 179, 179);
+  overflow: hidden;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  font-family: sans-serif;
+    }
+    #divPiy {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  position: fixed;
+  top: 15%;
+  left: 52%;
+  width: 45%;
+  height: 75%;
+  background-color: rgb(179, 179, 179);
+  overflow: hidden;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  font-family: sans-serif;
+}
+
+#divPiy label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+#divPiy input,
+#divPiy select {
+  width: 50%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+#notes {
+  flex-grow: 1; /* يجعل textarea يأخذ المساحة المتبقية */
+  resize: none;
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+  min-height: 100px;
+}
+
+#divPiy button {
+  width: 100%;
+  padding: 10px;
+  background-color: #3498db;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#divPiy button:hover {
+  background-color: #2980b9;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.form-row label {
+  width: 100px; /* عرض ثابت لليبل */
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.form-row input {
+  flex: 1;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+#show_pay_list_month {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  position: fixed;
+  top: 10px;
+  left:91%;
+  width: 8%;
+  height: 11%;
+  background-color:#b2bec3;
+  overflow: hidden;
+  z-index: 1000;
+  border-radius: 10px;
+  font-family: sans-serif;
+}
+
+#show_pay_list_month:hover {
+  background-color:#636e72 /* لون عند التمرير */
+}
+#imgModal {
+  display: none; 
+  position: fixed; 
+  z-index: 99999; /* رقم كبير جدا عشان يكون فوق كل الطبقات */
+  left: 0; 
+  top: 0; 
+  width: 100%; 
+  height: 100%; 
+  background-color: rgba(0,0,0,0.9); 
+  justify-content: center; 
+  align-items: center;
+}
+
+#imgModal img {
+  max-width: 90%;
+  max-height: 90%;
+  border: 3px solid white;
+  border-radius: 10px;
+}
+
+ /*==================== bar style start ================================ */
+     body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+    
+    }
+
+    .tabs {
+      display: flex;
+      background-color: #1e293b;
+      overflow-x: auto;
+    }
+
+    .tabs button {
+      flex: 1;
+      padding: 16px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .tabs button:hover,
+    .tabs button.active {
+      background-color: #334155;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 40px;
+      background-color: #fff;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .form-container {
+      max-width: 1000px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-container h2 {
+      margin-bottom: 20px;
+      color: #1e293b;
+      font-size: 24px;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 6px;
+      color: #475569;
+      font-weight: 500;
+    }
+
+    form input,
+    form select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 16px;
+    }
+
+    form input[type="submit"] {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    form input[type="submit"]:hover {
+      background-color: #1d4ed8;
+    }
+
+    /* تصميم خاص لصفحة المنتج */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .full-width-form {
+      max-width: none;
+      width: 100%;
+    }
+    /*==================== bar style end ================================ */
+    .big-icon {
+      font-size: 30px; /* حجم الرمز */
+      cursor: pointer; /* يظهر المؤشر عند التمرير */
+      transition: transform 0.2s; /* حركة بسيطة */
+    }
+
+    .big-icon:hover {
+      transform: scale(5.2); /* تكبير عند المرور */
+    }
+    
+</style>
+<body>
+   <!--bar show start -->
+  <script src="header.js" defer></script>
+ <my-header></my-header>
+<!--bar show end -->
+
+<h2>Просмотр данных смены</h2>
+
+    <label for="start_day"> введите год и месяц:</label>
+    <input type="month" id="start_day" />
+  
+    
+    <button onclick="loadData()">Просмотреть данные</button>
+    
+
+<p id="status"> Укажите месяц и год ⚠️</p>
+<p id="info_line">
+  <span><strong> ФИО:</strong> <span id="show_employee_name"></span></span> |
+  <br>
+  <span><strong> В Обект:</strong> <span id="show_projact_name"></span></span> |
+  <span><strong> ЗП :</strong> <span id="show_employee_sel"></span></span> |
+  <span><strong> смена:</strong> <span id="show_shift"></span></span> |
+  <span><strong> сума :</strong> <span id="show_sum"></span></span> 
+</p>
+
+<table id="data-table">
+  <thead>
+    <tr>
+      <td>Дата начала</td>
+      <td>Время начала</td>
+      <td>Дата окончания</td>
+      <td>Время окончания</td>
+      <td>Время окончания</td>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+<script>
+  // الحصول على التاريخ الحالي
+  const today = new Date();
+  // تحويله إلى صيغة YYYY-MM
+  const month = today.toISOString().slice(0, 7);
+  // تعيينه كقيمة افتراضية للمدخل
+  document.getElementById("start_day").value = month;
+</script>
+
+
+<script>
+  // استخراج البارامترات من رابط الصفحة
+  const params = new URLSearchParams(window.location.search);
+  
+
+  function loadData() {
+    const empId = params.get("employee_id_input");
+    const projId = params.get("project_id_input");
+    const startDay = document.getElementById('start_day').value;
+    document.getElementById("emp_id_send").value = params.get("employee_id_input");
+    document.getElementById("proj_id_send").value = params.get("project_id_input");
+    if (!empId || !projId || !startDay) {
+      document.getElementById('status').textContent = 'Укажите месяц и год ❗';
+      return;
+    }
+
+    let apiUrl = `http://127.0.0.1:8001/show_work_shift?employee_id_input=${empId}&project_id_input=${projId}`;
+    if (startDay) {
+      apiUrl += `&start_day=${startDay}-01`;
+    }
+
+    
+    document.getElementById('status').textContent = 'Загрузка данных 🔄...';
+    document.getElementById('data-table').style.display = 'none';
+    document.querySelector('#data-table tbody').innerHTML = '';
+
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(data => {
+        if (!data || data.length === 0) {
+          document.getElementById('status').textContent = ' Нет соответствующих данных ❌';
+          return;
+        }
+
+        const tbody = document.querySelector('#data-table tbody');
+        let total = 0;
+
+        data.forEach(item => {
+          const row = document.createElement('tr');
+          const selEmp = Number(item.projuct_sel_emp || 0);
+          total += selEmp;
+
+          row.innerHTML = `
+            <td>${item.start_day}</td>
+            <td>${item.start_time}</td>
+            <td>${item.end_day}</td>
+            <td>${item.end_time}</td>
+            <td> <img src="${item.file_path}" alt="нет фото" width="100" height="100"onclick="showImage(this)"></td>
+          `;
+          tbody.appendChild(row);
+          document.getElementById('show_employee_name').textContent = `${item.employee_name}`;
+          document.getElementById('show_projact_name').textContent = `${item.projuct_title}`;
+          document.getElementById('show_employee_sel').textContent = `${item.projuct_sel_emp}`;
+        });
+
+        document.getElementById('data-table').style.display = 'table';
+        document.getElementById('status').style.display = 'none';
+        document.getElementById('show_shift').textContent = `${data.length}`;
+        document.getElementById('show_sum').textContent = `${total}`;
+
+      })
+      .catch(err => {
+        document.getElementById('status').textContent = 'Нет соответствующих данных ❌';
+        console.error(err);
+      });
+      
+  }
+</script>
+<!-- نافذة التكبير -->
+<div id="imgModal" onclick="closeImage()">
+  <img id="modalImg" src="">
+</div>
+<script>
+function showImage(imgElement) {
+  const modal = document.getElementById("imgModal");
+  const modalImg = document.getElementById("modalImg");
+  modal.style.display = "flex";
+  modalImg.src = imgElement.src; // ينسخ رابط الصورة
+}
+
+function closeImage() {
+  document.getElementById("imgModal").style.display = "none";
+}
+</script>
+<form id="employee-form" onsubmit="submitForm(event)">
+<div id="form-message"></div>
+   
+  <input type="number" id="emp_id_send" name="emp_id_send" style="display: none;"/>
+  <input type="number" id="proj_id_send" name="proj_id_send" style="display: none;"/>
+
+<div id="divPiy" >
+  
+  <p id="info_line1">
+  <strong>Последний платеж:</strong> 
+  <span><strong> тип:</strong> <span id="show_employee_name_salry"></span></span> |
+  <span><strong> За:</strong> <span id="show_projact_name_salry"></span></span> |
+  <span><strong> сума :</strong> <span id="show_sum_salry"></span></span> 
+  <span class="big-icon" onclick="goToPage()">📊</span> 
+</p>
+<input type="text" id="try" id="emp_ent" name="emp_ent" style="display: none;">
+   
+
+  <div class="form-row"> 
+    <label for="sum_pay">сумма платежа:</label>
+  <input type="number" id="sum_pay" name="sum_pay"  required/>
+  </div>
+  
+<div class="form-row"> 
+  <label for="pay_month" >За месяц:</label>
+  <input type="month" id="pay_month" name="pay_month" required/>
+
+</div>
+  <div class="form-row">
+    <label for="mySelect">тип зп:</label>
+  <select id="mySelect" required name="mySelect">
+    <option value="" disabled selected hidden>Выбирать тип зарплата</option>
+    <option value="зарплата">зарплата</option>
+    <option value="аванс">аванс</option>
+    <option value="други">други</option>
+  </select>
+  </div>
+  
+
+  <label for="notes"></label>
+  <textarea id="notes" name="notes" placeholder="Напишите свои заметки или дополнительные детали здесь..."></textarea>
+
+   <input type="submit" value="отправлять">
+   </form>
+</div>
+ 
+<table id="data_table_salry">
+  <tbody></tbody>
+</table>
+<script>
+  // استخراج البارامترات من رابط الصفحة
+  
+ function lost_salry() {
+  const empId = params.get("employee_id_input");
+  const projId = params.get("project_id_input");
+  let apiUrl = `http://127.0.0.1:8001/show_salary_history?employee_id_input=${empId}&project_id_input=${projId}`;
+  fetch(apiUrl)
+    .then(res => res.json())
+    .then(data => {
+      // ✅ نأخذ فقط السطر الأخير
+      const lastItem = data[data.length - 1];
+      const tbody = document.querySelector('#data_table_salry tbody');
+      const selEmp = Number(lastItem.sum || 0);
+      const row = document.createElement('tr');
+      tbody.appendChild(row);
+
+      // ✅ تعبئة باقي المعلومات
+      document.getElementById('show_employee_name_salry').textContent = `${lastItem.pay_method}`;
+      document.getElementById('show_projact_name_salry').textContent = `${lastItem.pay_for}`;
+      document.getElementById('show_sum_salry').textContent = `${lastItem.sum}`;
+    })
+    .catch(err => {
+      document.getElementById('status').textContent = '❌ خطأ في تحميل البيانات.';
+      console.error(err);
+    });
+}
+
+// ✅ تنفيذ الدالة تلقائياً عند تحميل الصفحة
+window.onload = lost_salry;
+window.onload = loadData;
+
+</script>
+
+  <script>
+    function goToPage() {
+      const employeeId = params.get("employee_id_input");
+      const projectId = params.get("project_id_input");
+      
+
+      const url = `show_salary_history.html?employee_id_input=${employeeId}&project_id_input=${projectId}`;
+      window.location.href = url;
+    }
+  </script>
+
+ 
+<script>
+   
+
+    // إرسال النموذج
+    function submitForm(event) {
+  event.preventDefault();
+
+  const form = document.getElementById("employee-form");
+  const formData = new FormData(form);
+
+  fetch("http://127.0.0.1:8001/salary_history", {
+    method: "POST",
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    const msg = document.getElementById("form-message");
+    msg.textContent = data.message; // 👈 نعرض نفس النص القادم من بايثون
+
+    if (data.status === "success") {
+      document.getElementById('employee-form').reset();
+      msg.style.color = "green";
+    } else {
+      msg.style.color = "red";
+    }
+
+    console.log("Server response:", data);
+  })
+  .catch(error => {
+    const msg = document.getElementById("form-message");
+    msg.style.color = "red";
+    msg.textContent = "⚠️ فشل الاتصال بالخادم";
+    console.error("Fetch error:", error);
+  });
+}
+
+  </script>
+
+</body>
+
+</html>
+<script>
+  let role = sessionStorage.getItem("role");
+  let user = sessionStorage.getItem("username");
+  document.getElementById("try").value = role +" "+ user;
+                if (role === "admin") {
+                   
+                } else if(role === "supadmin") {
+                  document.getElementById("employee-form").style.display = "none";
+                }else if(role === "emp") {
+                    
+                }else if (!role) {  // الشرط الذي أضفته أنت
+                    window.location.href = "log_in.html";
+                }
+</script>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>salary history</title>
+  <style>
+    
+    table, th, td { border: 1px solid #aaa; border-collapse: collapse; padding: 8px; }
+    table { width: 95%; margin-top: 20px; }
+    th { background-color: #f0f0f0; }
+    #status { margin-top: 10px; font-weight: bold; color: #444; }
+    #show_pay_list_month{
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  position: fixed;
+  top: 10px;
+  left: 52%;
+  width: 45%;
+  height: 5%;
+  background-color: rgb(248, 208, 208);
+  overflow: hidden;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  font-family: sans-serif;
+    }
+    #divPiy {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  position: fixed;
+  top: 15%;
+  left: 52%;
+  width: 45%;
+  height: 75%;
+  background-color: rgb(208, 237, 248);
+  overflow: hidden;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  font-family: sans-serif;
+}
+
+#divPiy label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+#divPiy input,
+#divPiy select {
+  width: 50%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+#notes {
+  flex-grow: 1; /* يجعل textarea يأخذ المساحة المتبقية */
+  resize: none;
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+  min-height: 100px;
+}
+
+#divPiy button {
+  width: 100%;
+  padding: 10px;
+  background-color: #3498db;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#divPiy button:hover {
+  background-color: #2980b9;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.form-row label {
+  width: 100px; /* عرض ثابت لليبل */
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.form-row input {
+  flex: 1;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/*==================== bar style start ================================ */
+     body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+    
+    }
+
+    .tabs {
+      display: flex;
+      background-color: #1e293b;
+      overflow-x: auto;
+    }
+
+    .tabs button {
+      flex: 1;
+      padding: 16px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .tabs button:hover,
+    .tabs button.active {
+      background-color: #334155;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 40px;
+      background-color: #fff;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .form-container {
+      max-width: 1000px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-container h2 {
+      margin-bottom: 20px;
+      color: #1e293b;
+      font-size: 24px;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 6px;
+      color: #475569;
+      font-weight: 500;
+    }
+
+    form input,
+    form select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 16px;
+    }
+
+    form input[type="submit"] {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    form input[type="submit"]:hover {
+      background-color: #1d4ed8;
+    }
+
+    /* تصميم خاص لصفحة المنتج */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .full-width-form {
+      max-width: none;
+      width: 100%;
+    }
+    /*==================== bar style end ================================ */
+</style>
+<body>
+   <!--bar show start -->
+   
+<script src="header.js" defer></script>
+ <my-header></my-header>
+<!--bar show end -->
+<center>
+  <br>
+  <label for="start_day"> введите год и месяц:</label>
+ <input type="month" id="start_day" />
+ 
+ <button onclick="loadData()">Просмотреть данные</button>
+<h2>Список причитающихся зарплат</h2>
+<p id="status">В информации обнаружена ошибка.</p>
+<p id="info_line">
+   
+  <span><strong> В Обект:</strong> <span id="show_projact_name"></span></span> |
+  <span><strong> Количество выплат:</strong> <span id="show_shift"></span></span> |
+  <span><strong> сума :</strong> <span id="show_sum"></span></span> 
+</p>
+
+<table id="data-table">
+  <thead>
+    <tr>
+      <th>name</th>
+      <th>тип зарплата</th>
+      <th>за месяц</th>
+      <th>сума</th>
+      <th>начальник смена</th>
+      <th>примечания</th>
+      <th>статус получения</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+</center>
+
+
+<script>
+
+ // الحصول على التاريخ الحالي
+  const today = new Date();
+  // تحويله إلى صيغة YYYY-MM
+  const month = today.toISOString().slice(0, 7);
+  // تعيينه كقيمة افتراضية للمدخل
+  document.getElementById("start_day").value = month;
+        //=====================
+
+  // استخراج البارامترات من رابط الصفحة
+  const params = new URLSearchParams(window.location.search);
+  
+
+  function loadData() {
+   
+   const datas = document.getElementById('start_day').value;
+   const projId = params.get("id");
+   
+    
+    if (!datas || !projId ) {
+      document.getElementById('status').textContent = '⚠️ الرجاء إدخال معرف الموظف والمشروع.';
+      return;
+    }
+
+    let apiUrl = `http://127.0.0.1:8001/show_salary_history?datas=${datas}&project_id_input=${projId}`;
+
+    
+    document.getElementById('status').textContent = '🔄 جارٍ تحميل البيانات...';
+    document.getElementById('data-table').style.display = 'none';
+    document.querySelector('#data-table tbody').innerHTML = '';
+
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(data => {
+        if (!data || data.length === 0) {
+          document.getElementById('status').textContent = 'Нет подходящих результатов.';
+          return;
+        }
+
+        const tbody = document.querySelector('#data-table tbody');
+        let total = 0;
+
+        data.forEach(item => {
+          const row = document.createElement('tr');
+          const selEmp = Number(item.sum || 0);
+          total += selEmp;
+
+          row.innerHTML = `
+            <td>${item.employee_name}</td>
+            <td>${item.pay_method}</td>
+            <td>${item.pay_for}</td>
+            <td>${item.sum}</td>
+            <td>${item.responsible_emp_id}</td>
+            <td>${item.nots}</td>
+            <td>${item.done_or_not}</td>
+          `;
+          tbody.appendChild(row);
+          
+          document.getElementById('show_projact_name').textContent = `${item.projuct_title}`;
+        });
+
+        document.getElementById('data-table').style.display = 'table';
+        document.getElementById('status').style.display = 'none';
+        document.getElementById('show_shift').textContent = `${data.length}`;
+        document.getElementById('show_sum').textContent = `${total}`;
+
+      })
+      .catch(err => {
+        document.getElementById('status').textContent = '❌ خطأ في تحميل البيانات.';
+        console.error(err);
+      });
+      
+  }
+      window.onload = loadData;
+
+</script>
+
+
+</body>
+</html>
+<script>
+  let role = sessionStorage.getItem("role");
+                if (role === "admin") {
+                   
+                } else if(role === "supadmin") {
+                  
+                }else if(role === "emp") {
+                   
+                }else if (!role) {  // الشرط الذي أضفته أنت
+                    window.location.href = "log_in.html";
+                }
+</script>

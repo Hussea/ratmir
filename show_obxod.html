@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="UTF-8">
+    <title>обход</title>
+    <style>
+        table { border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid black; padding: 8px; }
+        th { background-color: #f0f0f0; }
+/*==================== bar style start ================================ */
+     body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+    
+    }
+
+    .tabs {
+      display: flex;
+      background-color: #1e293b;
+      overflow-x: auto;
+    }
+
+    .tabs button {
+      flex: 1;
+      padding: 16px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .tabs button:hover,
+    .tabs button.active {
+      background-color: #334155;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 40px;
+      background-color: #fff;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .form-container {
+      max-width: 1000px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-container h2 {
+      margin-bottom: 20px;
+      color: #1e293b;
+      font-size: 24px;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 6px;
+      color: #475569;
+      font-weight: 500;
+    }
+
+    form input,
+    form select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 16px;
+    }
+
+    form input[type="submit"] {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    form input[type="submit"]:hover {
+      background-color: #1d4ed8;
+    }
+
+    /* تصميم خاص لصفحة المنتج */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .full-width-form {
+      max-width: none;
+      width: 100%;
+    }
+    /*==================== bar style end ================================ */
+</style>
+<body>
+   <!--bar show start -->
+   <script src="header.js" defer></script>
+ <my-header></my-header>
+<!--bar show end -->
+<center>
+   <h3><span id="fixedText">обход в проекте</span> <span id="Postitle"></span></h3>
+     
+    <input type="number" id="project_id_input" style="display: none;" >
+     
+    <label>дата:</label>
+    <input type="date" id="data_tame_input">
+     
+    <button onclick="searchPoints()">поиск</button>
+
+    <div id="results"></div>
+</center>
+    <script>
+        // جعل القيمه الافتراضيه هي اليوم
+        // نجيب خانة الإدخال
+         const dateInput = document.getElementById("data_tame_input");
+
+         // نولّد تاريخ اليوم بصيغة YYYY-MM-DD
+         const today = new Date().toISOString().split("T")[0];
+
+        // نضبط القيمة الافتراضية
+        dateInput.value = today;
+        //=====================
+
+  const params = new URLSearchParams(window.location.search);
+  document.getElementById("project_id_input").value = params.get("id");
+   document.getElementById("Postitle").textContent = params.get("tet");
+        async function searchPoints() {
+            const project_id_input = document.getElementById("project_id_input").value;
+            const data_tame_input = document.getElementById("data_tame_input").value;
+
+            let url = `http://127.0.0.1:8001/search_points?`;
+            if (project_id_input) url += `project_id_input=${project_id_input}&`;
+            if (data_tame_input) url += `data_tame_input=${encodeURIComponent(data_tame_input)}&`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                let html = "";
+                if (data.length === 0) {
+                    html = "<p>Нет подходящих результатов.</p>";
+                } else {
+                     
+                    html += "<table><tr><th>№</th><th>name_point</th><th>data</th><th>tame</th></tr>";
+                    data.forEach((row, index) => {
+                        html += `<tr>
+                            <td>${index + 1}</td>
+                            <td>${row.name_point}</td>
+                            <td>${row.dataD}</td>
+                            <td>${row.timeD}</td>
+                        </tr>`;
+                    });
+                    html += "</table>";
+                }
+
+                document.getElementById("results").innerHTML = html;
+            } catch (err) {
+                document.getElementById("results").innerHTML = "<p>حدث خطأ أثناء جلب البيانات.</p>";
+            }
+        }
+        // ✅ تنفيذ الدالة تلقائياً عند تحميل الصفحة
+        window.onload = searchPoints;
+    </script>
+</body>
+</html>
+<script>
+  let role = sessionStorage.getItem("role");
+                if (role === "admin") {
+                   
+                } else if(role === "supadmin") {
+                  
+                }else if(role === "emp") {
+                   
+                }else if (!role) {  // الشرط الذي أضفته أنت
+                    window.location.href = "log_in.html";
+                }
+</script>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Categories</title>
+    <style>
+    body {
+      font-family: "Poppins", Arial, sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+    }
+
+    /* ====== RESPONSIVE ====== */
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: flex;
+      }
+    }
+        
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        li {
+            margin: 10px 30px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #ddd;
+        }
+
+         
+
+        button {
+            background-color: #0600be;
+            color: #ffffff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin-left: 8px;
+        }
+
+        /*==================== bar style start ================================ */
+     body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+    
+    }
+
+    .tabs {
+      display: flex;
+      background-color: #1e293b;
+      overflow-x: auto;
+    }
+
+    .tabs button {
+      flex: 1;
+      padding: 16px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .tabs button:hover,
+    .tabs button.active {
+      background-color: #334155;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 40px;
+      background-color: #fff;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .form-container {
+      max-width: 1000px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-container h2 {
+      margin-bottom: 20px;
+      color: #1e293b;
+      font-size: 24px;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 6px;
+      color: #475569;
+      font-weight: 500;
+    }
+
+    form input,
+    form select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 16px;
+    }
+
+    form input[type="submit"] {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    form input[type="submit"]:hover {
+      background-color: #1d4ed8;
+    }
+
+    /* تصميم خاص لصفحة المنتج */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .full-width-form {
+      max-width: none;
+      width: 100%;
+    }
+    /*==================== bar style end ================================ */
+    </style>
+</head>
+<body>
+ <!--bar show start -->
+   <script src="header.js" defer></script>
+ <my-header></my-header>
+<!--bar show end -->
+
+
+<center>
+  <h2>Список прав пользователей</h2>
+</center>
+<ul id="categoryList">
+    <!-- سيتم عرض العناصر هنا -->
+</ul>
+
+<script>
+  async function fetchCategories() {
+    try {
+        const response = await fetch('http://127.0.0.1:8001/get_admin');
+        const data = await response.json();
+
+        const list = document.getElementById('categoryList');
+        list.innerHTML = ""; // تفريغ القائمة قبل عرض النتائج الجديدة
+
+       if (data.username && data.password && data.role && Array.isArray(data.username)) {
+      list.innerHTML = ""; // تنظيف القائمة أولاً
+
+      data.idu.forEach((idu, index) => {
+        const username = data.username[index];
+        const password = data.password[index];
+        const role = data.role[index];
+
+        const li = document.createElement('li');
+        
+        // إنشاء الزر
+        const copyButton = document.createElement('button');
+        copyButton.textContent = "Копировать";
+         
+        
+        const span = document.createElement('span');
+        span.textContent = username;
+
+        const span1 = document.createElement('span');
+        span1.textContent = password;
+        // تبديل قيمه الرول التي تاتي من ثاعده البيانات الى المستخدك
+        const roleNames = {
+          admin: "Директор",
+          supadmin: "Зам. директора",
+          emp: "Бухгалтер"
+          };
+
+        const span2 = document.createElement('span');
+        span2.textContent = roleNames[role] || "Без роли";
+        // نهايه
+
+
+        const button1 = document.createElement('button');
+button1.textContent = "Удалить"; 
+button1.style.backgroundColor = "red";
+button1.style.color = "white";
+
+button1.onclick = async () => {
+  if (!confirm("Вы уверены, что хотите удалить этого пользователя?")) return;
+
+  try {
+    const response = await fetch(`http://127.0.0.1:8001/delet_admin?idu=${idu}`, {
+  method: "GET"
+   });
+
+
+    const data = await response.json();
+    alert(data.message);
+
+    // حذف العنصر من الصفحة بعد نجاح العملية
+    button1.closest("li").remove();
+
+  } catch (error) {
+    console.error("Произошла ошибка при удалении:", error);
+    alert("❌Не удалось подключиться к серверу.");
+  }
+};
+
+
+        const rightSide = document.createElement('div');
+        rightSide.appendChild(button1);
+        rightSide.appendChild(copyButton);
+ 
+
+        //  الزر النسخ
+        copyButton.onclick = () => {
+            const textToCopy1 = span.textContent;
+            const textToCopy2 = span1.textContent;
+            
+
+          const textToCopy = `Имя пользователя:- ${textToCopy1}\nПароль:- ${textToCopy2}`;
+          
+         navigator.clipboard.writeText(textToCopy)
+            .then(() => {
+               // 🔹 تغيير لون الخلفية حسب الحالة
+                li.style.backgroundColor ="#7bed9f"; 
+                setTimeout(() => {
+                li.style.backgroundColor = ""; // يرجع اللون للوضع الافتراضي بعد ثانية واحدة
+                }, 300); // 1000 ملي ثانية = 1 ثانية
+
+            })
+            .catch(err => {
+              console.error("Ошибка копирования:", err);
+            });
+        };
+
+        li.appendChild(span);
+        li.appendChild(span1);
+        li.appendChild(span2);
+        li.appendChild(rightSide);
+        list.appendChild(li);
+      });
+    } else {
+      list.innerHTML = "<li>لم يتم العثور على بيانات.</li>";
+    }
+  } catch (error) {
+    console.error("خطأ أثناء جلب البيانات:", error);
+  }
+}
+
+fetchCategories();
+
+</script>
+<!-- JAVASCRIPT -->
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const navList = document.getElementById("navList");
+    const navLinks = document.querySelectorAll(".navbar li a");
+
+    menuToggle.addEventListener("click", () => {
+      navList.classList.toggle("active");
+    });
+
+    // Change active link when clicked
+    navLinks.forEach(link => {
+      link.addEventListener("click", () => {
+        navLinks.forEach(l => l.classList.remove("active"));
+        link.classList.add("active");
+      });
+    });
+  </script>
+</body>
+</html>
+<script>
+  let role = sessionStorage.getItem("role");
+                if (role === "admin") {
+                   
+                } else if(role === "supadmin") {
+                  
+                }else if(role === "emp") {
+                 document.getElementById("QRBUT").style.display = "none";
+                }else if (!role) {  // الشرط الذي أضفته أنت
+                    window.location.href = "log_in.html";
+                }
+</script>

@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+ /* الأساسيات العامة */
+ 
+/* الحاوية */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 45px;  /* عرض أكبر */
+  height: 20px; /* ارتفاع مناسب */
+}
+
+/* إخفاء الـ checkbox الأصلي */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* الشريط الخلفي */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #e74c3c; /* لون افتراضي أحمر */
+  transition: 0.4s;
+  border-radius: 20px; /* حواف مستديرة */
+}
+
+/* الدائرة */
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+/* عند التفعيل */
+input:checked + .slider {
+  background-color: #2ecc71; /* أخضر عند التفعيل */
+}
+
+input:checked + .slider:before {
+  transform: translateX(24px); /* حركة الدائرة يمين */
+}
+/* تنسيق العنوان وزر البحث */
+h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+input[type="text"] {
+  padding: 8px;
+  font-size: 14px;
+  margin-right: 10px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+}
+
+button {
+  padding: 8px 16px;
+  font-size: 14px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* الحاوية الرئيسية التي تجمع الفورم والجدول جنبًا إلى جنب */
+.main-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* تنسيق الفورم */
+.form-container {
+  background-color: rgb(248, 248, 248);
+  padding: 20px;
+  border: 1px solid #d3d0d0e0;
+  border-radius: 8px;
+  width: 90%;
+  box-sizing: border-box;
+}
+
+.form-container h4 {
+  margin-top: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 16px;
+}
+
+.form-grid label {
+  display: block;
+  font-size: 13px;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.form-grid input[type="text"] {
+  width: 100%;
+  padding: 6px;
+  font-size: 13px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* تنسيق الجدول */
+.table-wrapper {
+  width: 48%;
+  box-sizing: border-box;
+  overflow-x: auto;
+}
+
+table {
+  width: 90%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* إظهار عدد النتائج */
+#result-count {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* responsive design */
+@media (max-width: 768px) {
+  .main-wrapper {
+    flex-direction: column;
+  }
+
+  .form-container,
+  .table-wrapper {
+    width: 100%;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+ /*==================== bar style start ================================ */
+     body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+    
+    }
+
+    .tabs {
+      display: flex;
+      background-color: #1e293b;
+      overflow-x: auto;
+    }
+
+    .tabs button {
+      flex: 1;
+      padding: 16px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .tabs button:hover,
+    .tabs button.active {
+      background-color: #334155;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 40px;
+      background-color: #fff;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .form-container {
+      max-width: 1000px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-container h2 {
+      margin-bottom: 20px;
+      color: #1e293b;
+      font-size: 24px;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 6px;
+      color: #475569;
+      font-weight: 500;
+    }
+
+    form input,
+    form select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 16px;
+    }
+
+    form input[type="submit"] {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    form input[type="submit"]:hover {
+      background-color: #1d4ed8;
+    }
+
+    /* تصميم خاص لصفحة المنتج */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .full-width-form {
+      max-width: none;
+      width: 100%;
+    }
+    /*==================== bar style end ================================ */
+</style>
+<body>
+   <!--bar show start -->
+  <script src="header.js" defer></script>
+ <my-header></my-header>
+<!--bar show end -->
+  <h3><span id="fixedText">Информация о проекте</span> <span id="Postitle"></span></h3>
+  <div id="genral_conter">
+  <input type="text" id="productName"  style="display:none;" />
+  <hr/>
+  <center>
+    <br>
+<button onclick="show_hade()" id="pig_data">Показать охранников проекта</button>
+<button onclick="show_hade()" id="id_qrcode">Показать QR_code проекта</button>
+<button onclick="show_hade()" id="id_qrcode1">Показать обход в проекта</button>
+<button onclick="show_hade()" id="bill">Ежемесячный счет</button>
+<button onclick="show_hade_edt_info()" id="bill1">Редактировать информацию</button>
+  </center>
+  
+
+<br>
+  <div class="details-wrapper">
+    <div class="form-container" id="idForm">
+      <div class="form-grid" >
+        <div><label style="display: none;">ID:</label><input type="text" id="id" readonly style="display: none;"/></div>
+        <div><label style="display: none;">Название:</label><input type="text" id="title" readonly style="display: none;"/></div>
+        <div><label>адрес:</label><input type="text" id="address" readonly/></div>
+        <div><label>Необходимое количество охранников:</label><input type="text" id="q_person" readonly/></div>
+        <div><label>Система смен:</label><input type="text" id="ses_work" readonly/></div>
+        <div><label>Сумма, выплаченная проектом:</label><input type="text" id="sum_of_proj" readonly/></div>
+        <div><label>Ответственный от проекта:</label><input type="text" id="pers_of_proj" readonly/></div>
+        <div><label>Зарплата за смену:</label><input type="text" id="sel_emp" readonly/></div>
+        <div><label>номер телефона:</label><input type="text" id="n_phone" readonly/></div>
+        <div><label>Примечания:</label><input type="text" id="nots" readonly/></div>
+      </div>
+      <br/>
+      <p id="result-count"></p>
+    </div>
+  </div>
+  <br>
+<center>
+  <table id="idTable" style="display: none;">
+    <thead >
+      <tr>
+        <th><input type="text" placeholder="Product NO" oninput="fetchProducts()" id="project_id" style="display: none;" /></th>
+        <th><input type="text" placeholder="Name" oninput="fetchProducts()" id="employee_id" style="display: none;" /></th>
+        <th><input type="text" placeholder="Purchase Price" oninput="fetchProducts()" id="nots0" style="display: none;" /></th>
+      </tr>
+      <tr id="table-headers"></tr>
+    </thead>
+    <tbody id="product-table" ></tbody>
+  </table>
+</center>
+ 
+   <!--------------------------updete----------------------------------------->
+   
+   <form id="updateForm" style="display: none;">
+    
+  <div class="details-wrapper" id="idForm">
+    <div class="form-container">
+      <center><span><h3><strong>Редактирование или удаление данных проекта</strong></h3></span></center>
+      <span><h3><strong>статус проек:- </strong><span id="status">активный ✅</span></h3></span>
+       
+      <div class="form-grid" >
+        <input type="hidden" id="is_active_up" value="1" />
+        <div><label style="display: none;">ID:</label><input type="text" id="id_up" readonly style="display: none;"/></div>
+        <div><label style="display: none;">Название:</label><input type="text" id="title_up" readonly style="display: none;"/></div>
+        <div><label>адрес:</label><input type="text" id="address_up" /></div>
+        <div><label>Необходимое количество охранников:</label><input type="text" id="q_person_up" /></div>
+        <div><label>Система смен:</label><input type="text" id="ses_work_up" /></div>
+        <div><label>Сумма, выплаченная проектом:</label><input type="text" id="sum_of_proj_up" /></div>
+        <div><label>Ответственный от проекта:</label><input type="text" id="pers_of_proj_up" /></div>
+        <div><label>Зарплата за смену:</label><input type="text" id="sel_emp_up" /></div>
+        <div><label>номер телефона:</label><input type="text" id="n_phone_up" /></div>
+        <div><label>Примечания:</label><input type="text" id="nots_up" /></div>
+        
+      </div>
+      <br/>
+       <label>Изменить статус: активен / нет:</label>
+      <label class="switch">
+      <input type="checkbox" id="mySwitch" checked>  <!-- checked تعني مفعل افتراضي -->
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+  <br>
+   <center>
+  <button type="submit" style="background-color: green; width: 500px; ">Сохранить изменения</button>
+  <button onclick="show_hade_edt_info0()" id="go_to_list_proj" style="background-color: rgb(33, 123, 226); width: 500px;">вернуться</button>
+   </center>
+</form>
+
+
+<script>
+  const checkbox = document.getElementById("mySwitch");
+const hiddenInput = document.getElementById("is_active_up");
+const statusText = document.getElementById("status");
+
+checkbox.addEventListener("change", function() {
+    if (checkbox.checked) {
+        hiddenInput.value = 1;                     // القيمة 1 عند التفعيل
+        statusText.textContent = "активный ✅";
+    } else {
+        hiddenInput.value = 0;                     // القيمة 0 عند الإيقاف
+        statusText.textContent = "не активный ❌";
+    }
+});
+
+</script>
+<script>
+document.getElementById("updateForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    let data = {
+        id: document.getElementById("id_up").value,
+        title: document.getElementById("title_up").value,
+        address: document.getElementById("address_up").value,
+        q_person: document.getElementById("q_person_up").value,
+        ses_work: document.getElementById("ses_work_up").value,
+        sum_of_proj: document.getElementById("sum_of_proj_up").value,
+        pers_of_proj: document.getElementById("pers_of_proj_up").value,
+        sel_emp: document.getElementById("sel_emp_up").value,
+        n_phone: document.getElementById("n_phone_up").value,
+        nots: document.getElementById("nots_up").value,
+        is_active: document.getElementById("is_active_up").value   // ✅ الحقل الجديد
+    };
+
+    let response = await fetch("http://127.0.0.1:8001/update_category", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+
+    let result = await response.json();
+    document.getElementById("status").textContent = result.message || result.error;
+});
+
+</script>
+   <!--------------------------End_updete----------------------------------------->
+
+  <script>
+     /////////////داله الانتقال الى صفحه تسجيل نقطه تفتيش جديده للمشروع
+
+    // الدالة لإنشاء الرابط مع الباراميترات
+        function goToPageWithParams(page, params) {
+            const queryString = new URLSearchParams(params).toString();
+            window.location.href = page + "?" + queryString;
+        }
+
+        // عند الضغط على الزر  
+        document.getElementById("id_qrcode").addEventListener("click", function() {
+            let projectValue = document.getElementById("id").value;
+            
+
+            // الانتقال باستخدام الدالة
+            goToPageWithParams("show_info_chick_point.htm", {
+                id: projectValue
+                
+            });
+        });
+
+    ////////////---------------------------------------------
+    // عند الضغط على الزر bill
+        document.getElementById("bill").addEventListener("click", function() {
+            let projectValue = document.getElementById("id").value;
+            
+
+            // الانتقال باستخدام الدالة
+            goToPageWithParams("project_salary_history.html", {
+                id: projectValue
+                
+            });
+        });
+
+    ////////////---------------------------------------------
+    // عند الضغط على الزر go_to_list_proj
+        document.getElementById("go_to_list_proj").addEventListener("click", function() {
+             
+            
+
+            // الانتقال باستخدام الدالة
+            goToPageWithParams("project_list.html", {
+                 
+                
+            });
+        });
+
+    ////////////---------------------------------------------
+    
+    // الدالة لإنشاء الرابط مع الباراميترات
+        function goToPageWithParams(page, params) {
+            const queryString = new URLSearchParams(params).toString();
+            window.location.href = page + "?" + queryString;
+        }
+
+        // عند الضغط على الزر  
+        document.getElementById("id_qrcode1").addEventListener("click", function() {
+            let projectValue = document.getElementById("id").value;
+            const titleParam = getQueryParam("title");
+            
+
+            // الانتقال باستخدام الدالة
+            goToPageWithParams("show_obxod.html", {
+                id: projectValue ,
+                tet: titleParam
+            });
+        });
+
+    ////////////اضهار و اخفاء ازرار العمليات ////////////
+     function show_hade() {
+    document.getElementById("idTable").style.display = "block";
+    }
+     
+    //////////// انهاء اضهار و اخفاء ازرار العمليات ////////////
+    ////////////اضهار و اخفاء  قسم تعديل البيانات ////////////
+     function show_hade_edt_info() {
+    document.getElementById("updateForm").style.display = "block";
+    document.getElementById("idForm").style.display = "none";
+    }
+   ////////////انهاء اضهار و اخفاء  قسم تعديل البيانات ////////////
+    let totalResults = 0;
+
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    function searchProduct() {
+      const title = document.getElementById("productName").value;
+      if (!title) {
+        alert("Нет соответствующих данных ❌");
+        return;
+      }
+
+      const url = `http://127.0.0.1:8001/get-product-by-name/?title=${encodeURIComponent(title)}`;
+      const request = new XMLHttpRequest();
+      request.open("GET", url);
+      request.responseType = "json";
+      request.send();
+
+      request.onload = function () {
+        if (request.status >= 200 && request.status < 300) {
+          const result = request.response;
+
+          if (!result || Object.keys(result).length === 0) {
+            alert("Нет соответствующих данных ❌");
+          } else {
+            //اعطاء قيمه الى خانتين مختلفتين من نفس المصدر
+          const fields = ["id", "title", "address", "q_person", "ses_work", "sum_of_proj", "pers_of_proj", "n_phone", "sel_emp", "nots"];
+
+          fields.forEach(field => {
+              // الحقل الأساسي
+              let el = document.getElementById(field);
+              if (el) el.value = result[field] || "";
+
+              // الحقل "_up"
+              let elUp = document.getElementById(field + "_up");
+              if (elUp) elUp.value = result[field] || "";
+          });
+          ////////////////////////////
+
+            totalResults = result.id || "";
+            document.getElementById("project_id").value = totalResults;
+          
+
+            fetchProducts(); // ✅ يتم جلب الحرس تلقائيًا بعد عرض بيانات المشروع
+          }
+        } else {
+          alert("Произошла ошибка сервера.");
+        }
+      };
+    }
+
+    async function fetchWorkShiftData(empId, projId) {
+      const apiUrl = `http://127.0.0.1:8001/show_work_shift?employee_id_input=${empId}&project_id_input=${projId}`;
+
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error("Произошла ошибка сервера.");
+        const data = await response.json();
+
+        let total = 0;
+        data.forEach((item) => {
+          const selEmp = Number(item.projuct_sel_emp || 0);
+          total += selEmp;
+        });
+
+        return {
+          shiftCount: data.length,
+          totalValue: total,
+        };
+      } catch (err) {
+        console.error(`Нет соответствующих данных ❌`, err);
+        return {
+          shiftCount: 0,
+          totalValue: 0,
+        };
+      }
+    }
+
+    async function fetchProducts() {
+      const params = new URLSearchParams();
+
+      const fields = ["project_id", "employee_id", "nots0"];
+      for (let field of fields) {
+        const value = document.getElementById(field)?.value;
+        if (value) {
+          params.append(field, value);
+        }
+      }
+
+      try {
+        const res = await fetch(`http://127.0.0.1:8001/get_guards?${params.toString()}`);
+        const data = await res.json();
+
+        const table = document.getElementById("product-table");
+        const resultCount = document.getElementById("result-count");
+        const headerRow = document.getElementById("table-headers");
+
+        table.innerHTML = "";
+        headerRow.innerHTML = "";
+
+        const displayFields = {
+         
+          employee_name: "Имя охранника",
+          nots: "Примечания",
+        };
+
+        if (data.length > 0) {
+          for (let key in displayFields) {
+            headerRow.innerHTML += `<th>${displayFields[key]}</th>`; 
+          }
+          headerRow.innerHTML += `<th>Количество смен</th><th>Общая сумма</th><th>историю платежей</th><th> история смены</th><th>статус ОХ в ОБ</th>`;
+
+        for (let row of data) {
+    const rowId = row["id"];
+    const employeeId = row["employee_id"];
+    const projectId = row["project_id"];
+    const workShiftData = await fetchWorkShiftData(employeeId, projectId);
+
+    let tr = "<tr>";
+    for (let key in displayFields) {
+      tr += `<td>${row[key] ?? ""}</td>`;
+    }
+
+    tr += `<td>${workShiftData.shiftCount}</td>`;
+    tr += `<td>${workShiftData.totalValue}</td>`;
+
+    // ✅ لو is_active == 1 نخلي checkbox مفعل
+    const checkedAttr = row.is_active == 1 ? "checked" : "";
+
+    tr += `
+    
+      <td><a href="show_salary_history.html?employee_id_input=${employeeId}&project_id_input=${projectId}"><button>историю платежей</button></a></td>
+      <td><a href="Payroll.html?employee_id_input=${employeeId}&project_id_input=${projectId}"><button>Дата</button></a></td>
+      <td>
+        <label class="switch">
+          <input type="checkbox" id="mySwitch" class="mySwitch" data-emp-id="${rowId}" ${checkedAttr}>
+          <span class="slider"></span>
+        </label>
+      </td>
+    `;
+    tr += "</tr>";
+    table.innerHTML += tr;
+}
+
+// ✅ بعد توليد الجدول، نربط event لكل checkbox
+document.querySelectorAll(".mySwitch").forEach(cb => {
+    cb.addEventListener("change", async function () {
+        const id =  this.getAttribute("data-emp-id");
+        const is_active = this.checked ? 1 : 0;
+
+        try {
+            const response = await fetch("http://127.0.0.1:8001/update_project_guards", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    id: id,
+                    is_active: is_active
+                })
+            });
+            const result = await response.json();
+            console.log("✅ Updated:", result);
+
+            if (result.success) {
+                alert(`تم تحديث الموظف ${id} إلى الحالة: ${is_active}`);
+            } else {
+                alert("❌ خطأ أثناء تحديث قاعدة البيانات");
+            }
+        } catch (err) {
+            console.error("❌ Error:", err);
+        }
+    });
+});
+
+
+
+          resultCount.textContent = ` В проекте ${data.length} охранника`;
+        } else {
+          table.innerHTML = "<tr><td colspan='100%'>Нет результатов.</td></tr>";
+          resultCount.textContent = "Количество охранников на проекте: 0";
+        }
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
+    }
+
+    // ✅ عند تحميل الصفحة
+    window.onload = function () {
+      const titleParam = getQueryParam("title");
+      if (titleParam) {
+        document.getElementById("productName").value = titleParam;
+        document.getElementById("Postitle").textContent = titleParam;
+        searchProduct();
+      } else {
+        alert("لم يتم إرسال بارامتر العنوان (title) في الرابط.");
+      }
+    };
+  </script>
+  <br>
+</body>
+</html>
+<script>
+  let role = sessionStorage.getItem("role");
+              if (role === "admin") {
+                   
+               } else if(role === "supadmin") {
+                   
+               }else if(role === "emp") {
+                    document.getElementById("bill1").style.display = "none";
+                    
+                }else if (!role) {  // الشرط الذي أضفته أنت
+                    window.location.href = "log_in.html";
+                }
+</script>
