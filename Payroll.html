@@ -5,7 +5,7 @@
   <title>Payroll</title>
   <style>
      
-    table, th, td { border: 1px solid #888686; border-collapse: collapse; padding: 8px; }
+    table, th, td { border: 1px solid #888686; border-collapse: collapse; padding: 8px; margin:2%; }
     table { width: 45%; margin-top: 20px; }
     th { background-color: #f0f0f0; }
     #status { margin-top: 10px; font-weight: bold; color: #444; }
@@ -25,15 +25,19 @@
   border-radius: 10px;
   font-family: sans-serif;
     }
+    #fers_info{
+      
+      margin:2%;
+    }
     #divPiy {
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 10px;
   position: fixed;
-  top: 15%;
-  left: 52%;
+  top: 90px;
+  left: 50%;
   width: 45%;
-  height: 75%;
+  height: 410px;
   background-color: rgb(179, 179, 179);
   overflow: hidden;
   z-index: 1000;
@@ -71,21 +75,7 @@
   min-height: 100px;
 }
 
-#divPiy button {
-  width: 100%;
-  padding: 10px;
-  background-color: #3498db;
-  color: white;
-  font-size: 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#divPiy button:hover {
-  background-color: #2980b9;
-}
+ 
 
 .form-row {
   display: flex;
@@ -146,7 +136,7 @@
 }
 
  /*==================== bar style start ================================ */
-     body {
+       body {
       margin: 0;
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f4f6f8;
@@ -257,8 +247,8 @@
   <script src="header.js" defer></script>
  <my-header></my-header>
 <!--bar show end -->
-
-<h2>Просмотр данных смены</h2>
+<div id="fers_info">
+  <h2>Просмотр данных смены</h2>
 
     <label for="start_day"> введите год и месяц:</label>
     <input type="month" id="start_day" />
@@ -276,6 +266,8 @@
   <span><strong> смена:</strong> <span id="show_shift"></span></span> |
   <span><strong> сума :</strong> <span id="show_sum"></span></span> 
 </p>
+</div>
+
 
 <table id="data-table">
   <thead>
@@ -424,8 +416,10 @@ function closeImage() {
 
   <label for="notes"></label>
   <textarea id="notes" name="notes" placeholder="Напишите свои заметки или дополнительные детали здесь..."></textarea>
-
-   <input type="submit" value="отправлять">
+<center>
+  <input type="submit" value="отправлять">
+</center>
+   
    </form>
 </div>
  

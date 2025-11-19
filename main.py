@@ -7,6 +7,7 @@ from datetime import datetime, date, time
 from fastapi import FastAPI, UploadFile, File, Form
 import base64, os, re
 from pydantic import BaseModel
+import psutil
 
 
 app = FastAPI()
@@ -27,6 +28,18 @@ def get_db_connection():
         password='',        # ← غيّر إذا عندك كلمة سر
         database='ratmer'
     )
+#====================================================
+@app.get("/stats")
+def stats():
+    p = psutil.Process()
+
+    cpu_percent = p.cpu_percent(interval=0.1)
+    memory_usage = p.memory_info().rss / (1024 * 1024)
+
+    return {
+        "cpu_percent": cpu_percent,
+        "memory_mb": memory_usage
+    }
 
 #====================================================
 @app.post("/check_password")

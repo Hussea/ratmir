@@ -136,7 +136,7 @@
 
 
 </script>
- <div style="display: blok;">
+ <div style="display: none;">
   <table>
   <thead>
       <tr>
@@ -173,7 +173,7 @@
         .then(res => res.json())
         .then(data => {
             lastData = data; // نخزن البيانات للمقارنة لاحقًا
-            const table = document.getElementById("product-table");
+            const table = document.getElementById("product-table1");
             const resultCount = document.getElementById("result-count");
             table.innerHTML = "";
 
@@ -200,7 +200,7 @@
                 
             } else {
                 table.innerHTML = "<tr><td colspan='2'>No results found.</td></tr>";
-                resultCount.textContent = "عدد النتائج: 0";
+                resultCount.textContent = " res: 0";
             }
         });
   }
@@ -209,7 +209,7 @@
 
   function checkLocation() {
     if (!navigator.geolocation) {
-      alert("❌ المتصفح لا يدعم تحديد الموقع الجغرافي");
+      alert("Браузер не поддерживает определение геолокации❌");
       return;
     }
 
