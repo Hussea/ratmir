@@ -18,43 +18,49 @@
     </center>
  
 
-   <script>
+ <script>
 document.getElementById("loginForm").addEventListener("submit", async function(e) {
     e.preventDefault();
 
     const formData = new FormData(this);
-    const endpointUrl = "https://ratmir.onrender.com/login";
 
-    const res = await fetch(endpointUrl, {
-        method: "POST",
-        body: formData
-    });
+    // تحويل FormData إلى URL params
+    const params = new URLSearchParams();
+    formData.forEach((value, key) => params.append(key, value));
 
-    const data = await res.json();
-    document.getElementById("result").textContent = data.message || data.error;
+    try {
+        const res = await fetch("https://ratmir.onrender.com/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: params.toString()
+        });
 
-    // إذا كان تسجيل الدخول ناجح
-    if (data.success) {
-    // خزن اسم المستخدم في sessionStorage
-    sessionStorage.setItem("role", data.role);
+        const data = await res.json();
 
-    // خزن اسم المستخدم في sessionStorage
-    sessionStorage.setItem("username", data.username);
+        document.getElementById("result").textContent = data.message || data.error;
 
-    if (data.role === "admin") {
-        window.location.href = "index.html";
-    } else if(data.role === "supadmin") {
-        window.location.href = "show.html";
-    }else if(data.role === "emp") {
-        window.location.href = "project_list.html";
+        if (data.success) {
+            sessionStorage.setItem("role", data.role);
+            sessionStorage.setItem("username", formData.get("username"));
+
+            if (data.role === "admin") {
+                window.location.href = "index.html";
+            } else if (data.role === "supadmin") {
+                window.location.href = "show.html";
+            } else if (data.role === "emp") {
+                window.location.href = "project_list.html";
+            }
+        }
+
+    } catch (err) {
+        document.getElementById("result").textContent = "خطأ في الاتصال بالسيرفر ❌";
+        console.log(err);
     }
-}
-   
-
 });
-
-
 </script>
+
 
 </body>
 </html>
