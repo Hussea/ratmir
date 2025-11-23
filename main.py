@@ -7,6 +7,7 @@ from datetime import datetime, date, time
 from fastapi import FastAPI, UploadFile, File, Form
 import base64, os, re
 from pydantic import BaseModel
+from fastapi.responses import HTMLResponse
 
 
 app = FastAPI()
@@ -19,6 +20,95 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+#====================================================
+# دالة لقراءة ملفات HTML
+def read_html(file_name: str):
+    file_path = os.path.join(os.path.dirname(__file__), file_name)
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        return "<h1>404 Not Found</h1>"
+
+@app.get("/", response_class=HTMLResponse)
+def home():
+    return read_html("index.html")
+
+@app.get("/details", response_class=HTMLResponse)
+def about():
+    return read_html("details.html")
+
+@app.get("/log_in", response_class=HTMLResponse)
+def about():
+    return read_html("log_in.html")
+
+@app.get("/navbar", response_class=HTMLResponse)
+def about():
+    return read_html("navbar.html")
+
+@app.get("/new_chick_point", response_class=HTMLResponse)
+def about():
+    return read_html("new_chick_point.html")
+
+@app.get("/Payroll", response_class=HTMLResponse)
+def about():
+    return read_html("Payroll.html")
+
+@app.get("/project_list", response_class=HTMLResponse)
+def about():
+    return read_html("project_list.html")
+
+@app.get("/project_salary_history", response_class=HTMLResponse)
+def about():
+    return read_html("project_salary_history.html")
+
+@app.get("/show", response_class=HTMLResponse)
+def about():
+    return read_html("show.html")
+
+@app.get("/show_admin", response_class=HTMLResponse)
+def about():
+    return read_html("show_admin.html")
+
+@app.get("/show_guards", response_class=HTMLResponse)
+def about():
+    return read_html("show_guards.html")
+
+@app.get("/show_info_chick_point", response_class=HTMLResponse)
+def about():
+    return read_html("show_info_chick_point.html")
+
+@app.get("/show_obxod", response_class=HTMLResponse)
+def about():
+    return read_html("show_obxod.html")
+
+@app.get("/show_project", response_class=HTMLResponse)
+def about():
+    return read_html("show_project.html")
+
+@app.get("/show_qr_code_fro_check_point", response_class=HTMLResponse)
+def about():
+    return read_html("show_qr_code_fro_check_point.html")
+
+@app.get("/show_qr_code_point _project", response_class=HTMLResponse)
+def about():
+    return read_html("show_qr_code_point _project.html")
+
+@app.get("/show_salary_history", response_class=HTMLResponse)
+def about():
+    return read_html("show_salary_history.html")
+
+@app.get("/show_work_shift", response_class=HTMLResponse)
+def about():
+    return read_html("show_work_shift.html")
+
+@app.get("/work_shift", response_class=HTMLResponse)
+def about():
+    return read_html("work_shift.html")
+
+
+    #====================================================
+
 # الاتصال بقاعدة البيانات
 def get_db_connection():
     return mysql.connector.connect(
@@ -28,7 +118,7 @@ def get_db_connection():
         database='defaultdb'
     )
 
-
+#====================================================
 @app.get("/")
 def home():
     return {"status": "ok"}
