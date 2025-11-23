@@ -22,13 +22,16 @@ app.add_middleware(
 # الاتصال بقاعدة البيانات
 def get_db_connection():
     return mysql.connector.connect(
-        host='localhost',
-        user='root',
-        password='',        # ← غيّر إذا عندك كلمة سر
-        database='ratmer'
+        host='mysql-ratmir-ratmir.g.aivencloud.com',
+        user='avnadmin',
+        password='AVNS_svRz6RySonWnU6RE3BL',        # ← غيّر إذا عندك كلمة سر
+        database='defaultdb'
     )
 
 
+@app.get("/")
+def home():
+    return {"status": "ok"}
 
 #====================================================
 @app.post("/add-emp")
