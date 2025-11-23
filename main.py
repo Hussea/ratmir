@@ -7,7 +7,7 @@ from datetime import datetime, date, time
 from fastapi import FastAPI, UploadFile, File, Form
 import base64, os, re
 from pydantic import BaseModel
-import psutil
+from fastapi.responses import HTMLResponse
 
 
 app = FastAPI()
@@ -20,59 +20,109 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+#====================================================
+# دالة لقراءة ملفات HTML
+def read_html(file_name: str):
+    file_path = os.path.join(os.path.dirname(__file__), file_name)
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        return "<h1>404 Not Found</h1>"
+
+@app.get("/", response_class=HTMLResponse)
+def home():
+    return read_html("index.html")
+
+@app.get("/details", response_class=HTMLResponse)
+def about():
+    return read_html("details.html")
+
+@app.get("/log_in", response_class=HTMLResponse)
+def about():
+    return read_html("log_in.html")
+
+@app.get("/navbar", response_class=HTMLResponse)
+def about():
+    return read_html("navbar.html")
+
+@app.get("/new_chick_point", response_class=HTMLResponse)
+def about():
+    return read_html("new_chick_point.html")
+
+@app.get("/Payroll", response_class=HTMLResponse)
+def about():
+    return read_html("Payroll.html")
+
+@app.get("/project_list", response_class=HTMLResponse)
+def about():
+    return read_html("project_list.html")
+
+@app.get("/project_salary_history", response_class=HTMLResponse)
+def about():
+    return read_html("project_salary_history.html")
+
+@app.get("/show", response_class=HTMLResponse)
+def about():
+    return read_html("show.html")
+
+@app.get("/show_admin", response_class=HTMLResponse)
+def about():
+    return read_html("show_admin.html")
+
+@app.get("/show_guards", response_class=HTMLResponse)
+def about():
+    return read_html("show_guards.html")
+
+@app.get("/show_info_chick_point", response_class=HTMLResponse)
+def about():
+    return read_html("show_info_chick_point.html")
+
+@app.get("/show_obxod", response_class=HTMLResponse)
+def about():
+    return read_html("show_obxod.html")
+
+@app.get("/show_project", response_class=HTMLResponse)
+def about():
+    return read_html("show_project.html")
+
+@app.get("/show_qr_code_fro_check_point", response_class=HTMLResponse)
+def about():
+    return read_html("show_qr_code_fro_check_point.html")
+
+@app.get("/show_qr_code_point _project", response_class=HTMLResponse)
+def about():
+    return read_html("show_qr_code_point _project.html")
+
+@app.get("/show_salary_history", response_class=HTMLResponse)
+def about():
+    return read_html("show_salary_history.html")
+
+@app.get("/show_work_shift", response_class=HTMLResponse)
+def about():
+    return read_html("show_work_shift.html")
+
+@app.get("/work_shift", response_class=HTMLResponse)
+def about():
+    return read_html("work_shift.html")
+
+
+    #====================================================
+
 # الاتصال بقاعدة البيانات
 def get_db_connection():
     return mysql.connector.connect(
-        host='localhost',
-        user='root',
-        password='',        # ← غيّر إذا عندك كلمة سر
-        database='ratmer'
+        host='mysql-ratmir-ratmir.g.aivencloud.com',
+        user='avnadmin',
+        password='AVNS_svRz6RySonWnU6RE3BL',        # ← غيّر إذا عندك كلمة سر
+        database='defaultdb'
     )
-#====================================================
-@app.get("/stats")
-def stats():
-    p = psutil.Process()
-
-    cpu_percent = p.cpu_percent(interval=0.1)
-    memory_usage = p.memory_info().rss / (1024 * 1024)
-
-    return {
-        "cpu_percent": cpu_percent,
-        "memory_mb": memory_usage
-    }
 
 #====================================================
-@app.post("/check_password")
-def check_password(password: str = Form(...)):
-    conn = get_db_connection()
-    cur = conn.cursor()
+@app.get("/")
+def home():
+    return {"status": "ok"}
 
-    cur.execute("SELECT COUNT(*) FROM users WHERE password = %s", (password,))
-    (count,) = cur.fetchone()
-
-    if count > 0:
-        return {"exists": True}   # كلمة المرور موجودة مسبقاً
-    else:
-        return {"exists": False}  # كلمة المرور فريدة
-
-#====================================================
-@app.post("/add_admin")
-def add_category(name: str = Form(...), 
-                 pasword: str = Form(...),
-                 rool: str = Form(...)):
-    try:
-        conn = get_db_connection()
-        cur = conn.cursor()
-        query = """
-        INSERT INTO users 
-        (username, password, role)
-        VALUES (%s, %s, %s)
-        """
-        cur.execute(query, (name, pasword, rool))
-        conn.commit()
-        return {"message": "تمت الإضافة بنجاح ✅"}
-    except mysql.connector.Error as e:
-        return {"error": str(e)}
 #====================================================
 @app.post("/add-emp")
 def add_employee(
@@ -123,9 +173,9 @@ def add_employee(
         return {"error": str(e)}
 #====================================================
 @app.post("/add-category")
-def add_category(title: str = Form(...), 
+def add_category(id: int = Form(0), 
+                 title: str = Form(...), 
                  address: str = Form(...),
-                 Coordinates: str = Form(...),
                  q_person: str = Form(...), 
                  ses_work: str = Form(...), 
                  start_time_work: int = Form(...), 
@@ -137,17 +187,12 @@ def add_category(title: str = Form(...),
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        query = """
-        INSERT INTO projuct 
-        (title, address, Coordinates, q_person, ses_work, start_time_work, sum_of_proj, pers_of_proj, n_phone, sel_emp, nots)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """
-        cur.execute(query, (title, address, Coordinates, q_person, ses_work, start_time_work, sum_of_proj, pers_of_proj, n_phone, sel_emp, nots))
+        query = "INSERT INTO projuct (id, title, address, q_person, ses_work, start_time_work, sum_of_proj, pers_of_proj, n_phone, sel_emp, nots) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        cur.execute(query, (id, title, address, q_person, ses_work, start_time_work, sum_of_proj, pers_of_proj, n_phone, sel_emp, nots))
         conn.commit()
         return {"message": "تمت الإضافة بنجاح ✅"}
     except mysql.connector.Error as e:
         return {"error": str(e)}
-
 #====================================================
 class UpdateCategory(BaseModel):
     id: int
@@ -311,71 +356,12 @@ def get_categories():
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT title, is_active FROM projuct")
+        cur.execute("SELECT title FROM projuct WHERE is_active = TRUE")  # أو اسم العمود اللي تريده
         rows = cur.fetchall()
-
-        # استخراج كل عمود في مصفوفة مستقلة
-        titles = [row[0] for row in rows]
-        is_active = [row[1] for row in rows]
-
-        # نرجعهم في JSON يحتوي على مصفوفتين
-        return {
-            "titles": titles,
-            "is_active": is_active
-        }
-
+        category = [row[0] for row in rows]
+        return {"category": category}
     except mysql.connector.Error as e:
         return {"error": str(e)}
-
- 
-#====================================================
-
-@app.get("/get_admin")
-def get_categories():
-    try:
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT * FROM users")
-        rows = cur.fetchall()
-
-        # استخراج كل عمود في مصفوفة مستقلة
-        idu = [row[0] for row in rows]
-        username = [row[1] for row in rows]
-        password = [row[2] for row in rows]
-        role = [row[3] for row in rows]
-        conn.close()  # مهم لإغلاق الاتصال
-
-        # نرجعهم في JSON يحتوي على مصفوفتين
-        return {
-            "idu": idu,
-            "username": username,
-            "password": password,
-            "role": role
-        }
-
-    except mysql.connector.Error as e:
-        return {"error": str(e)}
-
-#====================================================
-@app.get("/delet_admin")
-def delet_admin(idu: int):
-    try:
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("DELETE FROM users WHERE id = %s", (idu,))
-        conn.commit()  # ضروري لتأكيد الحذف
-
-        if cur.rowcount == 0:
-            return {"message": "❌Пользователь не найден."}
-
-        return {"message": "✅ Пользователь успешно удалён."}
-
-    except mysql.connector.Error as e:
-        return {"error": str(e)}
-
-    finally:
-        conn.close()
-
 
 #===============================================
 @app.get("/get_guards")
@@ -400,7 +386,6 @@ def get_guards(
     if employee_id is not None:
         query += " AND employee_id = %s"
         values.append(employee_id)
-    
     if nots is not None:
         query += " AND nots = %s"
         values.append(nots)
@@ -478,26 +463,28 @@ def salary_history(
     proj_id_send: int = Form(None), 
     mySelect: str = Form(None),  
     pay_month: str = Form(None), 
-    sum_pay: int = Form(None),
-    emp_ent: str = Form(...), 
+    sum_pay: int = Form(None), 
     notes: str = Form(None)
-    
 ):
     try:
-        
+        print("🚀 بدء حفظ البيانات...")
+        print("الموظف:", emp_id_send)
+        print("المشروع:", proj_id_send)
+        print("التواريخ:", mySelect, pay_month, sum_pay, notes)
         conn = get_db_connection()
         cur = conn.cursor()
         query = """
             INSERT INTO salary_history 
-            (emp_id, project_id, pay_method, pay_for, sum, data_entry_clerk_id, nots) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            (emp_id, project_id, pay_method, pay_for, sum, nots) 
+            VALUES (%s, %s, %s, %s, %s, %s)
         """
-        cur.execute(query, (emp_id_send, proj_id_send, mySelect, pay_month, sum_pay, emp_ent, notes))
+        cur.execute(query, (emp_id_send, proj_id_send, mySelect, pay_month, sum_pay, notes))
         conn.commit()
-        return {"status": "success", "message": "Отправлено успешно ✅"}
+        print("✅ تم الحفظ بنجاح")
+        return {"message": "تمت الإضافة بنجاح ✅"}
     except mysql.connector.Error as e:
-        return {"status": "error", "message": f"Произошла ошибка при отправке.❌: {str(e)}"}
-    
+        print("❌ خطأ في قاعدة البيانات:", str(e))
+        return {"error": str(e)}
     finally:
         cur.close()
         conn.close()
@@ -556,7 +543,7 @@ def add_chick_point(
     name_projct: int = Form(...), 
     name_point: str = Form(...), 
     crrdint: str = Form(...),
-    id_entry_emp: str = Form(...)
+    id_entry_emp: int = Form(...)
 ):
     try:
         print("🚀 بدء حفظ البيانات...")
@@ -642,7 +629,6 @@ def show_info_chick_point(
             points_chick.id_project,
             points_chick.name_point,
             points_chick.Coordinates,
-            points_chick.id_entry_emp,
             projuct.title AS projuct_title
            
         FROM points_chick
@@ -731,8 +717,7 @@ def login(username: str = Form(...), password: str = Form(...)):
         return {
             "success": True,
             "message": "تم تسجيل الدخول بنجاح ✅",
-            "role": user["role"],  # ترجع دور المستخدم هنا
-            "username": user["username"]  # ترجع دور المستخدم هنا
+            "role": user["role"]  # ترجع دور المستخدم هنا
         }
     else:
         return {
@@ -844,15 +829,7 @@ def get_all_products():
 
 r"""
 uvicorn main:app --reload
-cd C:\Users\alame\OneDrive\Desktop\python\ratmir
+cd C:\Users\Acer\Desktop\work\ratmir
 uvicorn main:app --host 127.0.0.1 --port 8001
 in link add /docs
-
-uvicorn C:\Users\alame\OneDrive\Desktop\python.main:app --reload
-
 """
-
-
-
-
-
