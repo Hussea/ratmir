@@ -9,10 +9,99 @@ import base64, os, re
 from pydantic import BaseModel
 import psutil
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from fastapi import Request
 
 app = FastAPI()
 
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
+#----------------------------------------------
+# mount static folder
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# templates folder
+templates = Jinja2Templates(directory="templates")
+
+@app.get("/", response_class=HTMLResponse)
+def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+@app.get("/login", response_class=HTMLResponse)
+def login_page(request: Request):
+    return templates.TemplateResponse("log_in.html", {"request": request})
+
+@app.get("/components", response_class=HTMLResponse)
+def login_page(request: Request):
+    return templates.TemplateResponse("components.html", {"request": request})
+
+@app.get("/details", response_class=HTMLResponse)
+def login_page(request: Request):
+    return templates.TemplateResponse("details.html", {"request": request})
+
+@app.get("/fils", response_class=HTMLResponse)
+def login_page(request: Request):
+    return templates.TemplateResponse("fils.html", {"request": request})
+
+@app.get("/navbar", response_class=HTMLResponse)
+def login_page(request: Request):
+    return templates.TemplateResponse("navbar.html", {"request": request})
+
+@app.get("/new_chick_point", response_class=HTMLResponse)
+def login_page(request: Request):
+    return templates.TemplateResponse("new_chick_point.html", {"request": request})
+
+@app.get("/Payroll", response_class=HTMLResponse)
+def login_page(request: Request):
+    return templates.TemplateResponse("Payroll.html", {"request": request})
+
+@app.get("/project_list", response_class=HTMLResponse)
+def login_page(request: Request):
+    return templates.TemplateResponse("project_list.html", {"request": request})
+
+@app.get("/project_salary_history", response_class=HTMLResponse)
+def login_page(request: Request):
+    return templates.TemplateResponse("project_salary_history.html", {"request": request})
+
+@app.get("/show", response_class=HTMLResponse)
+def login_page(request: Request):
+    return templates.TemplateResponse("show.html", {"request": request})
+
+@app.get("/show_admin", response_class=HTMLResponse)
+def login_page(request: Request):
+    return templates.TemplateResponse("loshow_adming_in.html", {"request": request})
+
+@app.get("/show_guards", response_class=HTMLResponse)
+def login_page(request: Request):
+    return templates.TemplateResponse("show_guards.html", {"request": request})
+
+@app.get("/show_info_chick_point", response_class=HTMLResponse)
+def login_page(request: Request):
+    return templates.TemplateResponse("show_info_chick_point.html", {"request": request})
+    
+@app.get("/show_obxod", response_class=HTMLResponse)
+def login_page(request: Request):
+    return templates.TemplateResponse("show_obxod.html", {"request": request})
+    
+@app.get("/show_project", response_class=HTMLResponse)
+def login_page(request: Request):
+    return templates.TemplateResponse("show_project.html", {"request": request})
+    
+@app.get("/show_qr_code_fro_check_point", response_class=HTMLResponse)
+def login_page(request: Request):
+    return templates.TemplateResponse("show_qr_code_fro_check_point.html", {"request": request})
+
+    
+@app.get("/show_qr_code_point _project", response_class=HTMLResponse)
+def login_page(request: Request):
+    return templates.TemplateResponse("show_qr_code_point _project.html", {"request": request})
+
+
+
+@app.get("/work_shift", response_class=HTMLResponse)
+def login_page(request: Request):
+    return templates.TemplateResponse("work_shift.html", {"request": request})
+
+#----------------------------------------------
 
 
 @app.get("/")

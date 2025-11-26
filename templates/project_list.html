@@ -146,7 +146,7 @@
 </head>
 <body>
  <!--bar show start -->
-   <script src="header.js" defer></script>
+   <script src="/static/js/header.js" defer></script>
  <my-header></my-header>
 <!--bar show end -->
 
@@ -157,7 +157,7 @@
 <ul id="categoryList">
     <!-- سيتم عرض العناصر هنا -->
 </ul>
-<script src="js/config.js"></script>
+<script src="/static/js/config.js"></script>
 <script>
   async function fetchCategories() {
     try {
@@ -186,7 +186,7 @@
                 button1.textContent = "Информация";
                  
                 button1.onclick = () => {
-                    const url = `/show_project.html?title=${encodeURIComponent(title)}`;
+                    const url = `show_project.html?title=${encodeURIComponent(title)}`;
                     window.location.href = url;
                 };
 
@@ -196,7 +196,7 @@
                 button2.style.backgroundColor = "#0056b3";
                 button2.id = "QRBUT";
                 button2.onclick = () => {
-                    const url = `/work_shift.html?title=${encodeURIComponent(title)}`;
+                    const url = `work_shift.html?title=${encodeURIComponent(title)}`;
                     window.location.href = url;
                 };
 
