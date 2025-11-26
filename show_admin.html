@@ -157,11 +157,11 @@
 <ul id="categoryList">
     <!-- سيتم عرض العناصر هنا -->
 </ul>
-
+<script src="js/config.js"></script>
 <script>
   async function fetchCategories() {
     try {
-        const response = await fetch('http://127.0.0.1:8001/get_admin');
+        const response = await fetch(`${LinkP}/get_admin`);
         const data = await response.json();
 
         const list = document.getElementById('categoryList');
@@ -208,7 +208,7 @@ button1.onclick = async () => {
   if (!confirm("Вы уверены, что хотите удалить этого пользователя?")) return;
 
   try {
-    const response = await fetch(`http://127.0.0.1:8001/delet_admin?idu=${idu}`, {
+    const response = await fetch(`${LinkP}/delet_admin?idu=${idu}`, {
   method: "GET"
    });
 

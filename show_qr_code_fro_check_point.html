@@ -129,6 +129,7 @@
     display: block;
   }
 </style>
+<script src="js/config.js"></script>
 <body>
 
 </body>
@@ -169,7 +170,7 @@
         }
     }
 
-    fetch(`http://127.0.0.1:8001/get_check_point?${params.toString()}`)
+    fetch(`${LinkP}/get_check_point?${params.toString()}`)
         .then(res => res.json())
         .then(data => {
             lastData = data; // نخزن البيانات للمقارنة لاحقًا
@@ -244,7 +245,7 @@
   const formData = new FormData();
   formData.append("id_check_point", projectName);
 
-  const response = await fetch("http://127.0.0.1:8001/add_chickd_point_datatame", {
+  const response = await fetch(`${LinkP}/add_chickd_point_datatame`, {
     method: "POST",
     body: formData
   });

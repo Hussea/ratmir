@@ -23,11 +23,12 @@ app.add_middleware(
 # الاتصال بقاعدة البيانات
 def get_db_connection():
     return mysql.connector.connect(
-        host='localhost',
-        user='root',
-        password='',        # ← غيّر إذا عندك كلمة سر
-        database='ratmer'
+        host='mysql-ratmir-ratmir.g.aivencloud.com',
+        user='avnadmin',
+        password='AVNS_svRz6RySonWnU6RE3BL',        # ← غيّر إذا عندك كلمة سر
+        database='defaultdb'
     )
+
 #====================================================
 @app.get("/stats")
 def stats():
@@ -844,7 +845,7 @@ def get_all_products():
 
 r"""
 uvicorn main:app --reload
-cd C:\Users\alame\OneDrive\Desktop\python\ratmir
+cd C:\Users\alame\OneDrive\Desktop\python\new_ratmir\ratmir
 uvicorn main:app --host 127.0.0.1 --port 8001
 in link add /docs
 

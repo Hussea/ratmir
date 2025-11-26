@@ -18,7 +18,7 @@
     </style>
 </head>
 <body>
-
+<script src="js/config.js"></script>
 <h2>Search Work Shifts</h2>
 <button onclick="show_hade()" id="pig_data">pig data</button>
 <button onclick="hade_show()" id="min_data" style="display: none;">min data</button>
@@ -76,7 +76,7 @@
             }
         }
 
-        fetch(`http://127.0.0.1:8001/show_work_shift?${params.toString()}`)
+        fetch(`${LinkP}/show_work_shift?${params.toString()}`)
             .then(res => res.json())
             .then(data => {
                 const table = document.getElementById("product-table");

@@ -173,6 +173,7 @@
   
   
 </head>
+<script src="js/config.js"></script>
 <body>
   <!--bar show start -->
    <script src="header.js" defer></script>
@@ -236,7 +237,7 @@
  في الخانات المطلوبه  -->
 <script>
   async function loademployee() {
-    const response = await fetch("http://127.0.0.1:8001/Dropdown_employee");
+    const response = await fetch(`${LinkP}/Dropdown_employee`);
     const data = await response.json();
 
     const dropdown = document.getElementById("guards");
@@ -262,7 +263,7 @@ function searchProduct() {
         return;
     }
 
-    let url = `http://127.0.0.1:8001/get-guards-by-name/?Ename=${encodeURIComponent(Ename)}`;
+    let url = `${LinkP}/get-guards-by-name/?Ename=${encodeURIComponent(Ename)}`;
 
     let request = new XMLHttpRequest();
     request.open("GET", url);
@@ -344,7 +345,7 @@ function searchProduct() {
         }
     }
 
-    fetch(`http://127.0.0.1:8001/get_guards?${params.toString()}`)
+    fetch(`${LinkP}/get_guards?${params.toString()}`)
         .then(res => res.json())
         .then(data => {
             const table = document.getElementById("product-table");
@@ -450,7 +451,7 @@ document.getElementById("updateForm").addEventListener("submit", async function(
         is_active: document.getElementById("is_active_up").value   // ✅ الحقل الجديد
     };
 
-    let response = await fetch("http://127.0.0.1:8001/update_guard", {
+    let response = await fetch(`${LinkP}/update_guard`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)

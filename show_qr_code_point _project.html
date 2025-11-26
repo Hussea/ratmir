@@ -131,7 +131,7 @@
 </style>
 <body>
    
-  
+  <script src="js/config.js"></script>
   
 </body>
 </html>
@@ -169,7 +169,7 @@
         }
     }
 
-    fetch(`http://127.0.0.1:8001/get_check_point?${params.toString()}`)
+    fetch(`${LinkP}/get_check_point?${params.toString()}`)
         .then(res => res.json())
         .then(data => {
             const table = document.getElementById("product-table");

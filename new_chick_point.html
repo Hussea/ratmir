@@ -231,6 +231,7 @@
      
 </body>
 </html>
+<script src="js/config.js"></script>
 <script>
     // استخراج البارامتر من الرابط
     const params = new URLSearchParams(window.location.search);
@@ -258,7 +259,7 @@
   }
 
   // إذا الكل صحيح، نرسل الفورم
-  fetch("http://127.0.0.1:8001/add_chick_point", {
+  fetch(`${LinkP}/add_chick_point`, {
     method: "POST",
     body: formData
   })

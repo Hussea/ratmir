@@ -244,6 +244,7 @@
 
 
 <body>
+  <script src="js/config.js"></script>
  <!--bar show start -->
    <script src="header.js" defer></script>
  <my-header></my-header>
@@ -308,7 +309,7 @@
 <!--   الخانات التي يضهر فيها ارقام المشروع و رقم الحارس التابع له و من ثمه ارساله الى قاعده البيانات و غالبا هذه الخانات مخفيه    -->
 <div id="project-guards" class="tab-content">
     <div class="form-container">
-      <form id="add-project-guards" onsubmit="submitForm(event, 'add-project-guards', 'http://127.0.0.1:8001/add-project-guards')">
+      <form id="add-project-guards" onsubmit="submitForm(event, 'add-project-guards', `${LinkP}/add-project-guards`)">
         
         <input type="text" name="project_id"id="id1"style="display: none;">
       
@@ -362,7 +363,7 @@
  طريق اسم المشروع و اضهار بيانته في الخانات المحدده  -->
 <script>
   async function loadProducts() {
-    const response = await fetch("http://127.0.0.1:8001/Dropdown_project");
+    const response = await fetch(`${LinkP}/Dropdown_project`);
     const data = await response.json();
 
     const dropdown = document.getElementById("productDropdown");
@@ -384,7 +385,7 @@ function searchProduct() {
         return;
     }
 
-    let url = `http://127.0.0.1:8001/get-product-by-name/?title=${encodeURIComponent(title)}`;
+    let url = `${LinkP}/get-product-by-name/?title=${encodeURIComponent(title)}`;
 
     let request = new XMLHttpRequest();
     request.open("GET", url);
@@ -425,7 +426,7 @@ function searchProduct() {
  في الخانات المطلوبه  -->
 <script>
   async function loademployee() {
-    const response = await fetch("http://127.0.0.1:8001/Dropdown_employee");
+    const response = await fetch(`${LinkP}/Dropdown_employee`);
     const data = await response.json();
 
     const dropdown = document.getElementById("employeeDropdown");
@@ -446,7 +447,7 @@ function searchguards() {
         return;
     }
 
-    let url = `http://127.0.0.1:8001/get-guards-by-name/?Ename=${encodeURIComponent(Ename)}`;
+    let url = `${LinkP}/get-guards-by-name/?Ename=${encodeURIComponent(Ename)}`;
 
     let request = new XMLHttpRequest();
     request.open("GET", url);

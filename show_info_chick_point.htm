@@ -134,6 +134,7 @@
     }
     /*==================== bar style end ================================ */
 </style>
+<script src="js/config.js"></script>
 <body>
    <!--bar show start -->
 
@@ -181,7 +182,7 @@
       return;
     }
 
-    let apiUrl = `http://127.0.0.1:8001/show_info_chick_point?employee_id_input=${serch_id}`;
+    let apiUrl = `${LinkP}/show_info_chick_point?employee_id_input=${serch_id}`;
 
     document.getElementById('status').textContent = 'Загрузка данных 🔄...';
     document.getElementById('data-table').style.display = 'none';
@@ -282,7 +283,7 @@
       return;
     }
 
-    let apiUrl = `http://127.0.0.1:8001/show_info_chick_point?employee_id_input=${serch_id}`;
+    let apiUrl = `${LinkP}/show_info_chick_point?employee_id_input=${serch_id}`;
     document.getElementById('status').textContent = 'Загрузка данных 🔄...';
     document.getElementById('data-table').style.display = 'none';
     document.querySelector('#data-table tbody').innerHTML = '';

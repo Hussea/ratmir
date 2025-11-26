@@ -182,7 +182,7 @@
 
 
 <body>
-
+<script src="js/config.js"></script>
    <h2>Регистрация присутствия</h2>
 <input type="text" id="productName" style="display: none;" readonly>
 <hr>
@@ -249,7 +249,7 @@ function searchProduct() {
         return;
     }
 
-    let url = `http://127.0.0.1:8001/get-product-by-name/?title=${encodeURIComponent(title)}`;
+    let url = `${LinkP}/get-product-by-name/?title=${encodeURIComponent(title)}`;
 
     let request = new XMLHttpRequest();
     request.open("GET", url);
@@ -307,7 +307,7 @@ function fetchProducts() {
         }
     }
 
-    fetch(`http://127.0.0.1:8001/get_guards?${params.toString()}`)
+    fetch(`${LinkP}/get_guards?${params.toString()}`)
         .then(res => res.json())
         .then(data => {
             const table = document.getElementById("product-table");

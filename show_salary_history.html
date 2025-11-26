@@ -204,6 +204,7 @@
     }
     /*==================== bar style end ================================ */
 </style>
+<script src="js/config.js"></script>
 <body>
    <!--bar show start -->
    <script src="header.js" defer></script>
@@ -253,7 +254,7 @@
       return;
     }
 
-    let apiUrl = `http://127.0.0.1:8001/show_salary_history?employee_id_input=${empId}&project_id_input=${projId}`;
+    let apiUrl = `${LinkP}/show_salary_history?employee_id_input=${empId}&project_id_input=${projId}`;
 
     
     document.getElementById('status').textContent = '🔄 جارٍ تحميل البيانات...';

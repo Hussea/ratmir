@@ -104,6 +104,7 @@
     }
     /*==================== bar style end ================================ */
 </style>
+<script src="js/config.js"></script>
 <body>
    <!--bar show start -->
    <script src="header.js" defer></script>
@@ -140,7 +141,7 @@
             const project_id_input = document.getElementById("project_id_input").value;
             const data_tame_input = document.getElementById("data_tame_input").value;
 
-            let url = `http://127.0.0.1:8001/search_points?`;
+            let url = `${LinkP}/search_points?`;
             if (project_id_input) url += `project_id_input=${project_id_input}&`;
             if (data_tame_input) url += `data_tame_input=${encodeURIComponent(data_tame_input)}&`;
 

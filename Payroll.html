@@ -307,7 +307,7 @@
       return;
     }
 
-    let apiUrl = `http://127.0.0.1:8001/show_work_shift?employee_id_input=${empId}&project_id_input=${projId}`;
+    let apiUrl = `${LinkP}/show_work_shift?employee_id_input=${empId}&project_id_input=${projId}`;
     if (startDay) {
       apiUrl += `&start_day=${startDay}-01`;
     }
@@ -388,7 +388,7 @@ function closeImage() {
   <span><strong> тип:</strong> <span id="show_employee_name_salry"></span></span> |
   <span><strong> За:</strong> <span id="show_projact_name_salry"></span></span> |
   <span><strong> сума :</strong> <span id="show_sum_salry"></span></span> 
-  <span class="big-icon" onclick="goToPage()">📊</span> 
+  <button id="goToSalaryHistoryBtn">Платежи</button>
 </p>
 <input type="text" id="try" id="emp_ent" name="emp_ent" style="display: none;">
    
@@ -432,8 +432,8 @@ function closeImage() {
  function lost_salry() {
   const empId = params.get("employee_id_input");
   const projId = params.get("project_id_input");
-  let apiUrl = `http://127.0.0.1:8001/show_salary_history?employee_id_input=${empId}&project_id_input=${projId}`;
-  fetch(apiUrl)
+   
+  fetch(`${LinkP}/show_salary_history?employee_id_input=${empId}&project_id_input=${projId}`)
     .then(res => res.json())
     .then(data => {
       // ✅ نأخذ فقط السطر الأخير
@@ -455,23 +455,32 @@ function closeImage() {
 }
 
 // ✅ تنفيذ الدالة تلقائياً عند تحميل الصفحة
-window.onload = lost_salry;
-window.onload = loadData;
+window.onload = function() {
+    lost_salry();
+    loadData();
+};
+
 
 </script>
-
-  <script>
-    function goToPage() {
+ 
+<script>
+ 
+  document.getElementById("goToSalaryHistoryBtn").addEventListener("click", function() {
       const employeeId = params.get("employee_id_input");
       const projectId = params.get("project_id_input");
-      
+
+      if (!employeeId || !projectId) {
+          alert("Employee ID или Project ID отсутствуют!");
+          return;
+      }
 
       const url = `show_salary_history.html?employee_id_input=${employeeId}&project_id_input=${projectId}`;
       window.location.href = url;
-    }
-  </script>
+  });
+</script>
 
- 
+
+ <script src="js/config.js"></script>
 <script>
    
 
@@ -482,7 +491,7 @@ window.onload = loadData;
   const form = document.getElementById("employee-form");
   const formData = new FormData(form);
 
-  fetch("http://127.0.0.1:8001/salary_history", {
+  fetch(`${LinkP}/salary_history`, {
     method: "POST",
     body: formData
   })

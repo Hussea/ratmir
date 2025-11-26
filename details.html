@@ -256,7 +256,7 @@ const params0 = new URLSearchParams(window.location.search);
   startDateInput.addEventListener("change", calculateEndTime);
   document.getElementById("start_time").addEventListener("change", calculateEndTime);
 </script>
-
+<script src="js/config.js"></script>
   <script>
     // التقاط بارامترات URL وتحديث الحقول
     const params = new URLSearchParams(window.location.search);
@@ -299,7 +299,7 @@ const params0 = new URLSearchParams(window.location.search);
   }
 
   // إذا الكل صحيح، نرسل الفورم
-  fetch("http://127.0.0.1:8001/add_work_shifts", {
+  fetch(`${LinkP}/add_work_shifts`, {
     method: "POST",
     body: formData
   })

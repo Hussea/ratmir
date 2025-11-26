@@ -282,6 +282,7 @@ tr:hover {
     }
     /*==================== bar style end ================================ */
 </style>
+<script src="js/config.js"></script>
 <body>
    <!--bar show start -->
   <script src="header.js" defer></script>
@@ -409,7 +410,7 @@ document.getElementById("updateForm").addEventListener("submit", async function(
         is_active: document.getElementById("is_active_up").value   // ✅ الحقل الجديد
     };
 
-    let response = await fetch("http://127.0.0.1:8001/update_category", {
+    let response = await fetch(`${LinkP}/update_category`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
@@ -516,7 +517,7 @@ document.getElementById("updateForm").addEventListener("submit", async function(
         return;
       }
 
-      const url = `http://127.0.0.1:8001/get-product-by-name/?title=${encodeURIComponent(title)}`;
+      const url = `${LinkP}/get-product-by-name/?title=${encodeURIComponent(title)}`;
       const request = new XMLHttpRequest();
       request.open("GET", url);
       request.responseType = "json";
@@ -556,7 +557,7 @@ document.getElementById("updateForm").addEventListener("submit", async function(
     }
 
     async function fetchWorkShiftData(empId, projId) {
-      const apiUrl = `http://127.0.0.1:8001/show_work_shift?employee_id_input=${empId}&project_id_input=${projId}`;
+      const apiUrl = `${LinkP}/show_work_shift?employee_id_input=${empId}&project_id_input=${projId}`;
 
       try {
         const response = await fetch(apiUrl);
@@ -594,7 +595,7 @@ document.getElementById("updateForm").addEventListener("submit", async function(
       }
 
       try {
-        const res = await fetch(`http://127.0.0.1:8001/get_guards?${params.toString()}`);
+        const res = await fetch(`${LinkP}/get_guards?${params.toString()}`);
         const data = await res.json();
 
         const table = document.getElementById("product-table");
@@ -655,7 +656,7 @@ document.querySelectorAll(".mySwitch").forEach(cb => {
         const is_active = this.checked ? 1 : 0;
 
         try {
-            const response = await fetch("http://127.0.0.1:8001/update_project_guards", {
+            const response = await fetch(`${LinkP}/update_project_guards`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

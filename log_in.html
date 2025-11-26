@@ -17,13 +17,13 @@
     <p id="result"></p>
     </center>
  
-
+<script src="js/config.js"></script>
    <script>
 document.getElementById("loginForm").addEventListener("submit", async function(e) {
     e.preventDefault();
 
     const formData = new FormData(this);
-    const endpointUrl = "http://127.0.0.1:8001/login";
+    const endpointUrl = `${LinkP}/login`;
 
     const res = await fetch(endpointUrl, {
         method: "POST",
@@ -42,11 +42,11 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     sessionStorage.setItem("username", data.username);
 
     if (data.role === "admin") {
-        window.location.href = "index.html";
+        window.location.href = "/index.html";
     } else if(data.role === "supadmin") {
-        window.location.href = "show.html";
+        window.location.href = "/show.html";
     }else if(data.role === "emp") {
-        window.location.href = "project_list.html";
+        window.location.href = "/project_list.html";
     }
 }
    

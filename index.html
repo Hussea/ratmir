@@ -111,6 +111,7 @@
     }
     
   </style>
+  <script src="js/config.js"></script>
   <script>
     function openTab(evt, tabName) {
       document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
@@ -152,7 +153,7 @@
 
     window.onload = function () {
       document.querySelector(".tabs button").click();
-      loadSelectOptions("categorySelect", "http://127.0.0.1:8001/get-categories", "category");
+      loadSelectOptions("categorySelect", "${LinkP}/get-categories", "category");
       
     };
   </script>
@@ -183,7 +184,7 @@ function project_list() {
   
  <div class="form-container">
       <h2>Предоставление прав доступа сотрудникам</h2>
-      <form id="userForm" onsubmit="submitForm(event, 'userForm', 'http://127.0.0.1:8001/add_admin')">
+      <form id="userForm" onsubmit="submitForm(event, 'userForm', `${LinkP}/add_admin`)">
         <label>Имя пользователя:</label>
         <input type="text" name="name"  required>
 
@@ -226,7 +227,7 @@ function project_list() {
         }
 
         // تحقق من قاعدة البيانات عبر السيرفر
-        const res = await fetch("http://127.0.0.1:8001/check_password", {
+        const res = await fetch(`${LinkP}/check_password`, {
           method: "POST",
           body: new URLSearchParams({ password })
         });
@@ -245,7 +246,7 @@ function project_list() {
   <div id="emp" class="tab-content">
     <div class="form-container">
       <h2>Введите данные сотрудника</h2>
-      <form id="empForm" onsubmit="submitForm(event, 'empForm', 'http://127.0.0.1:8001/add-emp')">
+      <form id="empForm" onsubmit="submitForm(event, 'empForm', `${LinkP}/add-emp`)">
         <label>ИФО:</label>
         <input type="text" name="name"  required>
         <label>номер телефона :</label>
@@ -272,7 +273,7 @@ function project_list() {
   <div id="category" class="tab-content">
     <div class="form-container">
       <h2>Введите данные проекта</h2>
-      <form id="categoryForm" onsubmit="submitForm(event, 'categoryForm', 'http://127.0.0.1:8001/add-category')">
+      <form id="categoryForm" onsubmit="submitForm(event, 'categoryForm', `${LinkP}/add-category`)">
         <label>	название проекта:</label>
         <input type="text" name="title" required>
 

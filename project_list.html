@@ -157,11 +157,11 @@
 <ul id="categoryList">
     <!-- سيتم عرض العناصر هنا -->
 </ul>
-
+<script src="js/config.js"></script>
 <script>
   async function fetchCategories() {
     try {
-        const response = await fetch('http://127.0.0.1:8001/get-categories');
+        const response = await fetch(`${LinkP}/get-categories`);
         const data = await response.json();
 
         const list = document.getElementById('categoryList');
@@ -186,7 +186,7 @@
                 button1.textContent = "Информация";
                  
                 button1.onclick = () => {
-                    const url = `show_project.html?title=${encodeURIComponent(title)}`;
+                    const url = `/show_project.html?title=${encodeURIComponent(title)}`;
                     window.location.href = url;
                 };
 
@@ -196,7 +196,7 @@
                 button2.style.backgroundColor = "#0056b3";
                 button2.id = "QRBUT";
                 button2.onclick = () => {
-                    const url = `work_shift.html?title=${encodeURIComponent(title)}`;
+                    const url = `/work_shift.html?title=${encodeURIComponent(title)}`;
                     window.location.href = url;
                 };
 
