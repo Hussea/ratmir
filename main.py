@@ -8,10 +8,12 @@ from fastapi import FastAPI, UploadFile, File, Form
 import base64, os, re
 from pydantic import BaseModel
 import psutil
-
+from fastapi.responses import FileResponse
 
 app = FastAPI()
-
+@app.get("/")
+def read_root():
+    return FileResponse("index.html")
 # للسماح للـ HTML من متصفح مختلف
 app.add_middleware(
     CORSMiddleware,
