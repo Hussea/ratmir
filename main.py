@@ -8,7 +8,7 @@ from fastapi import FastAPI, UploadFile, File, Form
 import base64, os, re
 from pydantic import BaseModel
 import psutil
-
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
