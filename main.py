@@ -8,9 +8,6 @@ from fastapi import FastAPI, UploadFile, File, Form
 import base64, os, re
 from pydantic import BaseModel
 import psutil
-from fastapi.responses import FileResponse
-from fastapi.staticfiles import StaticFiles
-
 
 
 app = FastAPI()
@@ -28,6 +25,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/")
+def read_root():
+    return FileResponse("index.html")
 
 # الاتصال بقاعدة البيانات
 def get_db_connection():
