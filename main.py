@@ -16,7 +16,7 @@ from fastapi import Request
 app = FastAPI()
 
 #----------------------------------------------
-# mount static folder
+# mount static foldervv
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # templates folder
