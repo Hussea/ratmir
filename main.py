@@ -9,8 +9,15 @@ import base64, os, re
 from pydantic import BaseModel
 import psutil
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+
+
 
 app = FastAPI()
+
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
+
+
 @app.get("/")
 def read_root():
     return FileResponse("index.html")
