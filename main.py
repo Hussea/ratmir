@@ -19,7 +19,7 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return FileResponse("templates/index.html")
+    return templates.TemplateResponse("index.html", {"request": request})
 #----------------------------------------------
 # mount static foldervv
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -27,10 +27,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # templates folder
 templates = Jinja2Templates(directory="templates")
 
-@app.get("/", response_class=HTMLResponse)
-def index(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
-
+ 
 @app.get("/login", response_class=HTMLResponse)
 def login_page(request: Request):
     return templates.TemplateResponse("log_in.html", {"request": request})
