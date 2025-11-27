@@ -30,9 +30,7 @@ def read_root(request: Request):
 #----------------------------------------------
 
  
-@app.get("/login", response_class=HTMLResponse)
-def login_page0(request: Request):
-    return templates.TemplateResponse("log_in.html", {"request": request})
+
 
 @app.get("/components", response_class=HTMLResponse)
 def login_page1(request: Request):
@@ -105,6 +103,9 @@ def login_page16(request: Request):
 def login_page17(request: Request):
     return templates.TemplateResponse("work_shift.html", {"request": request})
 
+@app.get("/login", response_class=HTMLResponse)
+def login_page0(request: Request):
+    return templates.TemplateResponse("log_in.html", {"request": request})
 #----------------------------------------------
 
 
