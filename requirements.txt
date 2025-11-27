@@ -4,3 +4,4 @@ mysql-connector-python
 pydantic
 psutil
 python-multipart
+jinja2
