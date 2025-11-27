@@ -16,91 +16,93 @@ from fastapi.responses import FileResponse
 
 app = FastAPI()
 
-
-@app.get("/")
-def read_root():
-    return templates.TemplateResponse("index.html", {"request": request})
-#----------------------------------------------
 # mount static foldervv
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # templates folder
 templates = Jinja2Templates(directory="templates")
 
+
+@app.get("/", response_class=HTMLResponse)
+def read_root(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+#----------------------------------------------
+
  
 @app.get("/login", response_class=HTMLResponse)
-def login_page(request: Request):
+def login_page0(request: Request):
     return templates.TemplateResponse("log_in.html", {"request": request})
 
 @app.get("/components", response_class=HTMLResponse)
-def login_page(request: Request):
+def login_page1(request: Request):
     return templates.TemplateResponse("components.html", {"request": request})
 
 @app.get("/details", response_class=HTMLResponse)
-def login_page(request: Request):
+def login_page2(request: Request):
     return templates.TemplateResponse("details.html", {"request": request})
 
 @app.get("/fils", response_class=HTMLResponse)
-def login_page(request: Request):
+def login_page3(request: Request):
     return templates.TemplateResponse("fils.html", {"request": request})
 
 @app.get("/navbar", response_class=HTMLResponse)
-def login_page(request: Request):
+def login_page4(request: Request):
     return templates.TemplateResponse("navbar.html", {"request": request})
 
 @app.get("/new_chick_point", response_class=HTMLResponse)
-def login_page(request: Request):
+def login_page5(request: Request):
     return templates.TemplateResponse("new_chick_point.html", {"request": request})
 
 @app.get("/Payroll", response_class=HTMLResponse)
-def login_page(request: Request):
+def login_page6(request: Request):
     return templates.TemplateResponse("Payroll.html", {"request": request})
 
 @app.get("/project_list", response_class=HTMLResponse)
-def login_page(request: Request):
+def login_page7(request: Request):
     return templates.TemplateResponse("project_list.html", {"request": request})
 
 @app.get("/project_salary_history", response_class=HTMLResponse)
-def login_page(request: Request):
+def login_page8(request: Request):
     return templates.TemplateResponse("project_salary_history.html", {"request": request})
 
 @app.get("/show", response_class=HTMLResponse)
-def login_page(request: Request):
+def login_page9(request: Request):
     return templates.TemplateResponse("show.html", {"request": request})
 
 @app.get("/show_admin", response_class=HTMLResponse)
-def login_page(request: Request):
+def login_page10(request: Request):
     return templates.TemplateResponse("loshow_adming_in.html", {"request": request})
 
 @app.get("/show_guards", response_class=HTMLResponse)
-def login_page(request: Request):
+def login_page11(request: Request):
     return templates.TemplateResponse("show_guards.html", {"request": request})
 
 @app.get("/show_info_chick_point", response_class=HTMLResponse)
-def login_page(request: Request):
+def login_page12(request: Request):
     return templates.TemplateResponse("show_info_chick_point.html", {"request": request})
     
 @app.get("/show_obxod", response_class=HTMLResponse)
-def login_page(request: Request):
+def login_page13(request: Request):
     return templates.TemplateResponse("show_obxod.html", {"request": request})
     
 @app.get("/show_project", response_class=HTMLResponse)
-def login_page(request: Request):
+def login_page14(request: Request):
     return templates.TemplateResponse("show_project.html", {"request": request})
     
 @app.get("/show_qr_code_fro_check_point", response_class=HTMLResponse)
-def login_page(request: Request):
+def login_page15(request: Request):
     return templates.TemplateResponse("show_qr_code_fro_check_point.html", {"request": request})
 
     
 @app.get("/show_qr_code_point _project", response_class=HTMLResponse)
-def login_page(request: Request):
+def login_page16(request: Request):
     return templates.TemplateResponse("show_qr_code_point _project.html", {"request": request})
 
 
 
 @app.get("/work_shift", response_class=HTMLResponse)
-def login_page(request: Request):
+def login_page17(request: Request):
     return templates.TemplateResponse("work_shift.html", {"request": request})
 
 #----------------------------------------------
