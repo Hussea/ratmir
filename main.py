@@ -70,7 +70,7 @@ def login_page9(request: Request):
 
 @app.get("/show_admin", response_class=HTMLResponse)
 def login_page10(request: Request):
-    return templates.TemplateResponse("loshow_adming_in.html", {"request": request})
+    return templates.TemplateResponse("show_admin.html", {"request": request})
 
 @app.get("/show_guards", response_class=HTMLResponse)
 def login_page11(request: Request):
@@ -93,9 +93,9 @@ def login_page15(request: Request):
     return templates.TemplateResponse("show_qr_code_fro_check_point.html", {"request": request})
 
     
-@app.get("/show_qr_code_point _project", response_class=HTMLResponse)
+@app.get("/show_qr_code_point_project", response_class=HTMLResponse)
 def login_page16(request: Request):
-    return templates.TemplateResponse("show_qr_code_point _project.html", {"request": request})
+    return templates.TemplateResponse("show_qr_code_point_project.html", {"request": request})
 
 
 
@@ -103,7 +103,7 @@ def login_page16(request: Request):
 def login_page17(request: Request):
     return templates.TemplateResponse("work_shift.html", {"request": request})
 
-@app.get("/login", response_class=HTMLResponse)
+@app.get("/log_in", response_class=HTMLResponse)
 def login_page0(request: Request):
     return templates.TemplateResponse("log_in.html", {"request": request})
 #----------------------------------------------
