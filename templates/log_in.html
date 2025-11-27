@@ -42,11 +42,11 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     sessionStorage.setItem("username", data.username);
 
     if (data.role === "admin") {
-        window.location.href = "index.html";
+        window.location.href = "/index.html";
     } else if(data.role === "supadmin") {
-        window.location.href = "show.html";
+        window.location.href = "/show.html";
     }else if(data.role === "emp") {
-        window.location.href = "project_list.html";
+        window.location.href = "/project_list.html";
     }
 }
    
