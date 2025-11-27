@@ -105,9 +105,7 @@ def login_page(request: Request):
 #----------------------------------------------
 
 
-@app.get("/")
-def read_root():
-    return FileResponse("index.html")
+
 # للسماح للـ HTML من متصفح مختلف
 app.add_middleware(
     CORSMiddleware,
@@ -118,7 +116,7 @@ app.add_middleware(
 
 @app.get("/")
 def read_root():
-    return FileResponse("index.html")
+    return FileResponse("static/index.html")
 
 # الاتصال بقاعدة البيانات
 def get_db_connection():
