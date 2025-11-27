@@ -16,6 +16,10 @@ from fastapi.responses import FileResponse
 
 app = FastAPI()
 
+
+@app.get("/")
+def read_root():
+    return FileResponse("templates/index.html")
 #----------------------------------------------
 # mount static foldervv
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -114,9 +118,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
-def read_root():
-    return FileResponse("static/index.html")
+
 
 # الاتصال بقاعدة البيانات
 def get_db_connection():
