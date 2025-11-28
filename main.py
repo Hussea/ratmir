@@ -25,7 +25,7 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/", response_class=HTMLResponse)
 def read_root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse("Payroll.html", {"request": request})
 
 #----------------------------------------------
 
@@ -52,9 +52,9 @@ def login_page4(request: Request):
 def login_page5(request: Request):
     return templates.TemplateResponse("new_chick_point.html", {"request": request})
 
-@app.get("/Payroll", response_class=HTMLResponse)
+@app.get("/index", response_class=HTMLResponse)
 def login_page6(request: Request):
-    return templates.TemplateResponse("Payroll.html", {"request": request})
+    return templates.TemplateResponse("index.html", {"request": request})
 
 @app.get("/project_list", response_class=HTMLResponse)
 def login_page7(request: Request):
