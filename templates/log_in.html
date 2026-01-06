@@ -1,23 +1,126 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>تسجيل الدخول</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Авторизация</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      background: linear-gradient(135deg, #e0e5eb, #3d4345);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+    }
+
+    /* 🧱 Card */
+    .login-card {
+      width: 100%;
+      max-width: 380px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+      text-align: center;
+    }
+
+    .login-card h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    /* 🧾 Form */
+    .form-group {
+      text-align: left;
+      margin-bottom: 15px;
+    }
+
+    label {
+      font-size: 14px;
+      color: #555;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      font-size: 15px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    input:focus {
+      border-color: #4a90e2;
+    }
+
+    /* 🔘 Button */
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: none;
+      background: #0a1624;
+      color: #fff;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #e8edf2;
+    }
+
+    /* ⚠️ Result */
+    #result {
+      margin-top: 15px;
+      font-size: 14px;
+      color: red;
+    }
+
+    /* 📱 Mobile */
+    @media (max-width: 360px) {
+      .login-card {
+        padding: 20px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <center>
-         <h2>Авторизация в системе </h2>
+
+  <div class="login-card">
+    <h2>OOO-Ratmir</h2>
+    <h2>Авторизация в системе</h2>
+
     <form id="loginForm">
-        <label> Логин:</label>
-        <input type="text" name="username" required><br><br>
-        <label> Пароль:</label>
-        <input type="password" name="password" required><br><br>
-        <button type="submit">Войти</button>
+      <div class="form-group">
+        <label>Логин</label>
+        <input type="text" name="username" required>
+      </div>
+
+      <div class="form-group">
+        <label>Пароль</label>
+        <input type="password" name="password" required>
+      </div>
+
+      <button type="submit">Войти</button>
     </form>
+
     <p id="result"></p>
-  </center>
-      
-    
+  </div>
+
  
 <script src="/static/js/config.js"></script>
    <script>

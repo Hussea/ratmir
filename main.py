@@ -950,14 +950,14 @@ def login(username: str = Form(...), password: str = Form(...)):
     if user:
         return {
             "success": True,
-            "message": "تم تسجيل الدخول بنجاح ✅",
+            "message": "✅ Вход выполнен успешно",
             "role": user["role"],  # ترجع دور المستخدم هنا
             "username": user["username"]  # ترجع دور المستخدم هنا
         }
     else:
         return {
             "success": False,
-            "error": "❌ اسم المستخدم أو كلمة المرور غير صحيحة"
+            "error": "❌ Неверный логин или пароль"
         }
      #====================================================
 @app.post("/add_chickd_point_datatame")
