@@ -108,213 +108,51 @@
 </head>
 <body>
 
-  <div class="container">
-    <h1>регистрация смену</h1>
+<div class="container">
+  <h1>Регистрация смены</h1>
 
-    <form id="employee-form" onsubmit="submitForm(event)">
-        
-     
-      <input type="text" id="employee_id_input" name="employee_id_input" style="display: none;">
-      <input type="text" id="project_id_input" name="project_id_input" style="display: none;">
-      
-      <label for="project_name">Название проекта :</label>
-      <input type="text" id="project_name" name="project_name"readonly>
+  <form id="employee-form" >
 
-      <label for="employee_name">Имя охранника :</label>
-      <input type="text" id="employee_name" name="employee_name"readonly>
+    <!-- hidden -->
+    <input type="hidden" name="employee_id" id="employee_id">
+    <input type="hidden" name="project_id" id="project_id">
 
-      <label for="start_date">День начала смены:</label>
-      <input type="date" id="start_date" name="start_date" required >
+    <label>Название проекта:</label>
+    <input type="text" id="project_name" readonly>
 
-      <label for="start_time">Время начала смены:</label>
-      <input type="text" id="start_time" name="start_time" required readonly>
+    <label>Имя охранника:</label>
+    <input type="text" id="employee_name" readonly>
 
-      <label for="end_date">День окончания смены:</label>
-      <input type="date" id="end_date" name="end_date" required readonly>
+    <label>День начала смены:</label>
+    <input type="date" id="start_date" name="start_date" required>
 
-      <label for="end_time" >Время окончания смены:</label>
-      <input type="time" id="end_time" name="end_time" required readonly>
-<center>
-   <!-- ✅ اختيار أو التقاط صورة -->
-      <video id="video" autoplay></video>
-      <canvas id="canvas" style="display:block;width:90% ;height: 90%;"></canvas><br>
-      <button type="button" id="captureBtn">📸 Сделать фото</button>
-      <input type="hidden" name="image" id="imageData"  >
-      
-</center>
-     
-<br>
-      <input type="submit" value="Войти на смену">
+    <label>Время начала смены:</label>
+    <input type="text" id="start_time" name="start_time" required readonly>
 
-      <div class="message" id="form-message"></div>
-    </form>
-  </div>
-  <!--start photo-->
-<script>
-  
-const video = document.getElementById('video');
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-const imageInput = document.getElementById('imageData');
+    <label>День окончания смены:</label>
+    <input type="date" id="end_date" name="end_date" required readonly>
 
-// تشغيل الكاميرا مباشرة
-navigator.mediaDevices.getUserMedia({ video: true })
-.then(stream => {
-    video.srcObject = stream;
-})
-.catch(err => {
-  console.error("لا يمكن الوصول للكاميرا:", err);
-  alert("لا يمكن الوصول إلى الكاميرا!");
-});
+    <label>Время окончания смены:</label>
+    <input type="time" id="end_time" name="end_time" required readonly>
 
+    <!-- camera -->
+    <div class="camera-box">
+      <video id="video" autoplay style="display:none;"></video>
+      <canvas id="canvas" style="width:90%; display:none;"></canvas><br>
+      <button type="button" id="startCameraBtn">📷 Включить камеру</button>
+      <button type="button" id="captureBtn" disabled>📸 Сделать фото</button>
+    </div>
 
-// عند الضغط على زر التقاط
-document.getElementById('captureBtn').onclick = () => {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    
-    // التقاط الصورة من الفيديو
-    ctx.drawImage(video, 0, 0);
- // السطر الثاني: التاريخ والوقت
-    const now = new Date();
-    const dateStr = now.toLocaleDateString();  // التاريخ
-    const timeStr = now.toLocaleTimeString();  // الوقت
-    
+    <br>
+    <button type="submit">Войти на смену</button>
 
-    // إضافة نص داخل الصورة (مثلاً رقم الموظف)
-    ctx.font = "20px Arial";       // حجم ونوع الخط
-    ctx.fillStyle = "red";         // لون النص
-    ctx.fillText("проекта :- " + projectName, 50, 50); // النص ومكانه (X=50, Y=50)
-    ctx.fillText("охранник :- " + employeeName, 50, 70); // النص ومكانه (X=50, Y=50)
-    ctx.fillText("Дата: " + dateStr, 50, 100);
-    ctx.fillText("Время: " + timeStr, 50, 130);
-    // تحويل الصورة مع النص إلى Base64
-    imageInput.value = canvas.toDataURL("image/jpeg");
-    imageInput.width = 30;
-    imageInput.height = video.videoHeight;
-    document.getElementById('video').style.display = 'none';
-    alert("✅ Фото сделано!");
-};
-</script>
-  <!--end -->
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script> 
-const params0 = new URLSearchParams(window.location.search);
-   
-   let workHours = params0.get("time0"); // عدد الساعات
+    <div id="form-message"></div>
+  </form>
+</div>
 
-  // تحديد اليوم و الغد
-  const today = new Date();
-  const tomorrow = new Date();
-  tomorrow.setDate(today.getDate() + 1);
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="/static/js/workshift.js"></script>
 
-  const todayStr = today.toISOString().split("T")[0];
-  const tomorrowStr = tomorrow.toISOString().split("T")[0];
-
-  // ضبط start_date = اليوم + الغد
-  const startDateInput = document.getElementById("start_date");
-  startDateInput.min = todayStr;
-  startDateInput.max = tomorrowStr;
-  
-
-  const endDateInput = document.getElementById("end_date");
-  endDateInput.readOnly = true;
-
-  // دالة حساب النهاية
-  function calculateEndTime() {
-      const startDate = startDateInput.value;
-      const startTime = document.getElementById("start_time").value;
-
-      if (!startDate || !startTime) return;
-
-      const startDateTime = new Date(`${startDate}T${startTime}:00`);
-      const endDateTime = new Date(startDateTime.getTime() + workHours * 60 * 60 * 1000);
-
-      // التاريخ
-      const endDateStr = endDateTime.toISOString().split("T")[0];
-
-      // الوقت بنظام 24 ساعة
-      const endHours = String(endDateTime.getHours()).padStart(2, "0");
-      const endMinutes = String(endDateTime.getMinutes()).padStart(2, "0");
-      const endTimeStr = `${endHours}:${endMinutes}`;
-
-      // تعيين القيم
-      endDateInput.value = endDateStr;
-      document.getElementById("end_time")._flatpickr.setDate(endTimeStr, true, "H:i");
-  }
-
-  // flatpickr لـ end_time
-  flatpickr("#end_time", {
-      enableTime: false,
-      noCalendar: true,
-      dateFormat: "H:i", // نظام 24 ساعة
-      time_24hr: true
-  });
-
-  // عند تغيير start_date أو start_time نحسب الجديد
-  startDateInput.addEventListener("change", calculateEndTime);
-  document.getElementById("start_time").addEventListener("change", calculateEndTime);
-</script>
-<script src="/static/js/config.js"></script>
-  <script>
-    // التقاط بارامترات URL وتحديث الحقول
-    const params = new URLSearchParams(window.location.search);
-    const employeeId = params.get("employee_id");
-    const projectId = params.get("project_id");
-    const projectName = params.get("project_name");
-    const employeeName = params.get("employee_name");
-    const start_time = params.get("time");
-     
-
-    if (employeeId && projectId && projectName && employeeName) {
-      document.getElementById("employee_id_input").value = employeeId;
-      document.getElementById("project_id_input").value = projectId;
-      document.getElementById("project_name").value = projectName;
-      document.getElementById("employee_name").value = employeeName;
-      document.getElementById("start_time").value = start_time;
-      if (start_time.value) {
-        
-      } else {
-        document.getElementById("form-message").textContent = "Проверьте дату и время смены.";
-      }
-    } else {
-      document.getElementById("form-message").textContent = "Произошла ошибка при отправке";
-    }
-
-
-    function submitForm(event) {
-  event.preventDefault();
-
-  const form = document.getElementById("employee-form");
-  const formData = new FormData(form);
-  
-
-  // تحقق من أن جميع الحقول غير فارغة
-  for (let [name, value] of formData.entries()) {
-    if (!value.trim()) {
-      document.getElementById("form-message").textContent = `Заполните дату и время смены.`;
-      return; // إيقاف الإرسال
-    }
-  }
-
-  // إذا الكل صحيح، نرسل الفورم
-  fetch(`${LinkP}/add_work_shifts`, {
-    method: "POST",
-    body: formData
-  })
-  .then(response => response.json())
-  .then(data => {
-    document.getElementById("form-message").textContent = "Отправлено успешно!";
-    console.log(data);
-  })
-  .catch(error => {
-    document.getElementById("form-message").textContent = "Произошла ошибка при отправке";
-    console.error(error);
-  });
-}
-
-  </script>
+ 
  
 </body>
-</html>

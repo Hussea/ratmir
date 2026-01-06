@@ -1,7 +1,7 @@
 // ✅ تعريف المكون
 class MyHeader extends HTMLElement {
   async connectedCallback() {
-    const response = await fetch("components.html");
+    const response = await fetch("/components");
     const text = await response.text();
 
     const tempDiv = document.createElement("div");

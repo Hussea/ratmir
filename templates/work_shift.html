@@ -182,9 +182,9 @@
 
 
 <body>
-<script src="/static/js/config.js"></script>
+
    <h2>Регистрация присутствия</h2>
-<input type="text" id="productName" style="display: none;" readonly>
+<input type="text" id="productName"  oninput="searchProduct()" style="display: none;">
 <hr>
   <center>
   <button id="new_chick_point" >Создать QR-код на Точка обхода</button>
@@ -210,6 +210,7 @@
     // استخراج البارامتر من الرابط
     const params = new URLSearchParams(window.location.search);
     const title = params.get("title");
+    const title0 = params.get("title");
 
     // وضع القيمة داخل input
     document.getElementById("productName").value = title ? decodeURIComponent(title) : "Заголовок не указан";
@@ -219,9 +220,9 @@
 
     <div class="details-wrapper">
   <!-- قسم بيانات المشروع -->
-  <div class="form-container">
+  <div class="form-container" >
     <h4>данных проекта</h4>
-    <div class="form-grid">
+    <div class="form-grid" id="info_cont">
       <div ><label>ID:</label><br><input type="text" id="id" readonly></div>
       <div><label>Название:</label><br><input type="text" id="title" readonly></div>
       <div><label>адрес:</label><br><input type="text" id="address" readonly></div>
@@ -245,31 +246,42 @@ let ses_work0 = ""; // متغير عالمي للوصول إليه من أي د�
 function searchProduct() {
     let title = document.getElementById("productName").value;
     if (!title) {
-        alert("Пожалуйста, введите имя охранника.");
+        alert("Пожалуйста, введите имя охранника.1");
         return;
     }
 
-    let url = `${LinkP}/get-product-by-name/?title=${encodeURIComponent(title)}`;
+    let url = `/get-product-by-name/?title=${encodeURIComponent(title)}`;
 
     let request = new XMLHttpRequest();
     request.open("GET", url);
     request.responseType = "json";
     request.send();
-
+    let name_projact = false;
     request.onload = function () {
         if (request.status >= 200 && request.status < 300) {
             let result = request.response;
+            if(title0 !== title){
+              name_projact = true;
+              alert("not fond this name 1" + title);
+               window.location.href =
+              `/show_qr_code_fro_check_point`;
 
-            if (!result || Object.keys(result).length === 0) {
-                alert("Пожалуйста, введите имя охранника.");
+            }else{
+              if (!result || Object.keys(result).length === 0) {
+                document.getElementById("info_cont").style.display = "none";
+                alert("Отсканированный QR-код не найден в системе");
+                 window.location.href =
+              `/show_qr_code_fro_check_point`;
             } else {
+              const rawTime = result.start_time_work || "";
+              const startTimeParam = rawTime ? rawTime.substring(0, 5) : "";
                 // تعبئة الخانات الثابتة
                 document.getElementById("id").value = result.id || "";
                 document.getElementById("title").value = result.title || "";
                 document.getElementById("address").value = result.address || "";
                 document.getElementById("Coordinates").value = result.Coordinates || "";
                 document.getElementById("ses_work").value = result.ses_work || "";
-                document.getElementById("ses_work0").value = result.start_time_work || "";
+                document.getElementById("ses_work0").value = startTimeParam;
 
                 totalResults = result.id || "";
                 document.getElementById("project_id").value = totalResults;
@@ -277,11 +289,14 @@ function searchProduct() {
                 // تخزين الوقت في المتغير العالمي
                 time0 = result.start_time_work || "";
                 ses_work0 = result.ses_work || "";
+                // إظهار الزر
+                document.getElementById("hiddenBox").style.display = "block";
+                alert("✅ Выбери своё имя и продолжи регистрацию смены.");
                 
             }
-        } else {
-            alert("Ошибка извлечения данных");
-        }
+        }  
+            }
+            
     };
 }
 
@@ -307,7 +322,7 @@ function fetchProducts() {
         }
     }
 
-    fetch(`${LinkP}/get_guards?${params.toString()}`)
+    fetch(`/get_guards?${params.toString()}`)
         .then(res => res.json())
         .then(data => {
             const table = document.getElementById("product-table");
@@ -332,7 +347,7 @@ function fetchProducts() {
 
                         // كل خلية ستكون رابطًا
                         tr += `<td>
-                                  <a href="details.html?employee_id=${encodeURIComponent(row.employee_id)}&project_id=${encodeURIComponent(row.project_id)}&project_name=${encodeURIComponent(row.project_name)}&employee_name=${encodeURIComponent(row.employee_name)}&time=${encodeURIComponent(time0)}&time0=${encodeURIComponent(ses_work0)}">${value}</a>
+                                  <a href="/details?employee_id=${encodeURIComponent(row.employee_id)}&project_id=${encodeURIComponent(row.project_id)}&project_name=${encodeURIComponent(row.project_name)}&employee_name=${encodeURIComponent(row.employee_name)}&time=${encodeURIComponent(time0)}&time0=${encodeURIComponent(ses_work0)}">${value}</a>
                                </td>`;
                     }
                     tr += "</tr>";
@@ -385,7 +400,7 @@ function fetchProducts() {
             let productNameValue = document.getElementById("productName").value;
 
             // الانتقال باستخدام الدالة
-            goToPageWithParams("new_chick_point.html", {
+            goToPageWithParams("/new_chick_point", {
                 id: projectValue,
                 name: productNameValue
             });
@@ -401,7 +416,7 @@ function fetchProducts() {
       // مسح الرمز السابق
       document.getElementById("qrcode").innerHTML = "";
 
-      var text = document.getElementById("pageUrl").value;
+      var text = document.getElementById("productName").value;
 
       if (text.trim() !== "") {
         qrcode = new QRCode(document.getElementById("qrcode"), {
@@ -469,8 +484,12 @@ function fetchProducts() {
             }
 
             console.log("Совпадают ли координаты?:", matched);
-
-            if (matched) {
+            if(name_projact){
+              alert("not fond this name 2");
+               window.location.href =
+              `/show_qr_code_fro_check_point`;
+            }else{
+              if (matched) {
               // إظهار الزر
                 document.getElementById("hiddenBox").style.display = "block";
                 alert("✅ Выбери своё имя и продолжи регистрацию смены.");
@@ -479,6 +498,8 @@ function fetchProducts() {
                 alert("❌Произошла ошибка.Вы должны находиться в зоне рабочего места, чтобы зарегистрировать смену.");
                 window.location.href = "https://ooo-ratmir.ru/";
             }
+            }
+            
         },
         function(error) {
             alert("Не удалось получить данные, попробуйте ещё раз: " + error.message);
@@ -504,7 +525,7 @@ window.addEventListener("load", function() {
                 } else if(role === "supadmin") {
                   document.getElementById("QRBUT").style.display = "none";
                 }else if(role === "emp") {
-                    window.location.href = "log_in.html";
+                    window.location.href = "/log_in";
                 }else if (!role) {  // الشرط الذي أضفته أنت
                     document.getElementById("QRBUT").style.display = "none";
                     document.getElementById("new_chick_point").style.display = "none";

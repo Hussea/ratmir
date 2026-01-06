@@ -241,7 +241,7 @@
 </table>
 </center>
 
-<script src="/static/js/config.js"></script>
+
 <script>
 
  // الحصول على التاريخ الحالي
@@ -267,7 +267,7 @@
       return;
     }
 
-    let apiUrl = `${LinkP}/show_salary_history?datas=${datas}&project_id_input=${projId}`;
+    let apiUrl = `/show_salary_history?datas=${datas}&project_id_input=${projId}`;
 
     
     document.getElementById('status').textContent = '🔄 جارٍ تحميل البيانات...';
@@ -323,7 +323,7 @@
 
 </body>
 </html>
-<script>  /*   
+<script> 
   let role = sessionStorage.getItem("role");
                 if (role === "admin") {
                    
@@ -332,6 +332,6 @@
                 }else if(role === "emp") {
                    
                 }else if (!role) {  // الشرط الذي أضفته أنت
-                    window.location.href = "log_in.html";
-                }*/
+                    window.location.href = "/log_in";
+                } 
 </script>

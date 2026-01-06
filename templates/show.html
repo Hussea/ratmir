@@ -244,7 +244,7 @@
 
 
 <body>
-  <script src="/static/js/config.js"></script>
+
  <!--bar show start -->
    <script src="/static/js/header.js" defer></script>
  <my-header></my-header>
@@ -309,7 +309,7 @@
 <!--   الخانات التي يضهر فيها ارقام المشروع و رقم الحارس التابع له و من ثمه ارساله الى قاعده البيانات و غالبا هذه الخانات مخفيه    -->
 <div id="project-guards" class="tab-content">
     <div class="form-container">
-      <form id="add-project-guards" onsubmit="submitForm(event, 'add-project-guards', `${LinkP}/add-project-guards`)">
+      <form id="add-project-guards" onsubmit="submitForm(event, 'add-project-guards', '/add-project-guards')">
         
         <input type="text" name="project_id"id="id1"style="display: none;">
       
@@ -349,6 +349,27 @@
   .then(data => {
     alert("Операция завершена!");
     console.log(data);
+    clearFields([
+  "id",
+  "title",
+  "address",
+  "q_person",
+  "ses_work",
+  "sum_of_proj",
+  "pers_of_proj",
+  "sel_emp",
+  "n_phone",
+  "nots",
+  "id2",
+  "name2",
+  "num_T2",
+  "data_prth2",
+  "address2",
+  "Salary2",
+  "Job2",
+  "nots2"
+]);
+document.getElementById("add-project-guards").reset();
   })
   .catch(error => {
     alert("حدث خطأ!");
@@ -363,7 +384,7 @@
  طريق اسم المشروع و اضهار بيانته في الخانات المحدده  -->
 <script>
   async function loadProducts() {
-    const response = await fetch(`${LinkP}/Dropdown_project`);
+    const response = await fetch("/Dropdown_project");
     const data = await response.json();
 
     const dropdown = document.getElementById("productDropdown");
@@ -385,7 +406,7 @@ function searchProduct() {
         return;
     }
 
-    let url = `${LinkP}/get-product-by-name/?title=${encodeURIComponent(title)}`;
+    let url = `/get-product-by-name/?title=${encodeURIComponent(title)}`;
 
     let request = new XMLHttpRequest();
     request.open("GET", url);
@@ -426,7 +447,7 @@ function searchProduct() {
  في الخانات المطلوبه  -->
 <script>
   async function loademployee() {
-    const response = await fetch(`${LinkP}/Dropdown_employee`);
+    const response = await fetch("/Dropdown_employee");
     const data = await response.json();
 
     const dropdown = document.getElementById("employeeDropdown");
@@ -447,7 +468,7 @@ function searchguards() {
         return;
     }
 
-    let url = `${LinkP}/get-guards-by-name/?Ename=${encodeURIComponent(Ename)}`;
+    let url = `/get-guards-by-name/?Ename=${encodeURIComponent(Ename)}`;
 
     let request = new XMLHttpRequest();
     request.open("GET", url);
@@ -499,3 +520,11 @@ function searchguards() {
 
 </body>
 </html>
+<script>
+  function clearFields(ids) {
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+  });
+}
+</script>

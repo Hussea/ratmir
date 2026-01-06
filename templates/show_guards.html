@@ -173,7 +173,7 @@
   
   
 </head>
-<script src="/static/js/config.js"></script>
+
 <body>
   <!--bar show start -->
    <script src="/static/js/header.js" defer></script>
@@ -237,7 +237,7 @@
  في الخانات المطلوبه  -->
 <script>
   async function loademployee() {
-    const response = await fetch(`${LinkP}/Dropdown_employee`);
+    const response = await fetch(`/Dropdown_employee`);
     const data = await response.json();
 
     const dropdown = document.getElementById("guards");
@@ -263,7 +263,7 @@ function searchProduct() {
         return;
     }
 
-    let url = `${LinkP}/get-guards-by-name/?Ename=${encodeURIComponent(Ename)}`;
+    let url = `/get-guards-by-name/?Ename=${encodeURIComponent(Ename)}`;
 
     let request = new XMLHttpRequest();
     request.open("GET", url);
@@ -328,7 +328,7 @@ function searchProduct() {
 }
 
 </script>
-  
+ 
 <script>
     
   function fetchProducts() {
@@ -345,7 +345,7 @@ function searchProduct() {
         }
     }
 
-    fetch(`${LinkP}/get_guards?${params.toString()}`)
+    fetch(`/get_guards?${params.toString()}`)
         .then(res => res.json())
         .then(data => {
             const table = document.getElementById("product-table");
@@ -451,7 +451,7 @@ document.getElementById("updateForm").addEventListener("submit", async function(
         is_active: document.getElementById("is_active_up").value   // ✅ الحقل الجديد
     };
 
-    let response = await fetch(`${LinkP}/update_guard`, {
+    let response = await fetch(`/update_guard`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
@@ -469,7 +469,7 @@ document.getElementById("updateForm").addEventListener("submit", async function(
 
 </script>
    <!--------------------------end_updete----------------------------------------->
-<script>  /*  
+<script>   
   let role = sessionStorage.getItem("role");
                 if (role === "admin") {
                    
@@ -477,8 +477,8 @@ document.getElementById("updateForm").addEventListener("submit", async function(
                    
                    
                 }else if(role === "emp") {
-                    window.location.href = "log_in.html";
+                    window.location.href = "/log_in";
                 }else if (!role) {  // الشرط الذي أضفته أنت
-                    window.location.href = "log_in.html";
-                } */
+                    window.location.href = "/log_in";
+                }  
 </script>

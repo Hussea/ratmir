@@ -276,7 +276,7 @@
       <td>Время начала</td>
       <td>Дата окончания</td>
       <td>Время окончания</td>
-      <td>Время окончания</td>
+      <td>фото</td>
     </tr>
   </thead>
   <tbody></tbody>
@@ -289,7 +289,6 @@
   // تعيينه كقيمة افتراضية للمدخل
   document.getElementById("start_day").value = month;
 </script>
-
 
 <script>
   // استخراج البارامترات من رابط الصفحة
@@ -307,7 +306,7 @@
       return;
     }
 
-    let apiUrl = `${LinkP}/show_work_shift?employee_id_input=${empId}&project_id_input=${projId}`;
+    let apiUrl = `/show_work_shift?employee_id_input=${empId}&project_id_input=${projId}`;
     if (startDay) {
       apiUrl += `&start_day=${startDay}-01`;
     }
@@ -433,7 +432,7 @@ function closeImage() {
   const empId = params.get("employee_id_input");
   const projId = params.get("project_id_input");
    
-  fetch(`${LinkP}/show_salary_history?employee_id_input=${empId}&project_id_input=${projId}`)
+  fetch(`/show_salary_history?employee_id_input=${empId}&project_id_input=${projId}`)
     .then(res => res.json())
     .then(data => {
       // ✅ نأخذ فقط السطر الأخير
@@ -474,13 +473,13 @@ window.onload = function() {
           return;
       }
 
-      const url = `show_salary_history.html?employee_id_input=${employeeId}&project_id_input=${projectId}`;
+      const url = `/show_salary_history_page?employee_id_input=${employeeId}&project_id_input=${projectId}`;
       window.location.href = url;
   });
 </script>
 
 
- <script src="/static/js/config.js"></script>
+
 <script>
    
 
@@ -491,7 +490,7 @@ window.onload = function() {
   const form = document.getElementById("employee-form");
   const formData = new FormData(form);
 
-  fetch(`${LinkP}/salary_history`, {
+  fetch(`/salary_history`, {
     method: "POST",
     body: formData
   })
@@ -523,7 +522,7 @@ window.onload = function() {
 
 </html>
 <script>
-  /*   
+  
   let role = sessionStorage.getItem("role");
   let user = sessionStorage.getItem("username");
   document.getElementById("try").value = role +" "+ user;
@@ -534,6 +533,6 @@ window.onload = function() {
                 }else if(role === "emp") {
                     
                 }else if (!role) {  // الشرط الذي أضفته أنت
-                    window.location.href = "log_in.html";
-                }*/
+                    window.location.href = "/log_in";
+                }
 </script>

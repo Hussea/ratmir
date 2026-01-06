@@ -13,6 +13,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
 from fastapi.responses import FileResponse
+from fastapi import FastAPI, Form, UploadFile, File, HTTPException, status
 
 app = FastAPI()
 
@@ -25,7 +26,7 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/", response_class=HTMLResponse)
 def read_root(request: Request):
-    return templates.TemplateResponse("Payroll.html", {"request": request})
+    return templates.TemplateResponse("index.html", {"request": request})
 
 #----------------------------------------------
 
@@ -52,9 +53,9 @@ def login_page4(request: Request):
 def login_page5(request: Request):
     return templates.TemplateResponse("new_chick_point.html", {"request": request})
 
-@app.get("/index", response_class=HTMLResponse)
+@app.get("/Payroll", response_class=HTMLResponse)
 def login_page6(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse("Payroll.html", {"request": request})
 
 @app.get("/project_list", response_class=HTMLResponse)
 def login_page7(request: Request):
@@ -103,9 +104,20 @@ def login_page16(request: Request):
 def login_page17(request: Request):
     return templates.TemplateResponse("work_shift.html", {"request": request})
 
+@app.get("/try", response_class=HTMLResponse)
+def login_page17(request: Request):
+    return templates.TemplateResponse("try.html", {"request": request})
+
+@app.get("/htmtry", response_class=HTMLResponse)
+def login_page17(request: Request):
+    return templates.TemplateResponse("htmtry.html", {"request": request})
+
 @app.get("/log_in", response_class=HTMLResponse)
 def login_page0(request: Request):
     return templates.TemplateResponse("log_in.html", {"request": request})
+
+
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 #----------------------------------------------
 
 
@@ -123,11 +135,12 @@ app.add_middleware(
 # الاتصال بقاعدة البيانات
 def get_db_connection():
     return mysql.connector.connect(
-        host='mysql-ratmir-ratmir.g.aivencloud.com',
-        user='avnadmin',
-        password='AVNS_svRz6RySonWnU6RE3BL',        # ← غيّر إذا عندك كلمة سر
-        database='defaultdb'
+        host='localhost',
+        user='root',
+        password='',        # ← غيّر إذا عندك كلمة سر
+        database='ratmer'
     )
+
 
 #====================================================
 @app.get("/stats")
@@ -229,7 +242,7 @@ def add_category(title: str = Form(...),
                  Coordinates: str = Form(...),
                  q_person: str = Form(...), 
                  ses_work: str = Form(...), 
-                 start_time_work: int = Form(...), 
+                 start_time_work: str = Form(...), 
                  sum_of_proj: str = Form(...), 
                  pers_of_proj: str = Form(...), 
                  n_phone: str = Form(...), 
@@ -479,8 +492,8 @@ def delet_admin(idu: int):
 
 
 #===============================================
-@app.get("/get_guards")
-def get_guards(
+@app.get("/get_all_guards")
+def get_all_guards(
     id: Optional[int] = Query(None),
     project_id: Optional[int] = Query(None),
     employee_id: Optional[int] = Query(None),
@@ -512,6 +525,52 @@ def get_guards(
     conn.close()
     
     return results
+#===============================================
+@app.get("/get_guards")
+def get_guards(
+    id: Optional[int] = Query(None),
+    project_id: Optional[int] = Query(None),
+    employee_id: Optional[int] = Query(None),
+    nots: Optional[float] = Query(None)
+):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    today = date.today()
+
+    # 1️⃣ جلب الحرس
+    query = "SELECT * FROM project_guards WHERE is_active = TRUE"
+    values = []
+
+    if project_id is not None:
+        query += " AND project_id = %s"
+        values.append(project_id)
+
+    cursor.execute(query, values)
+    guards = cursor.fetchall()
+
+    result = []
+
+    # 2️⃣ فلترة غير المسجّلين
+    for guard in guards:
+        cursor.execute(
+            """
+            SELECT 1 FROM work_shifts
+            WHERE employee_id_input = %s
+            AND start_day = %s
+            LIMIT 1
+            """,
+            (guard["employee_id"], today)
+        )
+
+        if cursor.fetchone() is None:
+            # غير مسجّل اليوم ➜ نرجعه
+            result.append(guard)
+
+    cursor.close()
+    conn.close()
+    
+    return result
 #===============================================
 @app.get("/get_check_point")
 def get_check_point(
@@ -603,54 +662,70 @@ def salary_history(
         cur.close()
         conn.close()
 #====================================================
-@app.post("/add_work_shifts")
-def add_work_shifts(
-    employee_id_input: int = Form(...), 
-    project_id_input: int = Form(...), 
+@app.post("/add_work_shifts", status_code=status.HTTP_201_CREATED)
+async def add_work_shifts(
+    employee_id: int = Form(...),
+    project_id: int = Form(...),
     start_date: date = Form(...),
     start_time: str = Form(...),
     end_date: date = Form(...),
     end_time: time = Form(...),
-    image: str = Form(...)
+    image: UploadFile = File(...)
 ):
+    # ✅ تحقق من الصورة
+    if not image:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="لم يتم التقاط الصورة"
+        )
+
     try:
-        if not image:
-              return {"error": "لم يتم التقاط الصورة"}
-
-        # إزالة بادئة Base64
-        img_data = re.sub('^data:image/.+;base64,', '', image)
-        img_bytes = base64.b64decode(img_data)
-
+        # 📁 حفظ الصورة
         os.makedirs("obxod", exist_ok=True)
-        # احصل على التاريخ والوقت الحالي بصيغة: YYYYMMDD_HHMMSS
         now = datetime.now().strftime("%Y-%m-%d-T-%H-%M")
+        filename = f"id{employee_id}-DT{now}.jpg"
+        file_path = os.path.join("obxod", filename)
 
-        # أنشئ اسم ملف جديد: مثلا name_YYYYMMDD_HHMMSS.jpg
-        
-        filename = f"id{employee_id_input}-DT{now}"
-        
-        file_path = f"obxod/{filename}.jpg"
         with open(file_path, "wb") as f:
-            f.write(img_bytes)
-        # //////////////////////////////
+            f.write(await image.read())
 
+        # 💾 حفظ البيانات
         conn = get_db_connection()
         cur = conn.cursor()
+
         query = """
-            INSERT INTO work_shifts 
-            (employee_id_input, project_id_input, start_day, start_time, end_day, end_time, file_path) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO work_shifts
+        (employee_id_input, project_id_input, start_day, start_time, end_day, end_time, file_path)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
-        cur.execute(query, (employee_id_input, project_id_input, start_date, start_time, end_date, end_time, file_path))
+        cur.execute(query, (
+            employee_id,
+            project_id,
+            start_date,
+            start_time,
+            end_date,
+            end_time,
+            file_path
+        ))
         conn.commit()
-        print("✅ تم الحفظ بنجاح")
-        return {"message": "تمت الإضافة بنجاح ✅"}
+
+        return {
+            "message": "تمت الإضافة بنجاح ✅",
+            "file": file_path
+        }
+
     except mysql.connector.Error as e:
-        print("❌ خطأ في قاعدة البيانات:", str(e))
-        return {"error": str(e)}
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"خطأ في قاعدة البيانات: {str(e)}"
+        )
+
     finally:
-        cur.close()
-        conn.close()
+        try:
+            cur.close()
+            conn.close()
+        except:
+            pass
         #====================================================
 @app.post("/add_chick_point")
 def add_chick_point(
@@ -730,8 +805,43 @@ def get_show_work_shift(
     conn.close()
     return results
 #===============================================
-@app.get("/show_info_chick_point")
-def show_info_chick_point(
+@app.get("/show_info_chick_point", response_class=HTMLResponse)
+def show_info_chick_point_page(
+    request: Request,
+    employee_id_input: Optional[str] = Query(None)
+):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    query = """
+        SELECT 
+            points_chick.id,
+            points_chick.id_project,
+            points_chick.name_point,
+            points_chick.Coordinates,
+            points_chick.id_entry_emp,
+            projuct.title AS projuct_title
+        FROM points_chick
+        JOIN projuct ON points_chick.id_project = projuct.id
+        WHERE 1=1
+    """
+    values = []
+    if employee_id_input:
+        query += " AND points_chick.id_project = %s"
+        values.append(employee_id_input)
+    cursor.execute(query, values)
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    # تمرير البيانات إلى HTML
+    return templates.TemplateResponse(
+        "show_info_chick_point.html",
+        {"request": request, "results": results}
+    )
+
+#===============================================
+@app.get("/api/show_info_chick_point")
+def show_info_chick_point_api(
     employee_id_input: Optional[str] = Query(None)
 ):
     conn = get_db_connection()
@@ -745,10 +855,8 @@ def show_info_chick_point(
             points_chick.Coordinates,
             points_chick.id_entry_emp,
             projuct.title AS projuct_title
-           
         FROM points_chick
         JOIN projuct ON points_chick.id_project = projuct.id
-        
         WHERE 1=1
     """
     values = []
@@ -759,9 +867,12 @@ def show_info_chick_point(
 
     cursor.execute(query, values)
     results = cursor.fetchall()
+
     cursor.close()
     conn.close()
+
     return results
+
 #===============================================
 @app.get("/show_salary_history")
 def get_show_salary_history(
@@ -814,6 +925,14 @@ def get_show_salary_history(
     cursor.close()
     conn.close()
     return results
+
+
+@app.get("/show_salary_history_page", response_class=HTMLResponse)
+def show_salary_history_page(request: Request):
+    return templates.TemplateResponse(
+        "show_salary_history.html",  # ملف الـ HTML
+        {"request": request}
+    )
 
 #=========================================================
 @app.post("/login")
@@ -935,6 +1054,7 @@ def get_all_products():
     conn.close()
     return products  # FastAPI ترجع JSON تلقائيًا
 #=========================================================
+app.mount("/obxod", StaticFiles(directory="obxod"), name="obxod")
 
        # حساب مجموع sale_price
    # total_sale_price = sum(item['sale_price'] for item in results if item['sale_price'] is not None)
@@ -945,7 +1065,7 @@ def get_all_products():
 
 r"""
 uvicorn main:app --reload
-cd C:\Users\alame\OneDrive\Desktop\python\new_ratmir\ratmir
+cd C:\Users\alame\OneDrive\Desktop\python\ratmir_from_git\ratmir
 uvicorn main:app --host 127.0.0.1 --port 8001
 in link add /docs
 

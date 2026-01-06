@@ -146,8 +146,12 @@
 </head>
 <body>
  <!--bar show start -->
-   <script src="/static/js/header.js" defer></script>
- <my-header></my-header>
+   
+<my-header>
+<script src="/static/js/header.js" defer></script>
+</my-header>
+
+
 <!--bar show end -->
 
 
@@ -157,11 +161,11 @@
 <ul id="categoryList">
     <!-- سيتم عرض العناصر هنا -->
 </ul>
-<script src="/static/js/config.js"></script>
+
 <script>
   async function fetchCategories() {
     try {
-        const response = await fetch(`${LinkP}/get-categories`);
+        const response = await fetch(`/get-categories`);
         const data = await response.json();
 
         const list = document.getElementById('categoryList');
@@ -186,7 +190,7 @@
                 button1.textContent = "Информация";
                  
                 button1.onclick = () => {
-                    const url = `show_project.html?title=${encodeURIComponent(title)}`;
+                    const url = `/show_project?title=${encodeURIComponent(title)}`;
                     window.location.href = url;
                 };
 
@@ -196,7 +200,7 @@
                 button2.style.backgroundColor = "#0056b3";
                 button2.id = "QRBUT";
                 button2.onclick = () => {
-                    const url = `work_shift.html?title=${encodeURIComponent(title)}`;
+                    const url = `/work_shift?title=${encodeURIComponent(title)}`;
                     window.location.href = url;
                 };
 
@@ -240,7 +244,7 @@ fetchCategories();
   </script>
 </body>
 </html>
-<script>  /* 
+<script>  
   let role = sessionStorage.getItem("role");
                 if (role === "admin") {
                    
@@ -249,6 +253,6 @@ fetchCategories();
                 }else if(role === "emp") {
                  document.getElementById("QRBUT").style.display = "none";
                 }else if (!role) {  // الشرط الذي أضفته أنت
-                    window.location.href = "log_in.html";
-                }  */
+                    window.location.href = "/log_in";
+                } 
 </script>

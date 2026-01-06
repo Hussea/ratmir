@@ -5,8 +5,8 @@
     <title>تسجيل الدخول</title>
 </head>
 <body>
-  
-           <h2>Авторизация в системе </h2>
+  <center>
+         <h2>Авторизация в системе </h2>
     <form id="loginForm">
         <label> Логин:</label>
         <input type="text" name="username" required><br><br>
@@ -15,6 +15,8 @@
         <button type="submit">Войти</button>
     </form>
     <p id="result"></p>
+  </center>
+      
     
  
 <script src="/static/js/config.js"></script>
@@ -32,7 +34,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
 
     const data = await res.json();
     document.getElementById("result").textContent = data.message || data.error;
-/*  
+ 
     // إذا كان تسجيل الدخول ناجح
     if (data.success) {
     // خزن اسم المستخدم في sessionStorage
@@ -42,15 +44,15 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     sessionStorage.setItem("username", data.username);
 
     if (data.role === "admin") {
-        window.location.href = "/index.html";
+        window.location.href = "/";
     } else if(data.role === "supadmin") {
-        window.location.href = "/show.html";
+        window.location.href = "/show";
     }else if(data.role === "emp") {
-        window.location.href = "/project_list.html";
+        window.location.href = "/project_list";
     }
 }
    
- */
+ 
 });
 
 

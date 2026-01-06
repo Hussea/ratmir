@@ -104,7 +104,7 @@
     }
     /*==================== bar style end ================================ */
 </style>
-<script src="/static/js/config.js"></script>
+
 <body>
    <!--bar show start -->
    <script src="/static/js/header.js" defer></script>
@@ -141,7 +141,7 @@
             const project_id_input = document.getElementById("project_id_input").value;
             const data_tame_input = document.getElementById("data_tame_input").value;
 
-            let url = `${LinkP}/search_points?`;
+            let url = `/search_points?`;
             if (project_id_input) url += `project_id_input=${project_id_input}&`;
             if (data_tame_input) url += `data_tame_input=${encodeURIComponent(data_tame_input)}&`;
 
@@ -154,7 +154,7 @@
                     html = "<p>Нет подходящих результатов.</p>";
                 } else {
                      
-                    html += "<table><tr><th>№</th><th>name_point</th><th>data</th><th>tame</th></tr>";
+                    html += "<table><tr><th>№</th><th>название точки</th><th>дата</th><th>время</th></tr>";
                     data.forEach((row, index) => {
                         html += `<tr>
                             <td>${index + 1}</td>
@@ -185,6 +185,6 @@
                 }else if(role === "emp") {
                    
                 }else if (!role) {  // الشرط الذي أضفته أنت
-                    window.location.href = "log_in.html";
+                    window.location.href = "/log_in";
                 }
 </script>

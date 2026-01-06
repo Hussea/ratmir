@@ -134,7 +134,7 @@
     }
     /*==================== bar style end ================================ */
 </style>
-<script src="/static/js/config.js"></script>
+
 <body>
    <!--bar show start -->
 
@@ -182,7 +182,7 @@
       return;
     }
 
-    let apiUrl = `${LinkP}/show_info_chick_point?employee_id_input=${serch_id}`;
+    let apiUrl = `/api/show_info_chick_point?employee_id_input=${serch_id}`;
 
     document.getElementById('status').textContent = 'Загрузка данных 🔄...';
     document.getElementById('data-table').style.display = 'none';
@@ -192,7 +192,7 @@
       .then(res => res.json())
       .then(data => {
         if (!data || data.length === 0) {
-          document.getElementById('status').textContent = 'Ошибка данных';
+          document.getElementById('status').textContent = 'Ошибка данных1';
           return;
         }
 
@@ -220,7 +220,7 @@
           const tr = document.createElement("tr");
 
           // نبني الرابط مع الباراميتر id
-          const link = `show_qr_code_fro_check_point.html?id=${encodeURIComponent(row.id)}`;
+          const link = `/show_qr_code_fro_check_point?id=${encodeURIComponent(row.id)}`;
 
           for (let key of displayFields) {
             const td = document.createElement("td");
@@ -242,7 +242,7 @@
         document.getElementById('status').style.display = 'none';
       })
       .catch(err => {
-        document.getElementById('status').textContent = 'Ошибка данных';
+        document.getElementById('status').textContent = 'Ошибка данных2';
         console.error(err);
       });
   }
@@ -279,11 +279,11 @@
   function loadData() {
     const serch_id = document.getElementById('serch_id').value;
     if (!serch_id) {
-      document.getElementById('status').textContent = 'Ошибка данных ❗';
+      document.getElementById('status').textContent = 'Ошибка данных3 ❗';
       return;
     }
 
-    let apiUrl = `${LinkP}/show_info_chick_point?employee_id_input=${serch_id}`;
+    let apiUrl = `/api/show_info_chick_point?employee_id_input=${serch_id}`;
     document.getElementById('status').textContent = 'Загрузка данных 🔄...';
     document.getElementById('data-table').style.display = 'none';
     document.querySelector('#data-table tbody').innerHTML = '';
@@ -292,7 +292,7 @@
       .then(res => res.json())
       .then(data => {
         if (!data || data.length === 0) {
-          document.getElementById('status').textContent = 'Ошибка данных';
+          document.getElementById('status').textContent = 'Ошибка данных4';
           return;
         }
 
@@ -316,7 +316,7 @@
         for (let row of data) {
           const tr = document.createElement("tr");
 
-          const link = `file:///C:/Users/Acer/Desktop/work/ratmir/show_qr_code_fro_check_point.html?id=${encodeURIComponent(row.id)}`;
+          const link = `${encodeURIComponent(row.id)}`;
 
           for (let key of displayFields) {
             const td = document.createElement("td");
@@ -334,17 +334,14 @@
         document.getElementById('status').style.display = 'none';
       })
       .catch(err => {
-        document.getElementById('status').textContent = 'Ошибка данных';
+        document.getElementById('status').textContent = 'Ошибка данных5';
         console.error(err);
       });
   }
   // ✅ تنفيذ الدالة تلقائياً عند تحميل الصفحة
 window.onload = loadData;
 </script>
-
-</body>
-</html>
-<script>  /*  
+<script>   
   let role = sessionStorage.getItem("role");
                 if (role === "admin") {
                    
@@ -353,6 +350,8 @@ window.onload = loadData;
                 }else if(role === "emp") {
                    
                 }else if (!role) {  // الشرط الذي أضفته أنت
-                    window.location.href = "log_in.html";
-                } */
+                    window.location.href = "/log_in";
+                }  
 </script>
+</body>
+</html>

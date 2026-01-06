@@ -282,7 +282,7 @@ tr:hover {
     }
     /*==================== bar style end ================================ */
 </style>
-<script src="/static/js/config.js"></script>
+
 <body>
    <!--bar show start -->
   <script src="/static/js/header.js" defer></script>
@@ -410,7 +410,7 @@ document.getElementById("updateForm").addEventListener("submit", async function(
         is_active: document.getElementById("is_active_up").value   // ✅ الحقل الجديد
     };
 
-    let response = await fetch(`${LinkP}/update_category`, {
+    let response = await fetch(`/update_category`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
@@ -438,7 +438,7 @@ document.getElementById("updateForm").addEventListener("submit", async function(
             
 
             // الانتقال باستخدام الدالة
-            goToPageWithParams("show_info_chick_point.htm", {
+            goToPageWithParams("/show_info_chick_point", {
                 id: projectValue
                 
             });
@@ -451,7 +451,7 @@ document.getElementById("updateForm").addEventListener("submit", async function(
             
 
             // الانتقال باستخدام الدالة
-            goToPageWithParams("project_salary_history.html", {
+            goToPageWithParams("/project_salary_history", {
                 id: projectValue
                 
             });
@@ -464,7 +464,7 @@ document.getElementById("updateForm").addEventListener("submit", async function(
             
 
             // الانتقال باستخدام الدالة
-            goToPageWithParams("project_list.html", {
+            goToPageWithParams("/project_list", {
                  
                 
             });
@@ -485,7 +485,7 @@ document.getElementById("updateForm").addEventListener("submit", async function(
             
 
             // الانتقال باستخدام الدالة
-            goToPageWithParams("show_obxod.html", {
+            goToPageWithParams("/show_obxod", {
                 id: projectValue ,
                 tet: titleParam
             });
@@ -517,7 +517,7 @@ document.getElementById("updateForm").addEventListener("submit", async function(
         return;
       }
 
-      const url = `${LinkP}/get-product-by-name/?title=${encodeURIComponent(title)}`;
+      const url = `/get-product-by-name/?title=${encodeURIComponent(title)}`;
       const request = new XMLHttpRequest();
       request.open("GET", url);
       request.responseType = "json";
@@ -557,7 +557,7 @@ document.getElementById("updateForm").addEventListener("submit", async function(
     }
 
     async function fetchWorkShiftData(empId, projId) {
-      const apiUrl = `${LinkP}/show_work_shift?employee_id_input=${empId}&project_id_input=${projId}`;
+      const apiUrl = `/show_work_shift?employee_id_input=${empId}&project_id_input=${projId}`;
 
       try {
         const response = await fetch(apiUrl);
@@ -595,7 +595,7 @@ document.getElementById("updateForm").addEventListener("submit", async function(
       }
 
       try {
-        const res = await fetch(`${LinkP}/get_guards?${params.toString()}`);
+        const res = await fetch(`/get_all_guards?${params.toString()}`);
         const data = await res.json();
 
         const table = document.getElementById("product-table");
@@ -636,8 +636,8 @@ document.getElementById("updateForm").addEventListener("submit", async function(
 
     tr += `
     
-      <td><a href="show_salary_history.html?employee_id_input=${employeeId}&project_id_input=${projectId}"><button>историю платежей</button></a></td>
-      <td><a href="Payroll.html?employee_id_input=${employeeId}&project_id_input=${projectId}"><button>Дата</button></a></td>
+      <td><a href="/show_salary_history_page?employee_id_input=${employeeId}&project_id_input=${projectId}"><button>историю платежей</button></a></td>
+      <td><a href="/Payroll?employee_id_input=${employeeId}&project_id_input=${projectId}"><button>Дата</button></a></td>
       <td>
         <label class="switch">
           <input type="checkbox" id="mySwitch" class="mySwitch" data-emp-id="${rowId}" ${checkedAttr}>
@@ -656,7 +656,7 @@ document.querySelectorAll(".mySwitch").forEach(cb => {
         const is_active = this.checked ? 1 : 0;
 
         try {
-            const response = await fetch(`${LinkP}/update_project_guards`, {
+            const response = await fetch(`/update_project_guards`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -705,7 +705,7 @@ document.querySelectorAll(".mySwitch").forEach(cb => {
   <br>
 </body>
 </html>
-<script>
+<script> 
   let role = sessionStorage.getItem("role");
               if (role === "admin") {
                    
@@ -715,6 +715,6 @@ document.querySelectorAll(".mySwitch").forEach(cb => {
                     document.getElementById("bill1").style.display = "none";
                     
                 }else if (!role) {  // الشرط الذي أضفته أنت
-                    window.location.href = "log_in.html";
+                    window.location.href = "/log_in";
                 }
 </script>

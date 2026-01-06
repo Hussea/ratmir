@@ -231,7 +231,7 @@
      
 </body>
 </html>
-<script src="/static/js/config.js"></script>
+
 <script>
     // استخراج البارامتر من الرابط
     const params = new URLSearchParams(window.location.search);
@@ -259,7 +259,7 @@
   }
 
   // إذا الكل صحيح، نرسل الفورم
-  fetch(`${LinkP}/add_chick_point`, {
+  fetch(`/add_chick_point`, {
     method: "POST",
     body: formData
   })
@@ -267,6 +267,8 @@
   .then(data => {
     document.getElementById("form-message").textContent = "Отправлено успешно!";
     console.log(data);
+    document.getElementById("chick_point_form").reset();
+
   })
   .catch(error => {
     document.getElementById("form-message").textContent = "Произошла ошибка при отправке";
@@ -275,7 +277,7 @@
 }
 </script>
 <script>
-  /*  
+ 
   let role = sessionStorage.getItem("role");
   let user = sessionStorage.getItem("username");
   document.getElementById("id_entry_emp").value = role +" "+ user;
@@ -284,8 +286,8 @@
                 } else if(role === "supadmin") {
                    
                 }else if(role === "emp") {
-                    window.location.href = "log_in.html";
+                    window.location.href = "/log_in";
                 }else if (!role) {  // الشرط الذي أضفته أنت
-                    window.location.href = "log_in.html";
-                } */
+                    window.location.href = "/log_in";
+                }
 </script>

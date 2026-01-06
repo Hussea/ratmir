@@ -111,7 +111,7 @@
     }
     
   </style>
-  <script src="/static/js/config.js"></script>
+
   <script>
     function openTab(evt, tabName) {
       document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
@@ -130,6 +130,10 @@
       .then(response => response.json())
       .then(data => alert("Данные успешно отправлены!"))
       .catch(error => alert("Произошла ошибка: " + error));
+      // ✅ تفريغ الحقول
+      document.getElementById("userForm").reset();
+      document.getElementById("empForm").reset();
+      document.getElementById("categoryForm").reset();
     }
 
     function loadSelectOptions(selectId, apiUrl, keyName) {
@@ -153,7 +157,7 @@
 
     window.onload = function () {
       document.querySelector(".tabs button").click();
-      loadSelectOptions("categorySelect", "${LinkP}/get-categories", "category");
+      loadSelectOptions("categorySelect", "/get-categories", "category");
       
     };
   </script>
@@ -171,20 +175,20 @@
   </div>
 <script>
 function show_guards() {
-  window.location.href = "show_guards.html"; // غيّر للرابط المطلوب
+  window.location.href = "/show_guards"; // غيّر للرابط المطلوب
   }
 function show() {
-  window.location.href = "show.html";
+  window.location.href = "/show";
   }
 function project_list() {
-  window.location.href = "project_list.html";
+  window.location.href = "/project_list";
   }
 </script>
 <div id="add_admin" class="tab-content" >
   
  <div class="form-container">
       <h2>Предоставление прав доступа сотрудникам</h2>
-      <form id="userForm" onsubmit="submitForm(event, 'userForm', `${LinkP}/add_admin`)">
+      <form id="userForm" onsubmit="submitForm(event, 'userForm', `/add_admin`)">
         <label>Имя пользователя:</label>
         <input type="text" name="name"  required>
 
@@ -204,7 +208,9 @@ function project_list() {
 
         
         <input type="submit" value="отправлять">
-        <input type="submit" value="Список прав пользователей" style="background-color: #0b6a00; color: white;" onclick="window.location.href='show_admin.html'; return false;">
+        <input type="submit" value="Список прав пользователей" style="background-color: #0b6a00; color: white;" onclick="window.location.href='/show_admin'; return false;">
+         <button onclick="window.location.href='/show_qr_code_fro_check_point'" style="background-color: #0b6a00; color: white;">Регистрация присутствия</button>
+
       </form>
       
     </div>
@@ -227,7 +233,7 @@ function project_list() {
         }
 
         // تحقق من قاعدة البيانات عبر السيرفر
-        const res = await fetch(`${LinkP}/check_password`, {
+        const res = await fetch(`/check_password`, {
           method: "POST",
           body: new URLSearchParams({ password })
         });
@@ -246,7 +252,7 @@ function project_list() {
   <div id="emp" class="tab-content">
     <div class="form-container">
       <h2>Введите данные сотрудника</h2>
-      <form id="empForm" onsubmit="submitForm(event, 'empForm', `${LinkP}/add-emp`)">
+      <form id="empForm" onsubmit="submitForm(event, 'empForm', `/add-emp`)">
         <label>ИФО:</label>
         <input type="text" name="name"  required>
         <label>номер телефона :</label>
@@ -266,6 +272,7 @@ function project_list() {
       <input type="file" name="image" accept="image/*" capture="environment" required>
 
         <input type="submit" value="отправлять">
+        
       </form>
     </div>
   </div>
@@ -273,7 +280,7 @@ function project_list() {
   <div id="category" class="tab-content">
     <div class="form-container">
       <h2>Введите данные проекта</h2>
-      <form id="categoryForm" onsubmit="submitForm(event, 'categoryForm', `${LinkP}/add-category`)">
+      <form id="categoryForm" onsubmit="submitForm(event, 'categoryForm', `/add-category`)">
         <label>	название проекта:</label>
         <input type="text" name="title" required>
 
@@ -290,7 +297,7 @@ function project_list() {
         <input type="number" name="ses_work" required>
 
         <label>время начала смену:</label>
-        <input type="number" name="start_time_work" required>
+        <input type="time" name="start_time_work" required>
 
         <label>Сумма от проекта:</label>
         <input type="number" name="sum_of_proj" required>
@@ -316,7 +323,7 @@ function project_list() {
 </body>
 </html>
 <script>
-/*
+
   let role = sessionStorage.getItem("role");
                 if (role === "admin") {
                    
@@ -324,9 +331,9 @@ function project_list() {
                   document.getElementById("category").style.display = "none";
                   //alert("🚫 У вас нет прав для выполнения этого действия.(Добавить проект)");
                 }else if(role === "emp") {
-                    window.location.href = "log_in.html";
+                    window.location.href = "/log_in";
                 }else if (!role) {  // الشرط الذي أضفته أنت
-                    window.location.href = "log_in.html";
+                    window.location.href = "/log_in";
                 }
-*/
+
 </script>

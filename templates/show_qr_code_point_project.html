@@ -131,7 +131,7 @@
 </style>
 <body>
    
-  <script src="/static/js/config.js"></script>
+
   
 </body>
 </html>
@@ -169,7 +169,7 @@
         }
     }
 
-    fetch(`${LinkP}/get_check_point?${params.toString()}`)
+    fetch(`/get_check_point?${params.toString()}`)
         .then(res => res.json())
         .then(data => {
             const table = document.getElementById("product-table");
@@ -213,4 +213,17 @@
 
 // ✅ تنفيذ الدالة تلقائياً عند تحميل الصفحة
 window.onload = fetchProducts;    
+</script>
+<script> 
+  let role = sessionStorage.getItem("role");
+              if (role === "admin") {
+                   
+               } else if(role === "supadmin") {
+                   
+               }else if(role === "emp") {
+                    document.getElementById("bill1").style.display = "none";
+                    
+                }else if (!role) {  // الشرط الذي أضفته أنت
+                    window.location.href = "/log_in";
+                }
 </script>

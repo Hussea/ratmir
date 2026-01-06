@@ -1,282 +1,374 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+<meta charset="UTF-8">
+<title>Check Point</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
- /* لعرض الأقسام جنباً إلى جنب */
-.details-wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-bottom: 30px;
-}
-
-/* تنسيق لكل قسم (موقع أو حارس) */
-.form-container {
-  background-color: #b788f5;
-  border: 1px solid #ccc;
-  padding: 15px;
-  border-radius: 8px;
-  width: 48%;
-  box-sizing: border-box;
-}
-
-.form-container h4 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  font-size: 16px;
-  color: #333;
-}
-
-/* شبكة داخلية لكل نموذج */
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px 16px;
-}
-
-.form-grid label {
-  display: block;
-  font-size: 13px;
-  color: #333;
-  margin-bottom: 3px;
-}
-
-.form-grid input[type="text"] {
-  width: 100%;
-  padding: 6px;
-  font-size: 13px;
-  border: 1px solid #aaa;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-/* استجابة للشاشات الصغيرة */
-@media (max-width: 768px) {
-  .details-wrapper {
-    flex-direction: column;
+  * {
+    box-sizing: border-box;
   }
 
-  .form-container {
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    background: linear-gradient(135deg, #f4f6f8, #e9edf2);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+  }
+
+  center {
     width: 100%;
   }
 
-  .form-grid {
-    grid-template-columns: 1fr;
+  /* 🧱 Container */
+  .container {
+    width: 100%;
+    max-width: 480px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    text-align: center;
   }
-}
 
-/* أسفل الصفحة - الفورم */
-#project-guards {
-  margin-top: 30px;
-}
+  /* 📷 QR Reader */
+  #reader {
+    width: 100%;
+    max-width: 370px;
+    height: 280px;
+    margin: 0 auto 15px;
+    border-radius: 12px;
+    overflow: hidden;
+    display: none;
+    border: 2px dashed #4a90e2;
+    aspect-ratio: 3 / 4; /* مثالي للموبايل */
 
-#add-project-guards input[type="text"] {
-  width: 100%;
-  padding: 6px;
-  margin-bottom: 8px;
-  border: 1px solid #aaa;
-  border-radius: 4px;
-  font-size: 13px;
-}
+  }
 
-#add-project-guards input[type="submit"] {
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
+  #result {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 10px;
+  }
 
-#add-project-guards input[type="submit"]:hover {
-  background-color: #0056b3;
-}
-
- table {
-    width: 50%;
+  /* 🧾 Table */
+  table {
+    width: 100%;
     border-collapse: collapse;
     margin-top: 15px;
-    font-family: Arial, sans-serif;
     font-size: 14px;
   }
 
+  table tr:nth-child(even) {
+    background: #f9fafb;
+  }
+
   th, td {
-    padding: 8px 12px;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
     text-align: left;
   }
 
-  th {
-    font-weight: bold;
+  td strong {
+    color: #333;
   }
 
-  tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-
-  tr:hover {
-    background-color: #eef;
-  }
-
-  #result-count {
-    font-weight: bold;
+  /* ✏️ Input */
+  input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 14px;
     margin-top: 10px;
-    display: block;
+    outline: none;
+  }
+
+  input[type="text"]:focus {
+    border-color: #4a90e2;
+  }
+
+  /* 🔘 Buttons */
+  button {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: 0.3s ease;
+  }
+
+  button:hover {
+    opacity: 0.9;
+  }
+
+  #startCameraBtn {
+    background: #4a90e2;
+    color: #fff;
+  }
+
+  #retryBtn {
+    background: #f1f1f1;
+    color: #333;
+    display: none;
+  }
+
+  .confirm-btn {
+    background: #2ecc71;
+    color: #fff;
+  }
+
+  /* 📱 Small screens */
+  @media (max-width: 360px) {
+    .container {
+      padding: 15px;
+    }
+
+    table {
+      font-size: 13px;
+    }
+
+    button {
+      font-size: 14px;
+    }
   }
 </style>
-<script src="/static/js/config.js"></script>
+
+</head>
 <body>
+<div class="container">
+
+  <button id="startCameraBtn">📷 Включить камеру</button>
+
+  <div id="reader"></div>
+  <div id="result"></div>
+
+  <input type="text" id="check_point_id" placeholder="Check Point ID" hidden>
+
+  <table>
+    <tbody id="product-table"></tbody>
+  </table>
+
+  <button class="confirm-btn" onclick="checkLocation()">
+    ✔️ Подтвердить присутствие
+  </button>
+
+  <button id="retryBtn">🔁 Повторите</button>
+
+</div>
+
+<!-- ----------------------start qr reder-------------------------------------- -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <script>
+    const resultDiv = document.getElementById('result');
+    const retryBtn = document.getElementById('retryBtn');
+
+    let scanner;
+
+    function startScanner() {
+      document.body.style.backgroundColor = '#f4f4f4';
+      resultDiv.textContent = '';
+      retryBtn.style.display = 'none';
+
+      scanner = new Html5Qrcode("reader");
+
+      scanner.start(
+        { facingMode: "environment" }, // الكاميرا الخلفية
+        {
+          fps: 10,
+          qrbox: 250
+        },
+        qrCodeMessage => {
+          // قراءة ناجحة
+          // وضع قيمة QR داخل input
+    document.getElementById("check_point_id").value = qrCodeMessage;
+
+    if (/^\d+$/.test(qrCodeMessage)) {
+        // الحالة الأولى
+                // أرقام فقط
+        // ✅ وضع قيمة QR داخل input
+          document.getElementById("check_point_id").value = qrCodeMessage;
+           
+          fetchProducts();
+          scanner.stop();
+          retryBtn.style.display = 'inline-block';
+          reader.style.display = 'none';
+
+    } else if (/^[A-Za-z0-9 ]+$/) {
+        // الحالة الثانية
+        // أرقام + حروف و مسافات
+         window.location.href =
+        `/work_shift?title=${encodeURIComponent(qrCodeMessage)}`;
+
+    } else {
+        // أي قيمة أخرى
+        document.body.style.backgroundColor = 'red';
+        alert("QR غير معروف");
+    }
+          
+          
+        },
+        errorMessage => {
+          // يمكن تجاهل الأخطاء البسيطة
+        }
+      ).catch(err => {
+        resultDiv.textContent = "حدث خطأ: " + err;
+      });
+    }
+
+   
+
+    // ابدأ المسح عند تحميل الصفحة
+    //window.onload = startScanner;
+  </script>
+ <!-- ----------------------end qr reder-------------------------------------- -->
+<script>
+  
+let lastData = [];
+
+/* =========================
+   جلب بيانات النقطة
+========================= */
+function fetchProducts() {
+  const checkPointId = document.getElementById("check_point_id").value.trim();
+  const table = document.getElementById("product-table");
+  table.innerHTML = "";
+   
+  lastData = [];
+
+  if (!checkPointId) return;
+
+  fetch(`/get_check_point?check_point_id=${encodeURIComponent(checkPointId)}`)
+    .then(res => res.json())
+    .then(data => {
+      lastData = data;
+
+      if (!data || data.length === 0) {
+        table.innerHTML = "<tr><td>Нет данных</td></tr>";
+         
+        return;
+      }
+
+      const displayFields = {
+        name_point: "Name Point"
+      };
+
+      data.forEach(row => {
+        for (let key in displayFields) {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td><strong>${displayFields[key]}</strong></td>
+            <td>${row[key] ?? ""}</td>
+          `;
+          table.appendChild(tr);
+        }
+
+        const sep = document.createElement("tr");
+        sep.innerHTML = `<td colspan="2" style="background:#eee;height:8px;"></td>`;
+        table.appendChild(sep);
+      });
+
+       
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Ошибка загрузки данных");
+    });
+}
+
+/* =========================
+   التحقق من الموقع + التسجيل
+========================= */
+async function checkLocation() {
+  const checkPointId = document.getElementById("check_point_id").value.trim();
+
+  if (!checkPointId) {
+    alert("⚠️ Введите ID точки");
+    return;
+  }
+
+  if (!lastData || lastData.length === 0) {
+    alert("❌ Нет данных для проверки");
+    return;
+  }
+
+  if (!navigator.geolocation) {
+    alert("❌ Геолокация не поддерживается");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async position => {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+
+      let matched = false;
+
+      lastData.forEach(row => {
+        if (row.Coordinates) {
+          const [dbLat, dbLng] = row.Coordinates.split(",").map(Number);
+          const tolerance = 0.0005;
+
+          if (
+            Math.abs(lat - dbLat) < tolerance &&
+            Math.abs(lng - dbLng) < tolerance
+          ) {
+            matched = true;
+          }
+        }
+      });
+
+      if (!matched) {
+        alert("⚠️ Вы находитесь не в нужной точке");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("id_check_point", checkPointId);
+
+      const response = await fetch(`/add_chickd_point_datatame`, {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+      alert("✅ Присутствие успешно подтверждено");
+
+      // 🔁 إفراغ الصفحة بعد النجاح
+      document.getElementById("check_point_id").value = "";
+      document.getElementById("product-table").innerHTML = "";
+      document.getElementById("result-count").textContent = "";
+      lastData = [];
+    },
+    error => {
+      alert("⚠️ Ошибка геолокации: " + error.message);
+    }
+  );
+}
+ retryBtn.addEventListener('click', () => {
+    reader.style.display = 'inline-block';
+      startScanner();
+    });
+</script>
+<script>
+  const startCameraBtn = document.getElementById("startCameraBtn");
+  const readerDiv = document.getElementById("reader");
+
+  startCameraBtn.addEventListener("click", () => {
+    readerDiv.style.display = "block";
+    startCameraBtn.style.display = "none";
+    startScanner(); // هنا يتم طلب إذن الكاميرا
+  });
+</script>
 
 </body>
 </html>
-
-
-</script>
- <div style="display: none;">
-  <table>
-  <thead>
-      <tr>
-          <th><input type="text" placeholder="Product NO" oninput="fetchProducts()" id="check_point_id" /></th>
-      </tr>
-  </thead>
-  <tbody id="product-table">
-      <!-- data will appear here -->
-  </tbody>
-</table>
-
-<p id="result-count"></p>
-
-
- </div>
-
-<script>
-  let lastData = []; // نخزن آخر بيانات جلبناها
-
-  const params = new URLSearchParams(window.location.search);
-  document.getElementById("check_point_id").value = params.get("id");
-
-  function fetchProducts() {
-    const params = new URLSearchParams();
-    const fields = [ "check_point_id" ];
-    for (let field of fields) {
-        let value = document.getElementById(field).value;
-        if (value) {
-            params.append(field, value);
-        }
-    }
-
-    fetch(`${LinkP}/get_check_point?${params.toString()}`)
-        .then(res => res.json())
-        .then(data => {
-            lastData = data; // نخزن البيانات للمقارنة لاحقًا
-            const table = document.getElementById("product-table1");
-            const resultCount = document.getElementById("result-count");
-            table.innerHTML = "";
-
-            const displayFields = { 
-              id_project: "Project ID",
-              name_point: "Name Point",
-              Coordinates: "Coordinates"
-            };
-
-            if (data.length > 0) {
-                data.forEach(row => {
-                    for (let key in displayFields) {
-                        let tr = document.createElement("tr");
-                        tr.innerHTML = `
-                          <td><strong>${displayFields[key]}</strong></td>
-                          <td><input type="text" value="${row[key] ?? ""}" readonly style="width:100%;"/></td>
-                        `;
-                        table.appendChild(tr);
-                    }
-                    let separator = document.createElement("tr");
-                    separator.innerHTML = `<td colspan="2" style="background:#f0f0f0;height:10px;"></td>`;
-                    table.appendChild(separator);
-                });
-                
-            } else {
-                table.innerHTML = "<tr><td colspan='2'>No results found.</td></tr>";
-                resultCount.textContent = " res: 0";
-            }
-        });
-  }
-
-   //////////////////////////// داله تحديد الموقع
-
-  function checkLocation() {
-    if (!navigator.geolocation) {
-      alert("Браузер не поддерживает определение геолокации❌");
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      function(position) {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-
-        if (!lastData || lastData.length === 0) {
-          alert("❌ Данные не найдены. Проверьте правильность QR-кода и попробуйте снова.");
-          return;
-        }
-
-        // نفترض أن Coordinates في الداتا على شكل "lat,lng"
-        let matched = false;
-        lastData.forEach(row => {
-          if (row.Coordinates) {
-            const [dbLat, dbLng] = row.Coordinates.split(",").map(Number);
-
-            // نسمح بهامش خطأ صغير لأن الإحداثيات ممكن تختلف بجزء بسيط
-            const tolerance = 0.0005; 
-            if (Math.abs(lat - dbLat) < tolerance && Math.abs(lng - dbLng) < tolerance) {
-              matched = true;
-            }
-          }
-        });
-
-       if (matched) {
-  async function add_chickd_point_datatame() {
-  const projectName = params.get("id");
-
-  const formData = new FormData();
-  formData.append("id_check_point", projectName);
-
-  const response = await fetch(`${LinkP}/add_chickd_point_datatame`, {
-    method: "POST",
-    body: formData
-  });
-
-  const data = await response.json();
-  console.log("Server response:", data);
-}
-
-
-  add_chickd_point_datatame();
-  alert("✅ Присутствие успешно подтверждено. Спасибо!");
-}
- else {
-          alert("⚠️ Не удалось подтвердить присутствие. Пожалуйста, попробуйте позже или обратитесь к администратору.");
-        }
-      },
-      function(error) {
-        alert("⚠️ Произошла техническая ошибка. Пожалуйста, попробуйте позже." + error.message);
-      }
-    );
-  }
-  window.addEventListener("load", function() {
-    fetchProducts();
-    checkLocation();
-});
-
-
- 
-</script>
-
-
-
-
- 

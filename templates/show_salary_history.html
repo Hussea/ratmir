@@ -204,7 +204,7 @@
     }
     /*==================== bar style end ================================ */
 </style>
-<script src="/static/js/config.js"></script>
+
 <body>
    <!--bar show start -->
    <script src="/static/js/header.js" defer></script>
@@ -254,7 +254,7 @@
       return;
     }
 
-    let apiUrl = `${LinkP}/show_salary_history?employee_id_input=${empId}&project_id_input=${projId}`;
+    let apiUrl = `/show_salary_history?employee_id_input=${empId}&project_id_input=${projId}`;
 
     
     document.getElementById('status').textContent = '🔄 جارٍ تحميل البيانات...';
@@ -308,6 +308,18 @@
 
 </script>
 
-
+<script> 
+  let role = sessionStorage.getItem("role");
+              if (role === "admin") {
+                   
+               } else if(role === "supadmin") {
+                   
+               }else if(role === "emp") {
+                    document.getElementById("bill1").style.display = "none";
+                    
+                }else if (!role) {  // الشرط الذي أضفته أنت
+                    window.location.href = "/log_in";
+                }
+</script>
 </body>
 </html>

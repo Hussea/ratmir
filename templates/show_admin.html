@@ -157,11 +157,11 @@
 <ul id="categoryList">
     <!-- سيتم عرض العناصر هنا -->
 </ul>
-<script src="/static/js/config.js"></script>
+
 <script>
   async function fetchCategories() {
     try {
-        const response = await fetch(`${LinkP}/get_admin`);
+        const response = await fetch(`/get_admin`);
         const data = await response.json();
 
         const list = document.getElementById('categoryList');
@@ -208,7 +208,7 @@ button1.onclick = async () => {
   if (!confirm("Вы уверены, что хотите удалить этого пользователя?")) return;
 
   try {
-    const response = await fetch(`${LinkP}/delet_admin?idu=${idu}`, {
+    const response = await fetch(`/delet_admin?idu=${idu}`, {
   method: "GET"
    });
 
@@ -299,6 +299,6 @@ fetchCategories();
                 }else if(role === "emp") {
                  document.getElementById("QRBUT").style.display = "none";
                 }else if (!role) {  // الشرط الذي أضفته أنت
-                    window.location.href = "log_in.html";
+                    window.location.href = "/log_in";
                 }
 </script>

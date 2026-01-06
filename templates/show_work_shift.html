@@ -18,7 +18,7 @@
     </style>
 </head>
 <body>
-<script src="/static/js/config.js"></script>
+
 <h2>Search Work Shifts</h2>
 <button onclick="show_hade()" id="pig_data">pig data</button>
 <button onclick="hade_show()" id="min_data" style="display: none;">min data</button>
@@ -76,7 +76,7 @@
             }
         }
 
-        fetch(`${LinkP}/show_work_shift?${params.toString()}`)
+        fetch(`/show_work_shift?${params.toString()}`)
             .then(res => res.json())
             .then(data => {
                 const table = document.getElementById("product-table");
@@ -134,6 +134,18 @@
 
   
 </script>
-
+<script> 
+  let role = sessionStorage.getItem("role");
+              if (role === "admin") {
+                   
+               } else if(role === "supadmin") {
+                   
+               }else if(role === "emp") {
+                    document.getElementById("bill1").style.display = "none";
+                    
+                }else if (!role) {  // الشرط الذي أضفته أنت
+                    window.location.href = "/log_in";
+                }
+</script>
 </body>
 </html>
