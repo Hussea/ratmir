@@ -32,6 +32,11 @@ document.getElementById("employee_name").value = employeeName;
 document.getElementById("start_time").value = startTimeParam;
 
 // ================== DATE LOGIC ==================
+const moscowTime = new Date().toLocaleString("ru-RU", {
+  timeZone: "Europe/Moscow",
+  hour12: false
+});
+
 const today = new Date();
 const datetime = today.toISOString(); 
 const tomorrow = new Date(today);
@@ -86,7 +91,7 @@ document.getElementById("captureBtn").onclick = () => {
   ctx.font = "20px Arial";
   ctx.fillText(`Проект: ${projectName}`, 20, 30);
   ctx.fillText(`Охранник: ${employeeName}`, 20, 60);
-  ctx.fillText(`Д:Т ${datetime}`, 20, 90);
+  ctx.fillText(`${moscowTime}`, 20, 90);
   canvas.toBlob(blob => {
     photoBlob = blob;
     canvas.style.display = "block";

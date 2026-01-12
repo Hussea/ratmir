@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Данные охранника</title>
   <style>
     /* الحاوية */
     .switch {
@@ -345,7 +345,7 @@ function searchProduct() {
         }
     }
 
-    fetch(`/get_guards?${params.toString()}`)
+    fetch(`/get_guards0?${params.toString()}`)
         .then(res => res.json())
         .then(data => {
             const table = document.getElementById("product-table");

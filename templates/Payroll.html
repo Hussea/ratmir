@@ -2,7 +2,7 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>Payroll</title>
+  <title>Просмотр данных смены</title>
   <style>
      
     table, th, td { border: 1px solid #888686; border-collapse: collapse; padding: 8px; margin:2%; }
@@ -448,7 +448,7 @@ function closeImage() {
       document.getElementById('show_sum_salry').textContent = `${lastItem.sum}`;
     })
     .catch(err => {
-      document.getElementById('status').textContent = '❌ خطأ في تحميل البيانات.';
+      document.getElementById('status').textContent = 'нет данных.';
       console.error(err);
     });
 }

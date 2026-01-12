@@ -1,0 +1,20 @@
+ratmir
+  |_.git
+  |_ __pycache__
+  |_obxod(هو ملف يرفع فيه صور معينه عن طريق البرنامج)
+  |_static
+       |_js
+         |_config.js
+         |_header.js
+         |_workshift.js
+  |_templats
+        |_details.html
+        |_index.html
+        |_log_in.html
+        |_navbar.html
+        |_new_chick_point.html
+  |_uploads(هو ملف يرفع فيه صور معينه عن طريق البرنامج
+  |_main.py
+  |_render.yaml
+  |_requirements.txt
+  

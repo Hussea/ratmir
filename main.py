@@ -4,6 +4,7 @@ from fastapi import FastAPI, Form
 from fastapi.middleware.cors import CORSMiddleware
 import mysql.connector
 from datetime import datetime, date, time
+from datetime import time, timedelta
 from fastapi import FastAPI, UploadFile, File, Form
 import base64, os, re
 from pydantic import BaseModel
@@ -135,11 +136,12 @@ app.add_middleware(
 # الاتصال بقاعدة البيانات
 def get_db_connection():
     return mysql.connector.connect(
-        host='localhost',
-        user='root',
-        password='',        # ← غيّر إذا عندك كلمة سر
-        database='ratmer'
+        host=os.getenv("DB_HOST", "localhost"),
+        user=os.getenv("DB_USER", "root"),
+        password=os.getenv("DB_PASSWORD", ""),
+        database=os.getenv("DB_NAME", "ratmer")
     )
+
 
 
 #====================================================
@@ -361,8 +363,8 @@ def add_project_guards(
     project_name: str = Form(...), 
     employee_id: int = Form(...),
     employee_name: str = Form(...),
-    start_date: str = Form(...),
-    end_date: str = Form(...),
+    start_date: date = Form(...),
+    end_date: date = Form(...),
     emp: str = Form(...),  
     nots: str = Form(...)
 ):
@@ -371,10 +373,10 @@ def add_project_guards(
         cur = conn.cursor()
         query = """
             INSERT INTO project_guards 
-            (project_id, project_name, employee_id, employee_name, end_date, emp, nots) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            (project_id, project_name, employee_id, employee_name, start_date, end_date, emp, nots) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """
-        cur.execute(query, (project_id, project_name, employee_id, employee_name, end_date, emp, nots))
+        cur.execute(query, (project_id, project_name, employee_id, employee_name, start_date, end_date, emp, nots))
         conn.commit()
         return {"message": "تمت الإضافة بنجاح ✅"}
     except mysql.connector.Error as e:
@@ -571,6 +573,40 @@ def get_guards(
     conn.close()
     
     return result
+#===============================================
+@app.get("/get_guards0")
+def get_guards0(
+    id: Optional[int] = Query(None),
+    project_id: Optional[int] = Query(None),
+    employee_id: Optional[int] = Query(None),
+    nots: Optional[float] = Query(None)
+):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    query = "SELECT * FROM project_guards WHERE is_active = TRUE"
+    values = []
+
+    if id is not None:
+        query += " AND id = %s"
+        values.append(id)
+    if project_id is not None:
+        query += " AND project_id = %s"
+        values.append(project_id)
+    if employee_id is not None:
+        query += " AND employee_id = %s"
+        values.append(employee_id)
+    
+    if nots is not None:
+        query += " AND nots = %s"
+        values.append(nots)
+
+    cursor.execute(query, values)
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    
+    return results
 #===============================================
 @app.get("/get_check_point")
 def get_check_point(
@@ -801,6 +837,39 @@ def get_show_work_shift(
 
     cursor.execute(query, values)
     results = cursor.fetchall()
+      # 🔥 الحل هنا
+    for row in results:
+    # تحويل start_time
+        start_time_val = row.get("start_time")
+        if isinstance(start_time_val, timedelta):
+            total_seconds = int(start_time_val.total_seconds())
+            hours = total_seconds // 3600
+            minutes = (total_seconds % 3600) // 60
+            seconds = total_seconds % 60
+            row["start_time"] = f"{hours:02}:{minutes:02}:{seconds:02}"
+        elif isinstance(start_time_val, time):
+            row["start_time"] = start_time_val.strftime("%H:%M:%S")
+        else:
+            row["start_time"] = None
+
+        # تحويل end_time
+        end_time_val = row.get("end_time")
+        if isinstance(end_time_val, timedelta):
+            total_seconds = int(end_time_val.total_seconds())
+            hours = total_seconds // 3600
+            minutes = (total_seconds % 3600) // 60
+            seconds = total_seconds % 60
+            row["end_time"] = f"{hours:02}:{minutes:02}:{seconds:02}"
+        elif isinstance(end_time_val, time):
+            row["end_time"] = end_time_val.strftime("%H:%M:%S")
+        else:
+            row["end_time"] = None
+
+        # تحويل التاريخ
+        for date_field in ["start_day", "end_day"]:
+            if isinstance(row.get(date_field), (date, datetime)):
+                row[date_field] = row[date_field].strftime("%Y-%m-%d")
+            
     cursor.close()
     conn.close()
     return results
@@ -1074,6 +1143,4 @@ uvicorn C:\Users\alame\OneDrive\Desktop\python.main:app --reload
 """
 
 
-
-
-
+ 

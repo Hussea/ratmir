@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>بحث منتج</title>
+    <title>соединить охрану с субъектом</title>
 </head>
 <style>
   * {
@@ -319,7 +319,7 @@
        
         <input type="text" name="employee_name"id="idnumemp"style="display: none;">
         
-        <input type="text" name="start_date"style="display: none;">
+        <input type="text" name="start_date"id="start_date"style="display: none;">
         
         <input type="text" name="end_date"style="display: none;">
          
@@ -446,6 +446,8 @@ function searchProduct() {
 <!-- داله الجافاسكربت التي بمساعدتها اضهار معلومات الحرس من قاعده البيانات و وضع البيانات 
  في الخانات المطلوبه  -->
 <script>
+  const today = new Date();
+  const today0 = new Date().toISOString().split("T")[0]; 
   async function loademployee() {
     const response = await fetch("/Dropdown_employee");
     const data = await response.json();
@@ -487,6 +489,8 @@ function searchguards() {
                 document.getElementById("id22").value = result.id || "";
                 document.getElementById("name2").value = result.name || "";
                 document.getElementById("idnumemp").value = result.name || "";
+                document.getElementById("start_date").value = today0;
+                document.getElementsByName("end_date")[0].value = today0;
                 document.getElementById("num_T2").value = result.num_T || "";
                 document.getElementById("data_prth2").value = result.data_prth || "";
                 document.getElementById("address2").value = result.address || "";
