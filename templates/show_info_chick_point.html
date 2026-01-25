@@ -4,143 +4,222 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <meta charset="UTF-8">
   <title>данных QR-кодов</title>
-  <style>
-     
-    table, th, td { border: 1px solid #888686; border-collapse: collapse; padding: 8px; }
-    table { width: 70%; margin-top: 20px; }
-    th { background-color: #f0f0f0; }
-    #status { margin-top: 10px; font-weight: bold; color: #444; }
-    #info_line { margin-top: 15px; }
-
-    #info_line span {
-      margin-right: 15px;
-    }
-     /* نافذة QR Code */
-  #qrModal {
-    display: none;
-    position: fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    background: rgba(0,0,0,0.5);
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-  }
-  #qrContent {
-    background:#fff;
-    padding:20px;
-    text-align:center;
-    border-radius:8px;
-    position: relative;
-  }
-  #qrContent button {
-    margin:5px;
-    padding:5px 10px;
-  }
- /*==================== bar style start ================================ */
-     body {
-      margin: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f6f8;
+  {% extends "try.html" %}
+  {% block page_css %}
     
-    }
+  <style>
+     /* ===== RESET ===== */
+* {
+  box-sizing: border-box;
+}
 
-    .tabs {
-      display: flex;
-      background-color: #1e293b;
-      overflow-x: auto;
-    }
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+  font-family: "Poppins", Arial, sans-serif;
+  background-color: #f4f6f9;
+  color: #2d3436;
+}
 
-    .tabs button {
-      flex: 1;
-      padding: 16px;
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
+/* ===== CONTENT CENTER ===== */
+center {
+  width: 100%;
+  padding: 15px;
+}
 
-    .tabs button:hover,
-    .tabs button.active {
-      background-color: #334155;
-    }
+/* ===== HEADINGS ===== */
+h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  text-align: center;
+}
 
-    .tab-content {
-      display: none;
-      padding: 40px;
-      background-color: #fff;
-    }
+/* ===== STATUS & INFO ===== */
+#status {
+  font-size: 14px;
+  margin: 10px 0;
+}
 
-    .tab-content.active {
-      display: block;
-    }
+#info_line {
+  background: #ffffff;
+  padding: 12px;
+  border-radius: 10px;
+  margin: 10px auto 20px;
+  width: 100%;
+  max-width: 800px;
+  text-align: center;
+  line-height: 1.6;
+}
 
-    .form-container {
-      max-width: 1000px;
-      margin: auto;
-      background-color: #ffffff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
+#info_line span {
+  display: inline-block;
+  margin: 5px 10px;
+}
 
-    .form-container h2 {
-      margin-bottom: 20px;
-      color: #1e293b;
-      font-size: 24px;
-    }
+/* ===== TABLE (DESKTOP) ===== */
+table {
+  width: 80%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+}
 
-    form label {
-      display: block;
-      margin-bottom: 6px;
-      color: #475569;
-      font-weight: 500;
-    }
+th {
+  background-color: #dfe6e9;
+  padding: 12px;
+  font-size: 14px;
+  text-align: center;
+}
 
-    form input,
-    form select {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 20px;
-      border-radius: 8px;
-      border: 1px solid #cbd5e1;
-      font-size: 16px;
-    }
+td {
+  padding: 10px;
+  font-size: 13px;
+  text-align: center;
+  word-break: break-word;
+}
 
-    form input[type="submit"] {
-      background-color: #2563eb;
-      color: white;
-      border: none;
-      font-weight: bold;
-      transition: background 0.3s;
-    }
+table, th, td {
+  border: 1px solid #b2bec3;
+}
 
-    form input[type="submit"]:hover {
-      background-color: #1d4ed8;
-    }
+/* ===== LINKS IN TABLE ===== */
+td a {
+  text-decoration: none;
+  color: #0984e3;
+  font-weight: 500;
+}
 
-    /* تصميم خاص لصفحة المنتج */
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-    }
+td a:hover {
+  text-decoration: underline;
+}
 
-    .full-width-form {
-      max-width: none;
-      width: 100%;
-    }
-    /*==================== bar style end ================================ */
+/* ===== QR MODAL ===== */
+#qrModal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(38, 37, 37, 0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+#qrContent {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 14px;
+  text-align: center;
+  width: 90%;
+  max-width: 320px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+#qrContent button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  background: #0984e3;
+  color: white;
+}
+
+#qrContent button:last-child {
+  background: #636e72;
+}
+
+#qrContent button:hover {
+  opacity: 0.9;
+}
+
+/* توسيط QR Code داخل النافذة */
+#qrcode {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 15px auto;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+
+  h2 {
+    font-size: 20px;
+  }
+
+  /* 🔥 تحويل الجدول إلى Cards */
+  table,
+  thead,
+  tbody,
+  tr,
+  th,
+  td {
+    display: block;
+    width: 100%;
+  }
+
+  thead {
+    display: none;
+  }
+
+  table {
+    background: transparent;
+    box-shadow: none;
+    width: 100%;
+  }
+
+  tr {
+    background: #ffffff;
+    margin-bottom: 15px;
+    padding: 12px;
+    border-radius: 14px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 5px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    text-align: right;
+  }
+
+  td:last-child {
+    border-bottom: none;
+  }
+
+  td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #636e72;
+    margin-left: 10px;
+    white-space: nowrap;
+  }
+}
+
+/* ===== SMALL PHONES ===== */
+@media (max-width: 480px) {
+  td {
+    font-size: 13px;
+  }
+}
+
+ 
 </style>
+{% endblock %}
 
 <body>
-   <!--bar show start -->
+{% block content %}
 
-<script src="/static/js/header.js" defer></script>
- <my-header></my-header>
-<!--bar show end -->
 <center>
 <h2>Просмотр данных QR-кодов</h2>
 
@@ -172,6 +251,8 @@
   </div>
 </div>
 </center>
+
+
 <script>
   const params = new URLSearchParams(window.location.search);
   document.getElementById("serch_id").value = params.get("id");
@@ -353,5 +434,6 @@ window.onload = loadData;
                     window.location.href = "/log_in";
                 }  
 </script>
+{% endblock %}
 </body>
 </html>

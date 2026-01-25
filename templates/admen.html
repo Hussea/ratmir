@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Admin</title>
+    {% extends "try.html" %}
+  {% block page_css %}
+<style>
+/* ===== Reset & Safety ===== */
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f1f5f9;
+}
+
+/* ===== Page Wrapper ===== */
+.add-admin-page {
+  min-height: 100vh;
+  padding: 20px;
+  overflow-x: hidden;
+}
+
+/* ===== Form Container ===== */
+.add-admin-page .form-container {
+  max-width: 600px;
+  margin: auto;
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 14px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+}
+
+/* ===== Title ===== */
+.add-admin-page h2 {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #1e293b;
+  font-size: 22px;
+}
+
+/* ===== Labels ===== */
+.add-admin-page label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #475569;
+}
+
+/* ===== Inputs & Select ===== */
+.add-admin-page input,
+.add-admin-page select {
+  width: 100%;
+  padding: 11px 12px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+}
+
+/* ===== Password Row ===== */
+.add-admin-page .password-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.add-admin-page #pasword {
+  margin-bottom: 0;
+}
+
+/* ===== Buttons ===== */
+.add-admin-page button,
+.add-admin-page input[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Primary */
+.add-admin-page #generateBtn {
+  background: #2563eb;
+  color: white;
+}
+
+.add-admin-page #generateBtn:hover {
+  background: #1d4ed8;
+}
+
+/* Submit */
+.add-admin-page input[type="submit"] {
+  background: #0f172a;
+  color: white;
+}
+
+.add-admin-page input[type="submit"]:hover {
+  background: #020617;
+}
+
+/* Secondary Buttons */
+.add-admin-page .secondary-btn {
+  background: #0b6a00;
+  color: white;
+}
+
+/* ===== Desktop Layout ===== */
+@media (min-width: 768px) {
+  .add-admin-page .form-container {
+    padding: 32px;
+  }
+
+  .add-admin-page .password-row {
+    flex-direction: row;
+  }
+
+  .add-admin-page #pasword {
+    flex: 3;
+  }
+
+  .add-admin-page #generateBtn {
+    flex: 1;
+  }
+}
+</style>
+{% endblock %}
+
+</head>
+
+<body>
+    {% block content %}
+
+<div class="add-admin-page">
+  <div class="form-container">
+
+    <h2>Обеспечить доступ пользователей</h2>
+
+    <form id="userForm" onsubmit="submitForm(event, 'userForm', '/add_admin')">
+
+      <label>Логин</label>
+      <input type="text" name="name" required>
+
+      <label>Роль</label>
+      <select name="rool" required>
+        <option value="" disabled selected hidden>Определите Роль</option>
+        <option value="admin">Администратор</option>
+        <option value="supadmin">Супадмин</option>
+        <option value="emp">Бухгалтер</option>
+      </select>
+
+      <label>Пароль</label>
+      <div class="password-row">
+        <input type="text" id="pasword" name="pasword" required>
+        <button type="button" id="generateBtn">Сгенерировть</button>
+      </div>
+
+      <input type="submit" value="Определите">
+
+      <input type="submit"
+             class="secondary-btn"
+             value="Список доступа пользователя"
+             onclick="window.location.href='/show_admin'; return false;">
+
+      <button type="button"
+              class="secondary-btn"
+              onclick="window.location.href='/show_qr_code_fro_check_point'">
+        Регистрация участников
+      </button>
+
+    </form>
+  </div>
+</div>
+
+
+<script>
+function submitForm(event, formId, url) {
+  event.preventDefault();
+  const formData = new FormData(document.getElementById(formId));
+  fetch(url, { method: "POST", body: formData })
+    .then(() => alert("Data submitted successfully"));
+}
+</script>
+
+ 
+
+   
+  <script>
+      document.getElementById("generateBtn").addEventListener("click", generateUniquePassword);
+
+    async function generateUniquePassword() {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      let password;
+      let exists = true;
+
+      while (exists) {
+        // توليد كلمة مرور جديدة
+        password = "";
+        for (let i = 0; i < 6; i++) {
+          password += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+
+        // تحقق من قاعدة البيانات عبر السيرفر
+        const res = await fetch(`/check_password`, {
+          method: "POST",
+          body: new URLSearchParams({ password })
+        });
+
+        const data = await res.json();
+        exists = data.exists; // لو موجودة نعيد المحاولة
+      }
+
+      // عرض الكلمة في الحقل
+      document.getElementById("pasword").value = password;
+      document.getElementById("pasword").style.boxShadow = "0 2px 10px rgba(57, 243, 11, 0.945)";
+    }
+
+  </script>
+  {% endblock %}
+</body>
+</html>

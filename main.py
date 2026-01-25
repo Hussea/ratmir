@@ -27,12 +27,14 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/", response_class=HTMLResponse)
 def read_root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse("admen.html", {"request": request})
 
 #----------------------------------------------
 
  
-
+@app.get("/try", response_class=HTMLResponse)
+def login_page0(request: Request):
+    return templates.TemplateResponse("try.html", {"request": request})
 
 @app.get("/components", response_class=HTMLResponse)
 def login_page1(request: Request):
@@ -105,13 +107,17 @@ def login_page16(request: Request):
 def login_page17(request: Request):
     return templates.TemplateResponse("work_shift.html", {"request": request})
 
-@app.get("/try", response_class=HTMLResponse)
-def login_page17(request: Request):
-    return templates.TemplateResponse("try.html", {"request": request})
+@app.get("/admen", response_class=HTMLResponse)
+def login_page18(request: Request):
+    return templates.TemplateResponse("admen.html", {"request": request})
 
-@app.get("/htmtry", response_class=HTMLResponse)
-def login_page17(request: Request):
-    return templates.TemplateResponse("htmtry.html", {"request": request})
+@app.get("/add_emp", response_class=HTMLResponse)
+def login_page19(request: Request):
+    return templates.TemplateResponse("add_emp.html", {"request": request})
+
+@app.get("/add_project", response_class=HTMLResponse)
+def login_page20(request: Request):
+    return templates.TemplateResponse("add_project.html", {"request": request})
 
 @app.get("/log_in", response_class=HTMLResponse)
 def login_page0(request: Request):
@@ -814,7 +820,7 @@ def get_show_work_shift(
             work_shifts.file_path,
             employee.name AS employee_name,
             projuct.title AS projuct_title,
-            projuct.sel_emp AS projuct_sel_emp
+            employee.Salary AS projuct_sel_emp
         FROM work_shifts
         JOIN employee ON work_shifts.employee_id_input = employee.id
         JOIN projuct ON work_shifts.project_id_input = projuct.id

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Project</title>
+  {% extends "try.html" %}
+  {% block page_css %}
+<style>
+/* ===== Reset & Safety ===== */
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f1f5f9;
+}
+
+/* ===== Page Wrapper ===== */
+.add-project-page {
+  min-height: 100vh;
+  padding: 20px;
+  overflow-x: hidden;
+}
+
+/* ===== Form Container ===== */
+.add-project-page .form-container {
+  max-width: 700px;
+  margin: auto;
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 14px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+}
+
+/* ===== Title ===== */
+.add-project-page h2 {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #1e293b;
+  font-size: 22px;
+}
+
+/* ===== Labels ===== */
+.add-project-page label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #475569;
+}
+
+/* ===== Inputs ===== */
+.add-project-page input {
+  width: 100%;
+  padding: 11px 12px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+}
+
+/* ===== Submit Button ===== */
+.add-project-page input[type="submit"] {
+  background: #0f172a;
+  color: white;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+.add-project-page input[type="submit"]:hover {
+  background: #020617;
+}
+
+/* ===== Desktop Enhancements ===== */
+@media (min-width: 768px) {
+  .add-project-page .form-container {
+    padding: 32px;
+  }
+}
+</style>
+{% endblock %}
+
+</head>
+
+<body>
+    {% block content %}
+
+<div class="add-project-page">
+  <div class="form-container">
+
+    <h2>Информация о проекте</h2>
+
+    <form id="categoryForm" onsubmit="submitForm(event, 'categoryForm', '/add-category')">
+
+      <label>Название проекта</label>
+      <input type="text" name="title" required>
+
+      <label>Адрес</label>
+      <input type="text" name="address" required>
+
+      <label>Координаты</label>
+      <input type="text" name="Coordinates" required>
+
+      <label>Требуются охранники</label>
+      <input type="number" name="q_person" required>
+
+      <label>Система работы</label>
+      <input type="number" name="ses_work" required>
+
+      <label>Время начала смены</label>
+      <input type="time" name="start_time_work" required>
+
+      <label>Доход от проекта</label>
+      <input type="number" name="sum_of_proj" required>
+
+      <label>менеджер проекта</label>
+      <input type="text" name="pers_of_proj" required>
+
+      <label>номер телефона</label>
+      <input type="text" name="n_phone" required>
+
+      <label>Зарплата охранника</label>
+      <input type="number" name="sel_emp" required>
+
+      <label>Примечание</label>
+      <input type="text" name="nots" required>
+
+      <input type="submit" value="Представить">
+
+    </form>
+
+  </div>
+</div>
+
+<script>
+function submitForm(event, formId, url) {
+  event.preventDefault();
+  const formData = new FormData(document.getElementById(formId));
+  fetch(url, { method: "POST", body: formData })
+    .then(() => alert("Project added successfully"));
+}
+</script>
+{% endblock %}
+
+</body>
+</html>

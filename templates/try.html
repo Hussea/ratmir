@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel</title>
+
+<style>
+:root {
+  --primary: #0f172a;
+  --secondary: #1e293b;
+  --accent: #2563eb;
+  --bg: #f1f5f9;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: #111;
+}
+
+/* ===== Top Navbar ===== */
+.bar_navbar {
+  height: 64px;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+}
+
+.bar_brand {
+  font-size: 25px;
+  font-weight: 600;
+  
+}
+.bar_brand a {
+    text-decoration: none;
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.bar_brand a:hover {
+    color: #007bff;      /* تغيير لون بسيط عند المرور */
+}
+
+.bar_nav-links {
+  display: flex;
+  gap: 24px;
+}
+
+.bar_nav-links a {
+  color: #e5e7eb;
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.bar_nav-links a:hover {
+  color: white;
+}
+
+/* Hamburger */
+.bar_menu-btn {
+  display: none;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* ===== Sidebar ===== */
+.bar_sidebar {
+  position: fixed;
+  top: 64px;
+  left: -260px;
+  width: 260px;
+  height: calc(100% - 64px);
+  background: var(--secondary);
+  padding: 20px;
+  transition: 0.3s ease;
+  z-index: 1000;
+}
+
+.bar_sidebar.active {
+  left: 0;
+}
+
+.bar_sidebar a {
+  display: block;
+  color: #e5e7eb;
+  text-decoration: none;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+
+.bar_sidebar a:hover {
+  background: #334155;
+  color: white;
+}
+
+/* ===== Layout ===== */
+.bar_container {
+  padding: 24px;
+  transition: margin-left 0.3s;
+}
+
+/* ===== Cards ===== */
+.bar_card {
+  background: white;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .bar_nav-links {
+    display: none;
+  }
+
+  .bar_menu-btn {
+    display: block;
+  }
+}
+</style>
+<script>
+function toggleSidebar() {
+  document.getElementById("bar_sidebar").classList.toggle("active");
+}
+</script>
+  {% block page_css %}{% endblock %}
+</head>
+
+<body>
+
+<!-- Navbar -->
+<header class="bar_navbar">
+  <div class="bar_brand"><a href="/log_in">РАТМИР</a></div>
+
+  <nav class="bar_nav-links">
+    <a href="/admen">Права доступа</a>
+    <a href="/add_emp">Сотрудники</a>
+    <a href="/add_project">Добавить проект</a>
+    <a href="/show_guards">Данные охранника</a>
+    <a href="/show">Интеграция</a>
+    <a href="/project_list">Список проектов</a>
+  </nav>
+
+  <div class="bar_menu-btn" onclick="toggleSidebar()">☰</div>
+</header>
+
+<!-- Sidebar (Mobile) -->
+<aside class="bar_sidebar" id="bar_sidebar">
+    <a href="/admen">Права доступа</a>
+    <a href="/add_emp">Сотрудники</a>
+    <a href="/add_project">Добавить проект</a>
+    <a href="/show_guards">Данные охранника</a>
+    <a href="/show">Интеграция</a>
+    <a href="/project_list">Список проектов</a>
+</aside>
+{% block content %}
+<!-- Main Content -->
+<main class="bar_container">
+  <div class="bar_card">
+    <h2>Welcome</h2>
+    <p>This is a professional, responsive admin layout designed for English (LTR).</p>
+  </div>
+</main>
+
+<script>
+
+  let role = sessionStorage.getItem("role");
+                if (role === "admin") {
+                   
+                } else if(role === "supadmin") {
+                  document.getElementById("category").style.display = "none";
+                  //alert("🚫 У вас нет прав для выполнения этого действия.(Добавить проект)");
+                }else if(role === "emp") {
+                    window.location.href = "/log_in";
+                }else if (!role) {  // الشرط الذي أضفته أنت
+                    window.location.href = "/log_in";
+                }
+
+</script>
+{% endblock %}
+
+</body>
+</html>

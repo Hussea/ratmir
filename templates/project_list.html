@@ -3,153 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <title>Список проектов</title>
+    {% extends "try.html" %}
+  {% block page_css %}
     <style>
-    body {
-      font-family: "Poppins", Arial, sans-serif;
-      background-color: #f8f9fa;
-      color: #333;
-    }
+    /* ====== Variables (same style as previous pages) ====== */
+:root {
+  --primary: #0f172a;
+  --secondary: #1e293b;
+  --accent: #2563eb;
+  --success: #16a34a;
+  --danger: #dc2626;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+}
 
-    /* ====== RESPONSIVE ====== */
-    @media (max-width: 768px) {
-      .menu-toggle {
-        display: flex;
-      }
-    }
-        
-        ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
+/* ====== Page Base ====== */
+body {
+  background: var(--bg);
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  color: #111;
+}
 
-        li {
-            margin: 10px 30px;
-            background-color: #f9f9f9;
-            padding: 10px;
-            border-radius: 6px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #ddd;
-        }
+/* ====== Page Title ====== */
+h2 {
+  margin: 30px 0 20px;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--primary);
+}
 
-         
+/* ====== Project List ====== */
+#categoryList {
+  max-width: 1100px;
+  margin: 0 auto 40px;
+  padding: 0 16px;
+  list-style: none;
+}
 
-        button {
-            background-color: #0600be;
-            color: #ffffff;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            margin-left: 8px;
-        }
+/* ====== Project Card ====== */
+#categoryList li {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 18px 22px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+  border-left: 6px solid var(--accent);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
-        /*==================== bar style start ================================ */
-     body {
-      margin: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f6f8;
-    
-    }
+#categoryList li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+}
 
-    .tabs {
-      display: flex;
-      background-color: #1e293b;
-      overflow-x: auto;
-    }
+/* ====== Project Name ====== */
+#categoryList li span {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--secondary);
+  word-break: break-word;
+}
 
-    .tabs button {
-      flex: 1;
-      padding: 16px;
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
+/* ====== Buttons Container ====== */
+#categoryList li div {
+  display: flex;
+  gap: 10px;
+}
 
-    .tabs button:hover,
-    .tabs button.active {
-      background-color: #334155;
-    }
+/* ====== Buttons ====== */
+#categoryList button {
+  border: none;
+  padding: 9px 16px;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+  color: #fff;
+  white-space: nowrap;
+}
 
-    .tab-content {
-      display: none;
-      padding: 40px;
-      background-color: #fff;
-    }
+#categoryList button:hover {
+  transform: scale(1.04);
+}
 
-    .tab-content.active {
-      display: block;
-    }
+/* Info button */
+#categoryList button:first-child {
+  background: var(--accent);
+}
 
-    .form-container {
-      max-width: 1000px;
-      margin: auto;
-      background-color: #ffffff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
+/* QR button */
+#categoryList button:last-child {
+  background: var(--secondary);
+}
 
-    .form-container h2 {
-      margin-bottom: 20px;
-      color: #1e293b;
-      font-size: 24px;
-    }
+/* ====== Responsive (Tablet & Mobile) ====== */
+@media (max-width: 768px) {
 
-    form label {
-      display: block;
-      margin-bottom: 6px;
-      color: #475569;
-      font-weight: 500;
-    }
+  h2 {
+    font-size: 22px;
+  }
 
-    form input,
-    form select {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 20px;
-      border-radius: 8px;
-      border: 1px solid #cbd5e1;
-      font-size: 16px;
-    }
+  #categoryList li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
 
-    form input[type="submit"] {
-      background-color: #2563eb;
-      color: white;
-      border: none;
-      font-weight: bold;
-      transition: background 0.3s;
-    }
+  #categoryList li div {
+    width: 100%;
+    justify-content: center;
+  }
 
-    form input[type="submit"]:hover {
-      background-color: #1d4ed8;
-    }
+  #categoryList button {
+    width: 100%;
+    font-size: 15px;
+  }
+}
 
-    /* تصميم خاص لصفحة المنتج */
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-    }
+/* ====== Small Phones ====== */
+@media (max-width: 480px) {
 
-    .full-width-form {
-      max-width: none;
-      width: 100%;
-    }
-    /*==================== bar style end ================================ */
+  #categoryList li {
+    padding: 16px;
+  }
+
+  #categoryList li span {
+    font-size: 16px;
+    text-align: center;
+    width: 100%;
+  }
+
+  #categoryList li div {
+    flex-direction: column;
+  }
+}
     </style>
+    {% endblock %}
 </head>
 <body>
  <!--bar show start -->
-   
-<my-header>
-<script src="/static/js/header.js" defer></script>
-</my-header>
+<!--<script src="/static/js/header.js" defer></script> -->
+{% block content %}
 
 
 <!--bar show end -->
@@ -242,6 +239,7 @@ fetchCategories();
       });
     });
   </script>
+  {% endblock %}
 </body>
 </html>
 <script>  

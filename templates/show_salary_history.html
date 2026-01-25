@@ -1,215 +1,179 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>историю платежей</title>
+  {% extends "try.html" %}
+  {% block page_css %}
   <style>
-     
-    table, th, td { border: 1px solid #aaa; border-collapse: collapse; padding: 8px; }
-    table { width: 95%; margin-top: 20px; }
-    th { background-color: #f0f0f0; }
-    #status { margin-top: 10px; font-weight: bold; color: #444; }
-    #show_pay_list_month{
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  position: fixed;
-  top: 10px;
-  left: 52%;
-  width: 45%;
-  height: 5%;
-  background-color: rgb(248, 208, 208);
-  overflow: hidden;
-  z-index: 1000;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  font-family: sans-serif;
-    }
-    #divPiy {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  position: fixed;
-  top: 15%;
-  left: 52%;
-  width: 45%;
-  height: 75%;
-  background-color: rgb(208, 237, 248);
-  overflow: hidden;
-  z-index: 1000;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  font-family: sans-serif;
-}
-
-#divPiy label {
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-#divPiy input,
-#divPiy select {
-  width: 50%;
-  padding: 8px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+ /* ===== Theme Variables (same as other pages) ===== */
+/* ===== RESET مهم جداً للموبايل ===== */
+* {
   box-sizing: border-box;
-  font-size: 14px;
 }
 
-#notes {
-  flex-grow: 1; /* يجعل textarea يأخذ المساحة المتبقية */
-  resize: none;
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden; /* 🔥 يمنع التشويه */
+  font-family: "Poppins", Arial, sans-serif;
+  background-color: #f4f6f9;
+}
+
+/* ===== الحاوية العامة ===== */
+center {
   width: 100%;
   padding: 10px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 15px;
-  box-sizing: border-box;
-  min-height: 100px;
 }
 
-#divPiy button {
+/* ===== العناوين ===== */
+h2 {
+  font-size: 24px;
+  margin: 15px 0;
+  text-align: center;
+  color: #2d3436;
+}
+
+/* ===== النص العلوي ===== */
+#info_line {
   width: 100%;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.6;
   padding: 10px;
-  background-color: #3498db;
-  color: white;
-  font-size: 16px;
-  border: none;
+  background: #ffffff;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+/* ===== المدخلات والأزرار ===== */
+input[type="month"],
+button {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px;
+  margin: 6px auto;
+  display: block;
+  font-size: 15px;
   border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#divPiy button:hover {
-  background-color: #2980b9;
-}
-
-.form-row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.form-row label {
-  width: 100px; /* عرض ثابت لليبل */
-  margin-right: 10px;
-  font-weight: bold;
-}
-
-.form-row input {
-  flex: 1;
-  padding: 8px;
-  font-size: 14px;
   border: 1px solid #ccc;
-  border-radius: 5px;
 }
 
-/*==================== bar style start ================================ */
-     body {
-      margin: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f6f8;
-    
-    }
+button {
+  background-color: #0984e3;
+  color: white;
+  cursor: pointer;
+}
 
-    .tabs {
-      display: flex;
-      background-color: #1e293b;
-      overflow-x: auto;
-    }
+button:hover {
+  background-color: #0652dd;
+}
 
-    .tabs button {
-      flex: 1;
-      padding: 16px;
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
+/* ===== الحالة ===== */
+#status {
+  font-size: 14px;
+  margin: 10px 0;
+}
 
-    .tabs button:hover,
-    .tabs button.active {
-      background-color: #334155;
-    }
+/* ================= TABLE DESKTOP ================= */
+table {
+  width: 95%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+}
 
-    .tab-content {
-      display: none;
-      padding: 40px;
-      background-color: #fff;
-    }
+th {
+  background-color: #dfe6e9;
+  padding: 12px;
+  font-size: 14px;
+}
 
-    .tab-content.active {
-      display: block;
-    }
+td {
+  padding: 10px;
+  font-size: 13px;
+  text-align: center;
+  word-break: break-word;
+}
 
-    .form-container {
-      max-width: 1000px;
-      margin: auto;
-      background-color: #ffffff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
 
-    .form-container h2 {
-      margin-bottom: 20px;
-      color: #1e293b;
-      font-size: 24px;
-    }
+  /* 🔥 إلغاء أي تمدد أو تشويه */
+  table,
+  thead,
+  tbody,
+  tr,
+  th,
+  td {
+    display: block;
+    width: 100%;
+  }
 
-    form label {
-      display: block;
-      margin-bottom: 6px;
-      color: #475569;
-      font-weight: 500;
-    }
+  thead {
+    display: none;
+  }
 
-    form input,
-    form select {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 20px;
-      border-radius: 8px;
-      border: 1px solid #cbd5e1;
-      font-size: 16px;
-    }
+  table {
+    background: transparent;
+    box-shadow: none;
+  }
 
-    form input[type="submit"] {
-      background-color: #2563eb;
-      color: white;
-      border: none;
-      font-weight: bold;
-      transition: background 0.3s;
-    }
+  tr {
+    background: white;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  }
 
-    form input[type="submit"]:hover {
-      background-color: #1d4ed8;
-    }
+  td {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    text-align: right;
+  }
 
-    /* تصميم خاص لصفحة المنتج */
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-    }
+  td:last-child {
+    border-bottom: none;
+  }
 
-    .full-width-form {
-      max-width: none;
-      width: 100%;
-    }
-    /*==================== bar style end ================================ */
+  td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #636e72;
+    margin-left: 10px;
+    white-space: nowrap;
+  }
+
+  /* ===== تصغير النصوص الطويلة ===== */
+  td {
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+}
+
+/* ===== أجهزة صغيرة جداً ===== */
+@media (max-width: 480px) {
+  h2 {
+    font-size: 20px;
+  }
+
+  td {
+    font-size: 13px;
+  }
+}
+
 </style>
-
+{% endblock %}
 <body>
-   <!--bar show start -->
-   <script src="/static/js/header.js" defer></script>
- <my-header></my-header>
-<!--bar show end -->
+ {% block content %}
 <center>
 <h2>историю платежей</h2>
 <p id="status">В информации обнаружена ошибка.</p>
@@ -278,14 +242,14 @@
           total += selEmp;
 
           row.innerHTML = `
-            <td>${item.pay_method}</td>
-            <td>${item.pay_for}</td>
-            <td>${item.sum}</td>
-            <td>${item.data_entry_clerk_id}</td>
-            <td>${item.process_supervisor_id}</td>
-            <td>${item.responsible_emp_id}</td>
-            <td>${item.nots}</td>
-            <td>${item.done_or_not}</td>
+            <td data-label="тип зарплата">${item.pay_method || "-"}</td>
+            <td data-label="за месяц">${item.pay_for || "-"}</td>
+            <td data-label="сума">${item.sum || "-"}</td>
+            <td data-label="бухгалтер">${item.data_entry_clerk_id || "-"}</td>
+            <td data-label="ответсвенный">${item.process_supervisor_id || "-"}</td>
+            <td data-label="начальник смена">${item.responsible_emp_id || "-"}</td>
+            <td data-label="примечания">${item.nots || "-"}</td>
+            <td data-label="статус получения">${item.done_or_not || "-"}</td>
           `;
           tbody.appendChild(row);
           document.getElementById('show_employee_name').textContent = `${item.employee_name}`;
@@ -321,5 +285,7 @@
                     window.location.href = "/log_in";
                 }
 </script>
+{% endblock %}
+
 </body>
 </html>
