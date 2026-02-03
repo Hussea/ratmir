@@ -145,6 +145,21 @@ function submitForm(event, formId, url) {
     .then(() => alert("Project added successfully"));
 }
 </script>
+<script>
+
+  let role = sessionStorage.getItem("role");
+                if (role === "admin") {
+                   
+                } else if(role === "supadmin") {
+                  document.getElementById("category").style.display = "none";
+                  //alert("🚫 У вас нет прав для выполнения этого действия.(Добавить проект)");
+                }else if(role === "emp") {
+                    window.location.href = "/log_in";
+                }else if (!role) {  // الشرط الذي أضفته أنت
+                    window.location.href = "/log_in";
+                }
+
+</script>
 {% endblock %}
 
 </body>
