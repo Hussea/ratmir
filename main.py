@@ -711,7 +711,7 @@ async def add_work_shifts(
     start_date: date = Form(...),
     start_time: str = Form(...),
     end_date: date = Form(...),
-    end_time: str = Form(...),
+    end_time: time = Form(...),
     image: UploadFile = File(...)
 ):
     # ✅ تحقق من الصورة
