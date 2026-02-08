@@ -430,24 +430,30 @@ def get_guards_by_name(Ename: str):
 
 @app.get("/get-categories")
 def get_categories():
-    try:
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT title, is_active FROM projuct")
-        rows = cur.fetchall()
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
 
-        # استخراج كل عمود في مصفوفة مستقلة
-        titles = [row[0] for row in rows]
-        is_active = [row[1] for row in rows]
+    query = """
+        SELECT 
+            p.id,
+            p.title,
+            p.is_active,
+            COUNT(ws.id) AS shift_count_today
+        FROM projuct p
+        LEFT JOIN work_shifts ws 
+            ON p.id = ws.project_id_input 
+            AND DATE(ws.start_day) = CURDATE()
+        GROUP BY p.id
+    """
 
-        # نرجعهم في JSON يحتوي على مصفوفتين
-        return {
-            "titles": titles,
-            "is_active": is_active
-        }
+    cursor.execute(query)
+    result = cursor.fetchall()
 
-    except mysql.connector.Error as e:
-        return {"error": str(e)}
+    cursor.close()
+    conn.close()
+
+    return result
+       
 
  
 #====================================================

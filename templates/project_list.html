@@ -50,7 +50,7 @@ h2 {
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 6px 18px rgba(0,0,0,0.05);
-  border-left: 6px solid var(--accent);
+  border-left: 6px solid var(--success);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -160,67 +160,78 @@ h2 {
 </ul>
 
 <script>
-  async function fetchCategories() {
+async function fetchCategories() {
     try {
         const response = await fetch(`/get-categories`);
         const data = await response.json();
 
         const list = document.getElementById('categoryList');
-        list.innerHTML = ""; // تفريغ القائمة قبل عرض النتائج الجديدة
+        list.innerHTML = "";
 
-        if (data.titles && data.is_active && Array.isArray(data.titles)) {
-            data.titles.forEach((title, index) => {
+        if (Array.isArray(data) && data.length > 0) {
+
+            data.forEach(project => {
+
                 const li = document.createElement('li');
-                const isActive = data.is_active[index] === 1;
 
+                const hasShiftToday = project.shift_count_today > 0;
+                
+                // 🔹 تغيير اللون حسب وجود شفت اليوم
+                li.style.backgroundColor = hasShiftToday 
+                    ? "#ffffff"      // أخضر عنده شفت اليوم
+                    : "#576574";     // أحمر ما عنده شفت
 
-                // 🔹 تغيير لون الخلفية حسب الحالة
-                li.style.backgroundColor = isActive ? "#dfe4ea" : "#d44242"; 
-                // أخضر فاتح للنشط، رمادي لغير النشط
-
+                const active_not = project.is_active === 1;
+                li.style.borderLeftColor = active_not 
+                    ? "#10ac84"      // أخضر عنده شفت اليوم
+                    : "#ee5253";     // أحمر ما عنده شفت
                 // النص
                 const span = document.createElement('span');
-                span.textContent = title  ;
+                span.textContent = project.title;
 
-                // الزر الأول: عرض المعلومات
+                // النص
+                const span1 = document.createElement('span1');
+                span1.textContent = project.shift_count_today + " ох в об";
+
+                // زر المعلومات
                 const button1 = document.createElement('button');
                 button1.textContent = "Информация";
-                 
                 button1.onclick = () => {
-                    const url = `/show_project?title=${encodeURIComponent(title)}`;
+                    const url = `/show_project?title=${encodeURIComponent(project.title)}`;
                     window.location.href = url;
                 };
 
-                // الزر الثاني: توليد الرمز
+                // زر الشفت
                 const button2 = document.createElement('button');
                 button2.textContent = "Сгенерировать QR-код";
                 button2.style.backgroundColor = "#0056b3";
-                button2.id = "QRBUT";
                 button2.onclick = () => {
-                    const url = `/work_shift?title=${encodeURIComponent(title)}`;
+                    const url = `/work_shift?title=${encodeURIComponent(project.title)}`;
                     window.location.href = url;
                 };
 
-                // تجميع الأزرار مع النص
                 const rightSide = document.createElement('div');
                 rightSide.appendChild(button1);
                 rightSide.appendChild(button2);
 
                 li.appendChild(span);
+                li.appendChild(span1);
                 li.appendChild(rightSide);
                 list.appendChild(li);
             });
+
         } else {
             list.innerHTML = "<li>لم يتم العثور على بيانات.</li>";
         }
+
     } catch (error) {
         console.error("خطأ أثناء جلب البيانات:", error);
     }
 }
 
 fetchCategories();
-
 </script>
+
 <!-- JAVASCRIPT -->
   <script>
     const menuToggle = document.getElementById("menuToggle");

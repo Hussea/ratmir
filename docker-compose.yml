@@ -40,3 +40,4 @@ services:
 
 volumes:
   mysql_data:
+    name: ratmir_mysql_data
