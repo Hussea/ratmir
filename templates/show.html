@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>соединить охрану с субъектом</title>
+  <title>соединить охрану с субъектом</title>
 </head>
 {% extends "try.html" %}
-  {% block page_css %}
+{% block page_css %}
 <style>
   * {
     box-sizing: border-box;
   }
 
-  
+
 
   h2 {
     text-align: center;
@@ -18,7 +19,9 @@
     color: #007bff;
   }
 
-  input[type="text"], input[type="submit"], button {
+  input[type="text"],
+  input[type="submit"],
+  button {
     font-size: 14px;
   }
 
@@ -37,6 +40,13 @@
     border-radius: 6px;
     cursor: pointer;
     margin-left: 10px;
+  }
+
+  #myImage {
+    width: 200px;
+    max-width: 80%;
+    border-radius: 6px;
+    margin-top: 15px;
   }
 
   button:hover {
@@ -58,7 +68,7 @@
   .form-container {
     background-color: white;
     border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     padding: 20px;
     width: 100%;
     max-width: 500px;
@@ -85,16 +95,17 @@
     color: #555;
   }
 
-  .form-grid input[type="text"],select,
-.form-grid textarea {
-  padding: 6px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-family: inherit;
-  font-size: 14px;
-  width: 90%;
-  box-sizing: border-box;
-}
+  .form-grid input[type="text"],
+  select,
+  .form-grid textarea {
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 14px;
+    width: 90%;
+    box-sizing: border-box;
+  }
 
   #project-guards {
     display: flex;
@@ -127,10 +138,12 @@
     }
 
     button {
-    width: 80%;
-    margin: 10px auto; /* 10px عمودي، auto أفقي */
-    display: block;    /* ضروري لتفعيل margin auto على العناصر inline */
-}
+      width: 80%;
+      margin: 10px auto;
+      /* 10px عمودي، auto أفقي */
+      display: block;
+      /* ضروري لتفعيل margin auto على العناصر inline */
+    }
 
 
     .details-wrapper {
@@ -142,100 +155,109 @@
       width: 100%;
     }
   }
+
   textarea {
-  width:100%;
-  resize: vertical; /* يسمح بتغيير الارتفاع فقط */
-  font-size: 14px;
-  padding: 2px;
-}
-.form-grid input[type="text"],select,
-.form-grid textarea {
- 
-  width: 100%;
-   
-}
-  </style>
+    width: 100%;
+    resize: vertical;
+    /* يسمح بتغيير الارتفاع فقط */
+    font-size: 14px;
+    padding: 2px;
+  }
+
+  .form-grid input[type="text"],
+  select,
+  .form-grid textarea {
+
+    width: 100%;
+
+  }
+</style>
 {% endblock %}
 
 <body>
-{% block content %}
-<h2>соединить охрану с субъектом</h2>
- 
-<button onclick="searchProduct()">Поиск</button>
-<select id="productDropdown">
+  {% block content %}
+  <h2>соединить охрану с субъектом</h2>
+
+  <button onclick="searchProduct()">Поиск</button>
+  <select id="productDropdown">
     <option value="">выберите проекта ....</option>
-</select>
-<br>
- <br>
-<button onclick="searchguards()">Поиск</button>
-<select id="employeeDropdown">
+  </select>
+  <br>
+  <br>
+  <button onclick="searchguards()">Поиск</button>
+  <select id="employeeDropdown">
     <option value="">выберите охранника .....</option>
-</select>
+  </select>
 
-<hr>
-<!-- الخانات التي تضهر فيها معلومات الموقع-->
-<!-- ============================================= -->
+  <hr>
+  <!-- الخانات التي تضهر فيها معلومات الموقع-->
+  <!-- ============================================= -->
 
-<!-- ============================================= -->
-<div class="details-wrapper">
-  <!-- قسم بيانات المشروع -->
-  <div class="form-container">
-    <h4>Данные проекта</h4>
-    <div class="form-grid">
-      <div style="display: none;"><label>ID:</label><input type="text" id="id"></div>
-      <div><label>Название:</label><input type="text" id="title" readonly></div>
-      <div><label>адрес:</label><input type="text" id="address"  readonly></div>
-      <div><label>необходимое количество охранников:</label><input type="text" id="q_person" readonly></div>
-      <div><label>система работы:</label><input type="text" id="ses_work" readonly></div>
-      <div style="display: none;"><label>sum_of_proj:</label><input type="text" id="sum_of_proj"></div>
-      <div style="display: none;"><label>pers_of_proj:</label><input type="text" id="pers_of_proj"></div>
-      <div><label>зарплата охранника на объекте:</label><input type="text" id="sel_emp" readonly></div>
-      <div style="display: none;"><label>n_phone:</label><input type="text" id="n_phone" readonly></div>
-      <div><label>примечания:</label><textarea id="nots" readonly></textarea></div>
-      
+  <!-- ============================================= -->
+  <div class="details-wrapper">
+    <!-- قسم بيانات المشروع -->
+    <div class="form-container">
+      <h4>Данные проекта</h4>
+      <div class="form-grid">
+        <div style="display: none;"><label>ID:</label><input type="text" id="id"></div>
+        <div><label>Название:</label><input type="text" id="title" readonly></div>
+        <div><label>адрес:</label><input type="text" id="address" readonly></div>
+        <div><label>необходимое количество охранников:</label><input type="text" id="q_person" readonly></div>
+        <div><label>система работы:</label><input type="text" id="ses_work" readonly></div>
+        <div style="display: none;"><label>sum_of_proj:</label><input type="text" id="sum_of_proj"></div>
+        <div style="display: none;"><label>pers_of_proj:</label><input type="text" id="pers_of_proj"></div>
+        <div><label>зарплата охранника на объекте:</label><input type="text" id="sel_emp" readonly></div>
+        <div style="display: none;"><label>n_phone:</label><input type="text" id="n_phone" readonly></div>
+        <div><label>примечания:</label><textarea id="nots" readonly></textarea></div>
+
+
+      </div>
+    </div>
+
+    <!-- قسم بيانات الحارس -->
+    <div class="form-container">
+      <h4>Данные охранника</h4>
+      <div class="form-grid">
+        <div style="display: none;"><label>ID:</label><input type="text" id="id2"></div>
+        <div><label>Имя:</label><input type="text" id="name2" readonly></div>
+        <div><label>номер телефона:</label><input type="text" id="num_T2" readonly></div>
+        <div style="display: none;"><label>data_prth:</label><input type="text" id="data_prth2"></div>
+        <div style="display: none;"><label>address:</label><input type="text" id="address2"></div>
+        <div><label>зарплата:</label><input type="text" id="Salary2" readonly></div>
+        <div style="display: none;"><label>Job:</label><input type="text" id="Job2"></div>
+        <div><label>примечания:</label><textarea id="nots2" readonly></textarea></div>
+      </div>
+      <center>
+        <img id="myImage" src="" alt="Фото сотрудника" width="200">
+      </center>
 
     </div>
+
   </div>
 
-  <!-- قسم بيانات الحارس -->
-  <div class="form-container">
-    <h4>Данные охранника</h4>
-    <div class="form-grid">
-      <div style="display: none;"><label>ID:</label><input type="text" id="id2"></div>
-      <div><label>Имя:</label><input type="text" id="name2" readonly></div>
-      <div><label>номер телефона:</label><input type="text" id="num_T2" readonly></div>
-      <div style="display: none;"><label>data_prth:</label><input type="text" id="data_prth2"></div>
-      <div style="display: none;"><label>address:</label><input type="text" id="address2"></div>
-      <div><label>зарплата:</label><input type="text" id="Salary2"  readonly ></div>
-      <div style="display: none;"><label>Job:</label><input type="text" id="Job2"></div>
-      <div><label>примечания:</label><textarea id="nots2" readonly ></textarea></div>
-    </div>
+
+  <!-- \الخانات التي تضهر فيها معلومات الموقع\-->
   </div>
-</div>
-
-
-<!-- \الخانات التي تضهر فيها معلومات الموقع\-->
-</div>
-<!--   الخانات التي يضهر فيها ارقام المشروع و رقم الحارس التابع له و من ثمه ارساله الى قاعده البيانات و غالبا هذه الخانات مخفيه    -->
-<div id="project-guards" class="tab-content">
+  <!--   الخانات التي يضهر فيها ارقام المشروع و رقم الحارس التابع له و من ثمه ارساله الى قاعده البيانات و غالبا هذه الخانات مخفيه    -->
+  <div id="project-guards" class="tab-content">
     <div class="form-container">
       <form id="add-project-guards" onsubmit="submitForm(event, 'add-project-guards', '/add-project-guards')">
-        
-        <input type="text" name="project_id"id="id1"style="display: none;">
-      
-        <input type="text" name="project_name"id="idnumproj"style="display: none;">
-       
-        <input type="text" name="employee_id"id="id22"style="display: none;">
-       
-        <input type="text" name="employee_name"id="idnumemp"style="display: none;">
-        
-        <input type="text" name="start_date"id="start_date"style="display: none;">
-        
-         
-         
+
+        <input type="text" name="project_id" id="id1" style="display: none;">
+
+        <input type="text" name="project_name" id="idnumproj" style="display: none;">
+
+        <input type="text" name="employee_id" id="id22" style="display: none;">
+
+        <input type="text" name="employee_name" id="idnumemp" style="display: none;">
+
+        <input type="text" name="start_date" id="start_date" style="display: none;">
+
+
+
         <input type="text" name="emp" id="emp" style="display: none;" required>
-         <label>примечания:</label>
-        <textarea name="nots"  required></textarea>
+        <label>примечания:</label>
+        <textarea name="nots" required></textarea>
         <input type="submit" value="отправлять">
       </form>
     </div>
@@ -244,203 +266,208 @@
 
   <!-- داله الجافاسكربت التي تساعد في نقل المعلومات من الفورم
    الذي يرسل المعلومات الى قاعده البيانات بارقام المشاريع و ارقام الحرس  -->
-   <script>
+  <script>
     function submitForm(event, formId, url) {
-  event.preventDefault(); // منع الإرسال التقليدي
+      event.preventDefault(); // منع الإرسال التقليدي
 
-  const form = document.getElementById(formId);
-  const formData = new FormData(form);
+      const form = document.getElementById(formId);
+      const formData = new FormData(form);
 
-  fetch(url, {
-    method: "POST",
-    body: formData
-  })
-  .then(response => response.json())
-  .then(data => {
-    alert("Операция завершена!");
-    console.log(data);
-    clearFields([
-  "id",
-  "title",
-  "address",
-  "q_person",
-  "ses_work",
-  "sum_of_proj",
-  "pers_of_proj",
-  "sel_emp",
-  "n_phone",
-  "nots",
-  "id2",
-  "name2",
-  "num_T2",
-  "data_prth2",
-  "address2",
-  "Salary2",
-  "Job2",
-  "nots2"
-]);
-document.getElementById("add-project-guards").reset();
-  })
-  .catch(error => {
-    alert("حدث خطأ!");
-    console.error(error);
-  });
-}
+      fetch(url, {
+        method: "POST",
+        body: formData
+      })
+        .then(response => response.json())
+        .then(data => {
+          alert("Операция завершена!");
+          console.log(data);
+          clearFields([
+            "id",
+            "title",
+            "address",
+            "q_person",
+            "ses_work",
+            "sum_of_proj",
+            "pers_of_proj",
+            "sel_emp",
+            "n_phone",
+            "nots",
+            "id2",
+            "name2",
+            "num_T2",
+            "data_prth2",
+            "address2",
+            "Salary2",
+            "Job2",
+            "nots2"
+          ]);
+          document.getElementById("add-project-guards").reset();
+        })
+        .catch(error => {
+          alert("حدث خطأ!");
+          console.error(error);
+        });
+    }
 
-   </script>
-<!-- ========================================================= -->
+  </script>
+  <!-- ========================================================= -->
 
-<!-- داله الجافاسكربت التي من خلالها يتم ارجاع بيانات المشروع عند البحث عن
+  <!-- داله الجافاسكربت التي من خلالها يتم ارجاع بيانات المشروع عند البحث عن
  طريق اسم المشروع و اضهار بيانته في الخانات المحدده  -->
-<script>
-  async function loadProducts() {
-    const response = await fetch("/Dropdown_project");
-    const data = await response.json();
+  <script>
+    async function loadProducts() {
+      const response = await fetch("/Dropdown_project");
+      const data = await response.json();
 
-    const dropdown = document.getElementById("productDropdown");
-    data.forEach(p => {
+      const dropdown = document.getElementById("productDropdown");
+      data.forEach(p => {
         const option = document.createElement("option");
         option.value = p.id;
         option.textContent = p.title;
         dropdown.appendChild(option);
-        
-    });
-}
-loadProducts();
 
-let dropdown = document.getElementById("productDropdown");
+      });
+    }
+    loadProducts();
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-function searchProduct() {
-    let title = dropdown.options[dropdown.selectedIndex].text;
-    if (!title) {
+    let dropdown = document.getElementById("productDropdown");
+
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    function searchProduct() {
+      let title = dropdown.options[dropdown.selectedIndex].text;
+      if (!title) {
         alert("no data");
         return;
+      }
+
+      let url = `/get-product-by-name/?title=${encodeURIComponent(title)}`;
+
+      let request = new XMLHttpRequest();
+      request.open("GET", url);
+      request.responseType = "json";
+      request.send();
+
+      request.onload = function () {
+        if (request.status >= 200 && request.status < 300) {
+          let result = request.response;
+
+          if (!result || Object.keys(result).length === 0) {
+            alert("no data");
+          } else {
+            // تعبئة الخانات الثابتة
+            document.getElementById("id").value = result.id || "";
+            document.getElementById("id1").value = result.id || "";
+            document.getElementById("title").value = result.title || "";
+            document.getElementById("idnumproj").value = result.title || "";
+            document.getElementById("address").value = result.address || "";
+            document.getElementById("q_person").value = result.q_person || "";
+            document.getElementById("ses_work").value = result.ses_work || "";
+            document.getElementById("sum_of_proj").value = result.sum_of_proj || "";
+            document.getElementById("pers_of_proj").value = result.pers_of_proj || "";
+            document.getElementById("n_phone").value = result.n_phone || "";
+            document.getElementById("sel_emp").value = result.sel_emp || "";
+            document.getElementById("nots").value = result.nots || "";
+
+          }
+        } else {
+          alert("خطأ في جلب البيانات");
+        }
+      };
+
     }
 
-    let url = `/get-product-by-name/?title=${encodeURIComponent(title)}`;
-
-    let request = new XMLHttpRequest();
-    request.open("GET", url);
-    request.responseType = "json";
-    request.send();
-
-    request.onload = function () {
-        if (request.status >= 200 && request.status < 300) {
-            let result = request.response;
-
-            if (!result || Object.keys(result).length === 0) {
-                alert("no data");
-            } else {
-                // تعبئة الخانات الثابتة
-                document.getElementById("id").value = result.id || "";
-                document.getElementById("id1").value = result.id || "";
-                document.getElementById("title").value = result.title || "";
-                document.getElementById("idnumproj").value = result.title || "";
-                document.getElementById("address").value = result.address || "";
-                document.getElementById("q_person").value = result.q_person || "";
-                document.getElementById("ses_work").value = result.ses_work || "";
-                document.getElementById("sum_of_proj").value = result.sum_of_proj || "";
-                document.getElementById("pers_of_proj").value = result.pers_of_proj || "";
-                document.getElementById("n_phone").value = result.n_phone || "";
-                document.getElementById("sel_emp").value = result.sel_emp || "";
-                document.getElementById("nots").value = result.nots || "";
-                
-            }
-        } else {
-            alert("خطأ في جلب البيانات");
-        }
-    };
-    
-}
-
-</script>
-<!-- داله الجافاسكربت التي بمساعدتها اضهار معلومات الحرس من قاعده البيانات و وضع البيانات 
+  </script>
+  <!-- داله الجافاسكربت التي بمساعدتها اضهار معلومات الحرس من قاعده البيانات و وضع البيانات 
  في الخانات المطلوبه  -->
-<script>
-  const today = new Date();
-  const today0 = new Date().toISOString().split("T")[0]; 
-  async function loademployee() {
-    const response = await fetch("/Dropdown_employee");
-    const data = await response.json();
+  <script>
+    const today = new Date();
+    const today0 = new Date().toISOString().split("T")[0];
+    async function loademployee() {
+      const response = await fetch("/Dropdown_employee");
+      const data = await response.json();
 
-    const dropdown = document.getElementById("employeeDropdown");
-    data.forEach(p => {
+      const dropdown = document.getElementById("employeeDropdown");
+      data.forEach(p => {
         const option = document.createElement("option");
         option.value = p.id;
         option.textContent = p.name;
         dropdown.appendChild(option);
-    });
-}
-loademployee();
-let dropemployee = document.getElementById("employeeDropdown");
-//+++++++++++++++++++++++++++++++++++++++++++++
-function searchguards() {
-    let Ename = dropemployee.options[dropemployee.selectedIndex].text;
-    if (!Ename) {
+      });
+    }
+    loademployee();
+    let dropemployee = document.getElementById("employeeDropdown");
+    //+++++++++++++++++++++++++++++++++++++++++++++
+    function searchguards() {
+      let Ename = dropemployee.options[dropemployee.selectedIndex].text;
+      if (!Ename) {
         alert("الرجاء إدخال اسم المنتج");
         return;
+      }
+
+      let url = `/get-guards-by-name/?Ename=${encodeURIComponent(Ename)}`;
+
+      let request = new XMLHttpRequest();
+      request.open("GET", url);
+      request.responseType = "json";
+      request.send();
+
+      request.onload = function () {
+        if (request.status >= 200 && request.status < 300) {
+          let result = request.response;
+
+          if (!result || Object.keys(result).length === 0) {
+            alert("لم يتم العثور على المنتج.");
+          } else {
+            // تعبئة الخانات الثابتة
+            document.getElementById("id2").value = result.id || "";
+            document.getElementById("id22").value = result.id || "";
+            document.getElementById("name2").value = result.name || "";
+            document.getElementById("idnumemp").value = result.name || "";
+            document.getElementById("start_date").value = today0;
+            document.getElementById("num_T2").value = result.num_T || "";
+            document.getElementById("data_prth2").value = result.data_prth || "";
+            document.getElementById("address2").value = result.address || "";
+            document.getElementById("Salary2").value = result.Salary || "";
+            document.getElementById("Job2").value = result.Job || "";
+            document.getElementById("nots2").value = result.nots || "";
+
+            const img = document.getElementById("myImage");
+            img.src = result.image_path; // هنا نربط المتغير بالـ src
+
+          }
+        } else {
+          alert("خطأ في جلب البيانات");
+        }
+      };
+
     }
 
-    let url = `/get-guards-by-name/?Ename=${encodeURIComponent(Ename)}`;
-
-    let request = new XMLHttpRequest();
-    request.open("GET", url);
-    request.responseType = "json";
-    request.send();
-
-    request.onload = function () {
-        if (request.status >= 200 && request.status < 300) {
-            let result = request.response;
-
-            if (!result || Object.keys(result).length === 0) {
-                alert("لم يتم العثور على المنتج.");
-            } else {
-                // تعبئة الخانات الثابتة
-                document.getElementById("id2").value = result.id || "";
-                document.getElementById("id22").value = result.id || "";
-                document.getElementById("name2").value = result.name || "";
-                document.getElementById("idnumemp").value = result.name || "";
-                document.getElementById("start_date").value = today0;
-                document.getElementById("num_T2").value = result.num_T || "";
-                document.getElementById("data_prth2").value = result.data_prth || "";
-                document.getElementById("address2").value = result.address || "";
-                document.getElementById("Salary2").value = result.Salary || "";
-                document.getElementById("Job2").value = result.Job || "";
-                document.getElementById("nots2").value = result.nots || "";
-            }
-        } else {
-            alert("خطأ في جلب البيانات");
-        }
-    };
-    
-}
-
-</script>
+  </script>
   <script>
-  let role = sessionStorage.getItem("role");
-  let user = sessionStorage.getItem("username");
-  document.getElementById("emp").value = role +" "+ user;
-                if (role === "admin") {
-                   
-                } else if(role === "supadmin") {
-                  
-                }else if(role === "emp") {
-                 window.location.href = "log_in.html";
-                }else if (!role) {  // الشرط الذي أضفته أنت
-                    window.location.href = "log_in.html";
-                }
-</script>
+    let role = sessionStorage.getItem("role");
+    let user = sessionStorage.getItem("username");
+    document.getElementById("emp").value = role + " " + user;
+    if (role === "admin") {
+
+    } else if (role === "supadmin") {
+
+    } else if (role === "emp") {
+      window.location.href = "log_in.html";
+    } else if (!role) {  // الشرط الذي أضفته أنت
+      window.location.href = "log_in.html";
+    }
+  </script>
 
 
 </body>
+
 </html>
 <script>
   function clearFields(ids) {
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = "";
-  });
-}
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = "";
+    });
+  }
 </script>
 {% endblock %}
