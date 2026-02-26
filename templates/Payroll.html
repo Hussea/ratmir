@@ -359,8 +359,7 @@ body {
     <tr>
       <td>Дата начала</td>
       <td>Время начала</td>
-      <td>Дата окончания</td>
-      <td>Время окончания</td>
+      <td>real_time</td>
       <td>фото</td>
     </tr>
   </thead>
@@ -420,8 +419,8 @@ body {
           row.innerHTML = `
   <td data-label="Дата начала">${item.start_day || "-"}</td>
   <td data-label="Время начала">${item.start_time || "-"}</td>
-  <td data-label="Дата окончания">${item.end_day || "-"}</td>
-  <td data-label="Время окончания">${item.end_time || "-"}</td>
+  <td data-label="Дата окончания">${item.rel_start_date || "-"}</td>
+  
   <td data-label="Фото">
     <img src="${item.file_path}"
          alt="нет фото"

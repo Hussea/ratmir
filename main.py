@@ -249,14 +249,17 @@ def add_category(title: str = Form(...),
                  address: str = Form(...),
                  Coordinates: str = Form(...),
                  q_person: str = Form(...), 
-                 ses_work: str = Form(...), 
-                 start_time_work: str = Form(...), 
+                 ses_work: str = Form(...),      
+                 hour: int = Form(...),
+                 minute: int = Form(...),
                  sum_of_proj: str = Form(...), 
                  pers_of_proj: str = Form(...), 
                  n_phone: str = Form(...), 
                  sel_emp: str = Form(...),
                  nots: str = Form(...)):
+    t = time(hour, minute)
     try:
+        
         conn = get_db_connection()
         cur = conn.cursor()
         query = """
@@ -264,7 +267,7 @@ def add_category(title: str = Form(...),
         (title, address, Coordinates, q_person, ses_work, start_time_work, sum_of_proj, pers_of_proj, n_phone, sel_emp, nots)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
-        cur.execute(query, (title, address, Coordinates, q_person, ses_work, start_time_work, sum_of_proj, pers_of_proj, n_phone, sel_emp, nots))
+        cur.execute(query, (title, address, Coordinates, q_person, ses_work, t, sum_of_proj, pers_of_proj, n_phone, sel_emp, nots))
         conn.commit()
         return {"message": "تمت الإضافة بنجاح ✅"}
     except mysql.connector.Error as e:
@@ -345,6 +348,7 @@ def update_guard(data: UpdateCategory):
 # ✅ موديل بيانات الاستقبال
 class GuardUpdate(BaseModel):
     id: int
+    rel_time: str
     is_active: int
     # ✅ API لتحديث الحالة
 @app.put("/update_project_guards")
@@ -352,8 +356,8 @@ def update_project_guards(data: GuardUpdate):
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    sql = "UPDATE project_guards SET is_active = %s WHERE id = %s"
-    cursor.execute(sql, (data.is_active, data.id))
+    sql = "UPDATE project_guards SET is_active = %s , end_date = %s WHERE id = %s"
+    cursor.execute(sql, (data.is_active, data.rel_time, data.id))
 
     conn.commit()
     cursor.close()
@@ -370,7 +374,6 @@ def add_project_guards(
     employee_id: int = Form(...),
     employee_name: str = Form(...),
     start_date: date = Form(...),
-    end_date: date = Form(...),
     emp: str = Form(...),  
     nots: str = Form(...)
 ):
@@ -379,10 +382,10 @@ def add_project_guards(
         cur = conn.cursor()
         query = """
             INSERT INTO project_guards 
-            (project_id, project_name, employee_id, employee_name, start_date, end_date, emp, nots) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            (project_id, project_name, employee_id, employee_name, start_date, emp, nots) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
-        cur.execute(query, (project_id, project_name, employee_id, employee_name, start_date, end_date, emp, nots))
+        cur.execute(query, (project_id, project_name, employee_id, employee_name, start_date, emp, nots))
         conn.commit()
         return {"message": "تمت الإضافة بنجاح ✅"}
     except mysql.connector.Error as e:
@@ -588,36 +591,68 @@ def get_guards(
 #===============================================
 @app.get("/get_guards0")
 def get_guards0(
-    id: Optional[int] = Query(None),
     project_id: Optional[int] = Query(None),
     employee_id: Optional[int] = Query(None),
     nots: Optional[float] = Query(None)
 ):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-    
-    query = "SELECT * FROM project_guards WHERE is_active = TRUE"
+
+    query = """
+    SELECT 
+        pg.id,
+        pg.project_id,
+        pg.employee_id,
+        pg.project_name,
+        pg.employee_name,
+        pg.start_date,
+        pg.end_date,
+        pg.emp,
+        pg.nots,
+        pg.is_active,
+        e.Salary AS salary,
+        COALESCE(ws.shifts_count, 0) AS shifts_this_month,
+        (e.Salary * COALESCE(ws.shifts_count, 0)) AS total_salary
+
+    FROM project_guards pg
+    JOIN employee e ON pg.employee_id = e.id
+
+    LEFT JOIN (
+        SELECT 
+            employee_id_input,
+            project_id_input,
+            COUNT(*) AS shifts_count
+        FROM work_shifts
+        WHERE YEAR(start_day) = YEAR(CURDATE())
+          AND MONTH(start_day) = MONTH(CURDATE())
+        GROUP BY employee_id_input, project_id_input
+    ) ws 
+    ON pg.employee_id = ws.employee_id_input
+    AND pg.project_id = ws.project_id_input
+
+    WHERE 1=1
+"""
+
     values = []
 
-    if id is not None:
-        query += " AND id = %s"
-        values.append(id)
     if project_id is not None:
-        query += " AND project_id = %s"
+        query += " AND pg.project_id = %s"
         values.append(project_id)
+
     if employee_id is not None:
-        query += " AND employee_id = %s"
+        query += " AND pg.employee_id = %s"
         values.append(employee_id)
-    
+
     if nots is not None:
-        query += " AND nots = %s"
+        query += " AND pg.nots = %s"
         values.append(nots)
 
     cursor.execute(query, values)
     results = cursor.fetchall()
+
     cursor.close()
     conn.close()
-    
+
     return results
 #===============================================
 @app.get("/get_check_point")
@@ -716,8 +751,7 @@ async def add_work_shifts(
     project_id: int = Form(...),
     start_date: date = Form(...),
     start_time: str = Form(...),
-    end_date: date = Form(...),
-    end_time: time = Form(...),
+    rel_start_date: str = Form(...),
     image: UploadFile = File(...)
 ):
     # ✅ تحقق من الصورة
@@ -743,16 +777,15 @@ async def add_work_shifts(
 
         query = """
         INSERT INTO work_shifts
-        (employee_id_input, project_id_input, start_day, start_time, end_day, end_time, file_path)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        (employee_id_input, project_id_input, start_day, start_time, rel_start_date, file_path)
+        VALUES (%s, %s, %s, %s, %s, %s)
         """
         cur.execute(query, (
             employee_id,
             project_id,
             start_date,
             start_time,
-            end_date,
-            end_time,
+            rel_start_date,
             file_path
         ))
         conn.commit()
@@ -821,8 +854,7 @@ def get_show_work_shift(
             work_shifts.project_id_input,
             work_shifts.start_day,
             work_shifts.start_time,
-            work_shifts.end_day,
-            work_shifts.end_time,
+            work_shifts.rel_start_date,
             work_shifts.file_path,
             employee.name AS employee_name,
             projuct.title AS projuct_title,
@@ -864,21 +896,10 @@ def get_show_work_shift(
         else:
             row["start_time"] = None
 
-        # تحويل end_time
-        end_time_val = row.get("end_time")
-        if isinstance(end_time_val, timedelta):
-            total_seconds = int(end_time_val.total_seconds())
-            hours = total_seconds // 3600
-            minutes = (total_seconds % 3600) // 60
-            seconds = total_seconds % 60
-            row["end_time"] = f"{hours:02}:{minutes:02}:{seconds:02}"
-        elif isinstance(end_time_val, time):
-            row["end_time"] = end_time_val.strftime("%H:%M:%S")
-        else:
-            row["end_time"] = None
+      
 
         # تحويل التاريخ
-        for date_field in ["start_day", "end_day"]:
+        for date_field in ["start_day"]:
             if isinstance(row.get(date_field), (date, datetime)):
                 row[date_field] = row[date_field].strftime("%Y-%m-%d")
             

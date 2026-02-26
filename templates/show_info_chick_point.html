@@ -1,439 +1,492 @@
 <!DOCTYPE html>
 <html lang="ar">
+
 <head>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <meta charset="UTF-8">
   <title>данных QR-кодов</title>
   {% extends "try.html" %}
   {% block page_css %}
-    
+
   <style>
-     /* ===== RESET ===== */
-* {
-  box-sizing: border-box;
-}
+    /* ===== RESET ===== */
+    * {
+      box-sizing: border-box;
+    }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  overflow-x: hidden;
-  font-family: "Poppins", Arial, sans-serif;
-  background-color: #f4f6f9;
-  color: #2d3436;
-}
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      overflow-x: hidden;
+      font-family: "Poppins", Arial, sans-serif;
+      background-color: #f4f6f9;
+      color: #2d3436;
+    }
 
-/* ===== CONTENT CENTER ===== */
-center {
-  width: 100%;
-  padding: 15px;
-}
+    /* ===== CONTENT CENTER ===== */
+    center {
+      width: 100%;
+      padding: 15px;
+    }
 
-/* ===== HEADINGS ===== */
-h2 {
-  font-size: 24px;
-  margin-bottom: 15px;
-  text-align: center;
-}
+    /* ===== HEADINGS ===== */
+    h2 {
+      font-size: 24px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
 
-/* ===== STATUS & INFO ===== */
-#status {
-  font-size: 14px;
-  margin: 10px 0;
-}
+    /* ===== STATUS & INFO ===== */
+    #status {
+      font-size: 14px;
+      margin: 10px 0;
+    }
 
-#info_line {
-  background: #ffffff;
-  padding: 12px;
-  border-radius: 10px;
-  margin: 10px auto 20px;
-  width: 100%;
-  max-width: 800px;
-  text-align: center;
-  line-height: 1.6;
-}
+    #info_line {
+      background: #ffffff;
+      padding: 12px;
+      border-radius: 10px;
+      margin: 10px auto 20px;
+      width: 100%;
+      max-width: 800px;
+      text-align: center;
+      line-height: 1.6;
+    }
 
-#info_line span {
-  display: inline-block;
-  margin: 5px 10px;
-}
+    #info_line span {
+      display: inline-block;
+      margin: 5px 10px;
+    }
 
-/* ===== TABLE (DESKTOP) ===== */
-table {
-  width: 80%;
-  margin: 20px auto;
-  border-collapse: collapse;
-  background: #ffffff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
-}
+    /* ===== TABLE (DESKTOP) ===== */
+    table {
+      width: 80%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+    }
 
-th {
-  background-color: #dfe6e9;
-  padding: 12px;
-  font-size: 14px;
-  text-align: center;
-}
+    th {
+      background-color: #dfe6e9;
+      padding: 12px;
+      font-size: 14px;
+      text-align: center;
+    }
 
-td {
-  padding: 10px;
-  font-size: 13px;
-  text-align: center;
-  word-break: break-word;
-}
+    td {
+      padding: 10px;
+      font-size: 13px;
+      text-align: center;
+      word-break: break-word;
+    }
 
-table, th, td {
-  border: 1px solid #b2bec3;
-}
+    table,
+    th,
+    td {
+      border: 1px solid #b2bec3;
+    }
 
-/* ===== LINKS IN TABLE ===== */
-td a {
-  text-decoration: none;
-  color: #0984e3;
-  font-weight: 500;
-}
+    /* ===== LINKS IN TABLE ===== */
+    td a {
+      text-decoration: none;
+      color: #0984e3;
+      font-weight: 500;
+    }
 
-td a:hover {
-  text-decoration: underline;
-}
+    td a:hover {
+      text-decoration: underline;
+    }
 
-/* ===== QR MODAL ===== */
-#qrModal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(38, 37, 37, 0.7);
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
+    /* ===== QR MODAL ===== */
+    #qrModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(38, 37, 37, 0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
 
-#qrContent {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 14px;
-  text-align: center;
-  width: 90%;
-  max-width: 320px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
+    #qrContent {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 14px;
+      text-align: center;
+      width: 90%;
+      max-width: 320px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
 
-#qrContent button {
-  width: 100%;
-  margin-top: 10px;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  background: #0984e3;
-  color: white;
-}
+    #qrContent button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      background: #0984e3;
+      color: white;
+    }
 
-#qrContent button:last-child {
-  background: #636e72;
-}
+    #qrContent button:last-child {
+      background: #636e72;
+    }
 
-#qrContent button:hover {
-  opacity: 0.9;
-}
+    #qrContent button:hover {
+      opacity: 0.9;
+    }
 
-/* توسيط QR Code داخل النافذة */
-#qrcode {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 15px auto;
-}
+    /* توسيط QR Code داخل النافذة */
+    #qrcode {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 15px auto;
+    }
 
-/* ================= MOBILE ================= */
-@media (max-width: 768px) {
+    /* ================= MOBILE ================= */
+    @media (max-width: 768px) {
 
-  h2 {
-    font-size: 20px;
-  }
+      h2 {
+        font-size: 20px;
+      }
 
-  /* 🔥 تحويل الجدول إلى Cards */
-  table,
-  thead,
-  tbody,
-  tr,
-  th,
-  td {
-    display: block;
-    width: 100%;
-  }
+      /* 🔥 تحويل الجدول إلى Cards */
+      table,
+      thead,
+      tbody,
+      tr,
+      th,
+      td {
+        display: block;
+        width: 100%;
+      }
 
-  thead {
-    display: none;
-  }
+      thead {
+        display: none;
+      }
 
-  table {
-    background: transparent;
-    box-shadow: none;
-    width: 100%;
-  }
+      table {
+        background: transparent;
+        box-shadow: none;
+        width: 100%;
+      }
 
-  tr {
-    background: #ffffff;
-    margin-bottom: 15px;
-    padding: 12px;
-    border-radius: 14px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  }
+      tr {
+        background: #ffffff;
+        margin-bottom: 15px;
+        padding: 12px;
+        border-radius: 14px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
 
-  td {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 5px;
-    border-bottom: 1px solid #eee;
-    font-size: 14px;
-    text-align: right;
-  }
+      td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 5px;
+        border-bottom: 1px solid #eee;
+        font-size: 14px;
+        text-align: right;
+      }
 
-  td:last-child {
-    border-bottom: none;
-  }
+      td:last-child {
+        border-bottom: none;
+      }
 
-  td::before {
-    content: attr(data-label);
-    font-weight: bold;
-    color: #636e72;
-    margin-left: 10px;
-    white-space: nowrap;
-  }
-}
+      td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #636e72;
+        margin-left: 10px;
+        white-space: nowrap;
+      }
+    }
 
-/* ===== SMALL PHONES ===== */
-@media (max-width: 480px) {
-  td {
-    font-size: 13px;
-  }
-}
-
- 
-</style>
-{% endblock %}
+    /* ===== SMALL PHONES ===== */
+    @media (max-width: 480px) {
+      td {
+        font-size: 13px;
+      }
+    }
+  </style>
+  {% endblock %}
 
 <body>
-{% block content %}
+  {% block content %}
 
-<center>
-<h2>Просмотр данных QR-кодов</h2>
+  <center>
+    <h2>Просмотр данных QR-кодов</h2>
 
-<!-- إدخال رقم الموظف -->
- 
-<input type="text" id="serch_id" style="display: none;">
- 
+    <!-- إدخال رقم الموظف -->
 
-<!-- حالة النظام -->
-<p id="status"> Укажите месяц и год ⚠️</p>
-
-<!-- معلومات إضافية -->
-<p id="info_line">
-  <span><strong>Есть:</strong><span id="show_shift"></span></span>
-  <span><strong>QR-кодов для обход в Проект:</strong> <span id="show_projact_name">---</span></span>
-</p>
-
-<!-- جدول عرض البيانات -->
-<table id="data-table" style="display:none;">
-  <thead></thead>
-  <tbody></tbody>
-</table>
-<div id="qrModal">
-  <div id="qrContent">
-    <div id="qrcode"></div>
-    <br>
-    <button onclick="downloadQRCode()">скачать QR</button>
-    <button onclick="hideQRCode()">закрытие</button>
-  </div>
-</div>
-</center>
+    <input type="text" id="serch_id" style="display: none;">
 
 
-<script>
-  const params = new URLSearchParams(window.location.search);
-  document.getElementById("serch_id").value = params.get("id");
-  function loadData() {
-    const serch_id = document.getElementById('serch_id').value;
-    if (!serch_id) {
-      document.getElementById('status').textContent = 'Укажите месяц и год ❗';
-      return;
-    }
+    <!-- حالة النظام -->
+    <p id="status"> Укажите месяц и год ⚠️</p>
 
-    let apiUrl = `/api/show_info_chick_point?employee_id_input=${serch_id}`;
+    <!-- معلومات إضافية -->
+    <p id="info_line">
+      <span><strong>Есть:</strong><span id="show_shift"></span></span>
+      <span><strong>QR-кодов для обход в Проект:</strong> <span id="show_projact_name">---</span></span>
+    </p>
 
-    document.getElementById('status').textContent = 'Загрузка данных 🔄...';
-    document.getElementById('data-table').style.display = 'none';
-    document.querySelector('#data-table tbody').innerHTML = '';
+    <!-- جدول عرض البيانات -->
+    <table id="data-table" style="display:none;">
+      <thead></thead>
+      <tbody></tbody>
+    </table>
+    <div id="qrModal">
+      <div id="qrContent">
+        <div id="qrcode"></div>
+        <br>
+        <button onclick="downloadQRCode()">скачать QR</button>
+        <button onclick="hideQRCode()">закрытие</button>
+      </div>
+    </div>
+  </center>
 
-    fetch(apiUrl)
-      .then(res => res.json())
-      .then(data => {
-        if (!data || data.length === 0) {
-          document.getElementById('status').textContent = 'Ошибка данных1';
-          return;
-        }
 
-        const table = document.getElementById("data-table");
-        const thead = table.querySelector("thead");
-        const tbody = table.querySelector("tbody");
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    document.getElementById("serch_id").value = params.get("id");
+    function loadData() {
+      const serch_id = document.getElementById('serch_id').value;
+      if (!serch_id) {
+        document.getElementById('status').textContent = 'Укажите месяц и год ❗';
+        return;
+      }
 
-        thead.innerHTML = "";
-        tbody.innerHTML = "";
+      let apiUrl = `/api/show_info_chick_point?employee_id_input=${serch_id}`;
 
-        // الحقول اللي راح تظهر بالجدول
-        const displayFields = [ "name_point", "Coordinates"];
+      document.getElementById('status').textContent = 'Загрузка данных 🔄...';
+      document.getElementById('data-table').style.display = 'none';
+      document.querySelector('#data-table tbody').innerHTML = '';
 
-        // إنشاء رؤوس الجدول
-        const headerRow = document.createElement("tr");
-        for (let key of displayFields) {
-          const th = document.createElement("th");
-          th.textContent = key;
-          headerRow.appendChild(th);
-        }
-        thead.appendChild(headerRow);
-
-        // إنشاء الصفوف
-        for (let row of data) {
-          const tr = document.createElement("tr");
-
-          // نبني الرابط مع الباراميتر id
-          const link = `/show_qr_code_fro_check_point?id=${encodeURIComponent(row.id)}`;
-
-          for (let key of displayFields) {
-            const td = document.createElement("td");
-            td.innerHTML = `<a href="${link}" style="text-decoration:none; color:inherit;">${row[key] ?? ""}</a>`;
-            tr.appendChild(td);
+      fetch(apiUrl)
+        .then(res => res.json())
+        .then(data => {
+          if (!data || data.length === 0) {
+            document.getElementById('status').textContent = 'Ошибка данных1';
+            return;
           }
 
-          tbody.appendChild(tr);
+          const table = document.getElementById("data-table");
+          const thead = table.querySelector("thead");
+          const tbody = table.querySelector("tbody");
 
-          // تحديث اسم المشروع آخر مرة
-          document.getElementById('show_projact_name').textContent = row.projuct_title || "---";
-        }
+          thead.innerHTML = "";
+          tbody.innerHTML = "";
 
-        // إظهار عدد السجلات
-        document.getElementById('show_shift').textContent = data.length;
+          // الحقول اللي راح تظهر بالجدول
+          const displayFields = ["name_point", "Coordinates"];
 
-        // عرض الجدول
-        table.style.display = "table";
-        document.getElementById('status').style.display = 'none';
-      })
-      .catch(err => {
-        document.getElementById('status').textContent = 'Ошибка данных2';
-        console.error(err);
-      });
-  }
+          // إنشاء رؤوس الجدول
+          const headerRow = document.createElement("tr");
+          for (let key of displayFields) {
+            const th = document.createElement("th");
+            th.textContent = key;
+            headerRow.appendChild(th);
+          }
+          thead.appendChild(headerRow);
 
-  ///////
-   // دوال التحكم بالـ QR
-  function showQRCode(link) {
-    document.getElementById('qrModal').style.display = 'flex';
-    document.getElementById('qrcode').innerHTML = "";
-    new QRCode(document.getElementById('qrcode'), {
-      text: link,
-      width: 200,
-      height: 200,
-      colorDark: "#000000",
-      colorLight: "#ffffff"
-    });
-  }
+          // إنشاء الصفوف
+          for (let row of data) {
+            const tr = document.createElement("tr");
 
-  function hideQRCode() {
-    document.getElementById('qrModal').style.display = 'none';
-  }
+            // نبني الرابط مع الباراميتر id
+            const link = `/show_qr_code_fro_check_point?id=${encodeURIComponent(row.id)}`;
 
-  function downloadQRCode() {
-    const qrImg = document.querySelector('#qrcode img');
-    if (qrImg) {
-      const link = document.createElement('a');
-      link.href = qrImg.src;
-      link.download = 'qrcode.png';
+
+            for (let key of displayFields) {
+              const td = document.createElement("td");
+              td.innerHTML = `<a href="${link}" style="text-decoration:none; color:inherit;">${row[key] ?? ""}</a>`;
+              tr.appendChild(td);
+            }
+
+            tbody.appendChild(tr);
+
+            // تحديث اسم المشروع آخر مرة
+            document.getElementById('show_projact_name').textContent = row.projuct_title || "---";
+          }
+
+          // إظهار عدد السجلات
+          document.getElementById('show_shift').textContent = data.length;
+
+          // عرض الجدول
+          table.style.display = "table";
+          document.getElementById('status').style.display = 'none';
+        })
+        .catch(err => {
+          document.getElementById('status').textContent = 'Ошибка данных2';
+          console.error(err);
+        });
+    }
+
+    ///////
+
+
+    function hideQRCode() {
+      document.getElementById('qrModal').style.display = 'none';
+    }
+
+    function downloadQRCode() {
+      const canvas = document.querySelector("#qrcode canvas");
+      const link = document.createElement("a");
+
+      link.download = "QR-код Проект номер" + params.get("id") +  ".png";
+      link.href = canvas.toDataURL("image/png");
       link.click();
     }
-  }
 
-  // تعديل loadData لتفعيل QR عند الضغط على الرابط
-  function loadData() {
-    const serch_id = document.getElementById('serch_id').value;
-    if (!serch_id) {
-      document.getElementById('status').textContent = 'Ошибка данных3 ❗';
-      return;
-    }
+    // تعديل loadData لتفعيل QR عند الضغط على الرابط
+    function loadData() {
+      const serch_id = document.getElementById('serch_id').value;
+      if (!serch_id) {
+        document.getElementById('status').textContent = 'Ошибка данных3 ❗';
+        return;
+      }
 
-    let apiUrl = `/api/show_info_chick_point?employee_id_input=${serch_id}`;
-    document.getElementById('status').textContent = 'Загрузка данных 🔄...';
-    document.getElementById('data-table').style.display = 'none';
-    document.querySelector('#data-table tbody').innerHTML = '';
+      let apiUrl = `/api/show_info_chick_point?employee_id_input=${serch_id}`;
+      document.getElementById('status').textContent = 'Загрузка данных 🔄...';
+      document.getElementById('data-table').style.display = 'none';
+      document.querySelector('#data-table tbody').innerHTML = '';
 
-    fetch(apiUrl)
-      .then(res => res.json())
-      .then(data => {
-        if (!data || data.length === 0) {
-          document.getElementById('status').textContent = 'Ошибка данных4';
-          return;
-        }
-
-        const table = document.getElementById("data-table");
-        const thead = table.querySelector("thead");
-        const tbody = table.querySelector("tbody");
-
-        thead.innerHTML = "";
-        tbody.innerHTML = "";
-
-        const displayFields = ["name_point", "Coordinates", "id_entry_emp"];
-
-        const headerRow = document.createElement("tr");
-        for (let key of displayFields) {
-          const th = document.createElement("th");
-          th.textContent = key;
-          headerRow.appendChild(th);
-        }
-        thead.appendChild(headerRow);
-
-        for (let row of data) {
-          const tr = document.createElement("tr");
-
-          const link = `${encodeURIComponent(row.id)}`;
-
-          for (let key of displayFields) {
-            const td = document.createElement("td");
-            td.innerHTML = `<a href="javascript:void(0)" style="text-decoration:none; color:inherit;">${row[key] ?? ""}</a>`;
-            td.querySelector('a').onclick = () => showQRCode(link);
-            tr.appendChild(td);
+      fetch(apiUrl)
+        .then(res => res.json())
+        .then(data => {
+          if (!data || data.length === 0) {
+            document.getElementById('status').textContent = 'Ошибка данных4';
+            return;
           }
 
-          tbody.appendChild(tr);
-          document.getElementById('show_projact_name').textContent = row.projuct_title || "---";
-        }
+          const table = document.getElementById("data-table");
+          const thead = table.querySelector("thead");
+          const tbody = table.querySelector("tbody");
 
-        document.getElementById('show_shift').textContent = data.length;
-        table.style.display = "table";
-        document.getElementById('status').style.display = 'none';
-      })
-      .catch(err => {
-        document.getElementById('status').textContent = 'Ошибка данных5';
-        console.error(err);
-      });
-  }
-  // ✅ تنفيذ الدالة تلقائياً عند تحميل الصفحة
-window.onload = loadData;
-</script>
-<script>   
-  let role = sessionStorage.getItem("role");
-                if (role === "admin") {
-                   
-                } else if(role === "supadmin") {
-                  
-                }else if(role === "emp") {
-                   
-                }else if (!role) {  // الشرط الذي أضفته أنت
-                    window.location.href = "/log_in";
-                }  
-</script>
-{% endblock %}
+          thead.innerHTML = "";
+          tbody.innerHTML = "";
+
+          const displayFields = ["name_point", "Coordinates", "id_entry_emp"];
+
+          const headerRow = document.createElement("tr");
+          for (let key of displayFields) {
+            const th = document.createElement("th");
+            th.textContent = key;
+            headerRow.appendChild(th);
+          }
+          thead.appendChild(headerRow);
+
+          for (let row of data) {
+            const tr = document.createElement("tr");
+
+            const link = `${encodeURIComponent(row.id)}`;
+
+            for (let key of displayFields) {
+              const td = document.createElement("td");
+              td.innerHTML = `<a href="javascript:void(0)" style="text-decoration:none; color:inherit;">${row[key] ?? ""}</a>`;
+              td.querySelector('a').onclick = () => showQRCode(link);
+              tr.appendChild(td);
+            }
+
+            tbody.appendChild(tr);
+            document.getElementById('show_projact_name').textContent = row.projuct_title || "---";
+            // دوال التحكم بالـ QR
+            function showQRCode(link, link0) {
+
+              document.getElementById('qrModal').style.display = 'flex';
+              const qrContainer = document.getElementById('qrcode');
+              qrContainer.innerHTML = "";
+
+              // إنشاء QR مؤقت
+              const qr = new QRCode(qrContainer, {
+                text: link,
+                width: 200,
+                height: 200,
+                colorDark: "#000000",
+                colorLight: "#ffffff"
+              });
+
+              // انتظر حتى يتم إنشاؤه
+              setTimeout(() => {
+
+                const originalCanvas = qrContainer.querySelector("canvas");
+
+                // إنشاء canvas جديد أكبر لإضافة الاسم
+                const newCanvas = document.createElement("canvas");
+                const ctx = newCanvas.getContext("2d");
+
+                const padding = 40; // مساحة للاسم
+                newCanvas.width = 200;
+                newCanvas.height = 230 + padding;
+
+                // خلفية بيضاء
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(0, 0, newCanvas.width, newCanvas.height);
+
+                // رسم QR
+                ctx.drawImage(originalCanvas, 0, 0);
+
+                ctx.fillStyle = "#000000";
+                ctx.font = "20px Arial";
+                ctx.textAlign = "center";
+
+                const centerX = newCanvas.width / 2;
+
+                ctx.fillText(
+                  "project :- " + row.projuct_title,
+                  centerX,
+                  225
+                );
+
+                ctx.fillText(
+                  row.name_point,
+                  centerX,
+                  250
+                );
+                // استبدال القديم بالجديد
+                qrContainer.innerHTML = "";
+                qrContainer.appendChild(newCanvas);
+
+              }, 100);
+            }
+          }
+
+          document.getElementById('show_shift').textContent = data.length;
+          table.style.display = "table";
+          document.getElementById('status').style.display = 'none';
+        })
+        .catch(err => {
+          document.getElementById('status').textContent = 'Ошибка данных5';
+          console.error(err);
+        });
+    }
+
+
+    // ✅ تنفيذ الدالة تلقائياً عند تحميل الصفحة
+    window.onload = loadData;
+  </script>
+  <script>
+    let role = sessionStorage.getItem("role");
+    if (role === "admin") {
+
+    } else if (role === "supadmin") {
+
+    } else if (role === "emp") {
+
+    } else if (!role) {  // الشرط الذي أضفته أنت
+      window.location.href = "/log_in";
+    }  
+  </script>
+  {% endblock %}
 </body>
+
 </html>

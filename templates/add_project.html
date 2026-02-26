@@ -75,6 +75,16 @@ body {
 .add-project-page input[type="submit"]:hover {
   background: #020617;
 }
+.time-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.colon {
+  font-size: 20px;
+  font-weight: bold;
+}
 
 /* ===== Desktop Enhancements ===== */
 @media (min-width: 768px) {
@@ -111,9 +121,14 @@ body {
 
       <label>Система работы</label>
       <input type="number" name="ses_work" required>
-
-      <label>Время начала смены</label>
-      <input type="time" name="start_time_work" required>
+       <label>время начала смены</label>
+      <div class="time-group">
+        <label>час</label><span class="colon">:</span>
+      <input type="number" name="hour" min="0" max="23" required>
+      
+      <label>минута</label><span class="colon">:</span>
+      <input type="number" name="minute" min="0" max="59" required>
+      </div>
 
       <label>Доход от проекта</label>
       <input type="number" name="sum_of_proj" required>

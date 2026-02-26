@@ -124,16 +124,13 @@
     <input type="text" id="employee_name" readonly>
 
     <label>День начала смены:</label>
-    <input type="date" id="start_date" name="start_date" required>
+    <input type="text" id="start_date" name="start_date" readonly>
 
     <label>Время начала смены:</label>
-    <input type="text" id="start_time" name="start_time" required >
+    <input type="text" id="start_time" name="start_time" readonly >
 
-    <label>День окончания смены:</label>
-    <input type="date" id="end_date" name="end_date" required >
-
-    <label>Время окончания смены:</label>
-    <input type="time" id="end_time" name="end_time" required >
+   
+    <input type="hidden" id="rel_start_date" name="rel_start_date" style="display:none;" >
 
     <!-- camera -->
     <div class="camera-box">
@@ -152,6 +149,21 @@
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
+  // ================== DATE LOGIC ==================
+const moscowTime = new Date().toLocaleString("ru-RU", {
+  timeZone: "Europe/Moscow",
+  hour12: false
+});
+
+
+const mosc_date = new Date().toLocaleDateString("en-CA", {
+  timeZone: "Europe/Moscow"
+});
+
+const mosc_time = new Date().toLocaleTimeString("ru-RU", {
+  timeZone: "Europe/Moscow",
+  hour12: false
+});
   // ================== URL PARAMS ==================
 const params = new URLSearchParams(window.location.search);
 
@@ -183,56 +195,10 @@ document.getElementById("employee_id").value = employeeId;
 document.getElementById("project_id").value = projectId;
 document.getElementById("project_name").value = projectName;
 document.getElementById("employee_name").value = employeeName;
+document.getElementById("start_date").value = mosc_date;
 document.getElementById("start_time").value = startTimeParam;
+document.getElementById("rel_start_date").value = mosc_time;
 
-// ================== DATE LOGIC ==================
-const moscowTime = new Date().toLocaleString("ru-RU", {
-  timeZone: "Europe/Moscow",
-  hour12: false
-});
-
-const today = new Date();
-const datetime = today.toISOString(); 
-const tomorrow = new Date(today);
-tomorrow.setDate(today.getDate() + 1);
-
-const startDateInput = document.getElementById("start_date");
-const endDateInput   = document.getElementById("end_date");
-
-startDateInput.min = today.toISOString().split("T")[0];
-startDateInput.max = tomorrow.toISOString().split("T")[0];
-
-flatpickr("#end_time", {
-  enableTime: false,
-  noCalendar: true,
-  dateFormat: "H:i",
-  time_24hr: true
-});
-
-function calculateEnd() {
-  if (!startDateInput.value || !startTimeParam) return;
-
-  const [h, m] = startTimeParam.split(":").map(Number);
-
-  // إنشاء التاريخ كتوقيت محلي (موسكو)
-  const start = new Date(startDateInput.value);
-  start.setHours(h, m, 0, 0);
-
-  const end = new Date(start.getTime() + workHours * 60 * 60 * 1000);
-
-  // اليوم (محلي)
-  endDateInput.value = end.getFullYear() + "-" +
-    String(end.getMonth() + 1).padStart(2, "0") + "-" +
-    String(end.getDate()).padStart(2, "0");
-
-  // الوقت (محلي)
-  document.getElementById("end_time").value =
-    String(end.getHours()).padStart(2, "0") + ":" +
-    String(end.getMinutes()).padStart(2, "0");
-}
-
-
-startDateInput.addEventListener("change", calculateEnd);
 
 // ================== CAMERA ==================
 document.getElementById("startCameraBtn").onclick = async () => {

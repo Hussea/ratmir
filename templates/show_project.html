@@ -354,6 +354,8 @@ document.getElementById("updateForm").addEventListener("submit", async function(
    <!--------------------------End_updete----------------------------------------->
 
   <script>
+    const today = new Date();
+    const today0 = new Date().toISOString().split("T")[0]; 
      /////////////داله الانتقال الى صفحه تسجيل نقطه تفتيش جديده للمشروع
 
     // الدالة لإنشاء الرابط مع الباراميترات
@@ -591,6 +593,7 @@ document.querySelectorAll(".mySwitch").forEach(cb => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     id: id,
+                    rel_time: today0,
                     is_active: is_active
                 })
             });

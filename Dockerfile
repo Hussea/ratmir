@@ -19,5 +19,5 @@ RUN mkdir -p uploads obxod
 # فتح البورت
 EXPOSE 8001
 
-# تشغيل FastAPI
+# تشغيل FastAPI, "--reload"
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001"]
