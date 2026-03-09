@@ -336,7 +336,7 @@
     function searchProduct() {
       let title = dropdown.options[dropdown.selectedIndex].text;
       if (!title) {
-        alert("no data");
+        alert("no data 1");
         return;
       }
 
@@ -352,7 +352,7 @@
           let result = request.response;
 
           if (!result || Object.keys(result).length === 0) {
-            alert("no data");
+            alert("no data 2");
           } else {
             // تعبئة الخانات الثابتة
             document.getElementById("id").value = result.id || "";
