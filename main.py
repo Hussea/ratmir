@@ -227,7 +227,18 @@ def add_employee(
             # حفظ الصورة في المجلد
             with open(image_path, "wb") as f:
                 f.write(image.file.read())
-
+            # طباعة المتغيرات في الكونسول
+        print("------ after Employee Data ------")
+        print("id:", id)
+        print("name:", name)
+        print("num_T:", num_T)
+        print("data_prth:", data_prth)
+        print("address:", address)
+        print("Salary:", Salary)
+        print("Job:", Job)
+        print("nots:", nots)
+        print("image_path:", image_path)
+        print("---------------------------")
         # حفظ البيانات في قاعدة البيانات
         conn = get_db_connection()
         cur = conn.cursor()
@@ -238,7 +249,18 @@ def add_employee(
         cur.execute(query, (id, name, num_T, data_prth, address, Salary, Job, nots, image_path))
         conn.commit()
         conn.close()
-
+        # طباعة المتغيرات في الكونسول
+        print("------befor Employee Data ------")
+        print("id:", id)
+        print("name:", name)
+        print("num_T:", num_T)
+        print("data_prth:", data_prth)
+        print("address:", address)
+        print("Salary:", Salary)
+        print("Job:", Job)
+        print("nots:", nots)
+        print("image_path:", image_path)
+        print("---------------------------")
         return {"message": "تمت الإضافة بنجاح ✅", "image_saved": image_path}
 
     except mysql.connector.Error as e:
