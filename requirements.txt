@@ -7,3 +7,6 @@ jinja2
 python-multipart
 alembic==1.13.1
 gunicorn
+pillow
+pillow-heif
+uuid

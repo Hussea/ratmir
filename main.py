@@ -15,6 +15,9 @@ from fastapi.templating import Jinja2Templates
 from fastapi import Request
 from fastapi.responses import FileResponse
 from fastapi import FastAPI, Form, UploadFile, File, HTTPException, status
+import uuid
+from PIL import Image
+import pillow_heif
 
 app = FastAPI()
 
@@ -196,6 +199,8 @@ def add_category(name: str = Form(...),
     except mysql.connector.Error as e:
         return {"error": str(e)}
 #====================================================
+pillow_heif.register_heif_opener()
+
 @app.post("/add-emp")
 def add_employee(
     id: int = Form(0), 
@@ -208,7 +213,8 @@ def add_employee(
     nots: str = Form(...),
     image: UploadFile = File(None)
 ):
-    print("======= Incoming Request Data =======")
+   # طباعة المتغيرات في الكونسول
+    print("------ after Employee Data ------")
     print("id:", id)
     print("name:", name)
     print("num_T:", num_T)
@@ -217,39 +223,42 @@ def add_employee(
     print("Salary:", Salary)
     print("Job:", Job)
     print("nots:", nots)
-    print("image:", image.filename if image else None)
-    print("=====================================")
+    print("image_path:", image_path)
+    print("---------------------------")  
     try:
-        image_path = None
+        temp_path = None
 
         if image:
             os.makedirs("uploads", exist_ok=True)
 
-            # احصل على التاريخ والوقت الحالي بصيغة: YYYYMMDD_HHMMSS
-            now = datetime.now().strftime("%Y-%m-%d-T-%H-%M")
+            
 
             # أنشئ اسم ملف جديد: مثلا name_YYYYMMDD_HHMMSS.jpg
-            extension = os.path.splitext(image.filename)[1]  # .jpg أو .png
-            filename = f"{name}-DT{now}{extension}"
+            extension = os.path.splitext(image.filename)[1].lower()
+            unique_name = str(uuid.uuid4())
+            
 
             # مسار حفظ الصورة
-            image_path = f"uploads/{filename}"
+            temp_path  = f"uploads/{unique_name}{extension}"
 
             # حفظ الصورة في المجلد
-            with open(image_path, "wb") as f:
+            with open(temp_path, "wb") as f:
                 f.write(image.file.read())
-            # طباعة المتغيرات في الكونسول
-        print("------ after Employee Data ------")
-        print("id:", id)
-        print("name:", name)
-        print("num_T:", num_T)
-        print("data_prth:", data_prth)
-        print("address:", address)
-        print("Salary:", Salary)
-        print("Job:", Job)
-        print("nots:", nots)
-        print("image_path:", image_path)
-        print("---------------------------")
+            if extension in [".heic", ".heif"]:
+
+                img = Image.open(temp_path)
+
+                new_path = f"uploads/{unique_name}.jpg"
+
+                img.convert("RGB").save(new_path, "JPEG")
+
+                os.remove(temp_path)
+
+                image_path = new_path
+
+            else:
+                image_path = temp_path
+           
         # حفظ البيانات في قاعدة البيانات
         conn = get_db_connection()
         cur = conn.cursor()
