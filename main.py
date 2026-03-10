@@ -208,6 +208,17 @@ def add_employee(
     nots: str = Form(...),
     image: UploadFile = File(None)
 ):
+    print("======= Incoming Request Data =======")
+    print("id:", id)
+    print("name:", name)
+    print("num_T:", num_T)
+    print("data_prth:", data_prth)
+    print("address:", address)
+    print("Salary:", Salary)
+    print("Job:", Job)
+    print("nots:", nots)
+    print("image:", image.filename if image else None)
+    print("=====================================")
     try:
         image_path = None
 
