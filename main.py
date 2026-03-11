@@ -230,41 +230,30 @@ def add_employee(
         temp_path = None
 
         if image:
+
             os.makedirs("uploads", exist_ok=True)
 
-            
-
-            # أنشئ اسم ملف جديد: مثلا name_YYYYMMDD_HHMMSS.jpg
             extension = os.path.splitext(image.filename)[1].lower()
             unique_name = str(uuid.uuid4())
-            
 
-            # مسار حفظ الصورة
-            temp_path  = f"uploads/{unique_name}{extension}"
             img = Image.open(image.file)
 
-            # تقليل الحجم
+            # تقليل حجم الصورة
             img.thumbnail((1280, 1280))
 
-            img.save(image_path, optimize=True, quality=75)
-            
-            # حفظ الصورة في المجلد
-            with open(temp_path, "wb") as f:
-                f.write(image.file.read())
             if extension in [".heic", ".heif"]:
 
-                
-
-                new_path = f"uploads/{unique_name}.jpg"
-
-                img.convert("RGB").save(new_path, "JPEG")
-
-                os.remove(temp_path)
-
-                image_path = new_path
+                image_path = f"uploads/{unique_name}.jpg"
+        
+                img.convert("RGB").save(image_path, "JPEG", optimize=True, quality=75)
 
             else:
-                image_path = temp_path
+
+                image_path = f"uploads/{unique_name}{extension}"
+
+                img.save(image_path, optimize=True, quality=75)
+
+     
            
         # حفظ البيانات في قاعدة البيانات
         conn = get_db_connection()
