@@ -18,6 +18,7 @@ from fastapi import FastAPI, Form, UploadFile, File, HTTPException, status
 import uuid
 from PIL import Image
 import pillow_heif
+import io
 
 app = FastAPI()
 
@@ -240,13 +241,19 @@ def add_employee(
 
             # مسار حفظ الصورة
             temp_path  = f"uploads/{unique_name}{extension}"
+            img = Image.open(image.file)
 
+            # تقليل الحجم
+            img.thumbnail((1280, 1280))
+
+            img.save(image_path, optimize=True, quality=75)
+            
             # حفظ الصورة في المجلد
             with open(temp_path, "wb") as f:
                 f.write(image.file.read())
             if extension in [".heic", ".heif"]:
 
-                img = Image.open(temp_path)
+                
 
                 new_path = f"uploads/{unique_name}.jpg"
 
