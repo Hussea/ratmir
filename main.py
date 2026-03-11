@@ -214,6 +214,8 @@ def add_employee(
     nots: str = Form(...),
     image: UploadFile = File(None)
 ):
+    image_path  = None
+
    # طباعة المتغيرات في الكونسول
     print("------ after Employee Data ------")
     print("id:", id)
@@ -227,7 +229,6 @@ def add_employee(
     print("image_path:", image_path)
     print("---------------------------")  
     try:
-        temp_path = None
 
         if image:
 
@@ -236,15 +237,19 @@ def add_employee(
             extension = os.path.splitext(image.filename)[1].lower()
             unique_name = str(uuid.uuid4())
 
-            img = Image.open(image.file)
+            # قراءة الملف
+            contents = image.file.read()
 
-            # تقليل حجم الصورة
+            # فتح الصورة
+            img = Image.open(io.BytesIO(contents))
+
+            # تقليل الحجم
             img.thumbnail((1280, 1280))
 
             if extension in [".heic", ".heif"]:
 
                 image_path = f"uploads/{unique_name}.jpg"
-        
+
                 img.convert("RGB").save(image_path, "JPEG", optimize=True, quality=75)
 
             else:
