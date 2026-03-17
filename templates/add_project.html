@@ -108,42 +108,42 @@ body {
     <form id="categoryForm" onsubmit="submitForm(event, 'categoryForm', '/add-category')">
 
       <label>Название проекта</label>
-      <input type="text" name="title" required>
+      <input type="text" name="title" id="title" required>
 
       <label>Адрес</label>
-      <input type="text" name="address" required>
+      <input type="text" name="address" id="address" required>
 
       <label>Координаты</label>
-      <input type="text" name="Coordinates" required>
+      <input type="text" name="Coordinates" id="Coordinates" required>
 
       <label>Требуются охранники</label>
-      <input type="number" name="q_person" required>
+      <input type="number" name="q_person" id="q_person" required>
 
       <label>Система работы</label>
-      <input type="number" name="ses_work" required>
+      <input type="number" name="ses_work" id="ses_work" required>
        <label>время начала смены</label>
       <div class="time-group">
         <label>час</label><span class="colon">:</span>
-      <input type="number" name="hour" min="0" max="23" required>
+      <input type="number" name="hour" min="0" max="23" id="hour" required>
       
       <label>минута</label><span class="colon">:</span>
-      <input type="number" name="minute" min="0" max="59" required>
+      <input type="number" name="minute" min="0" max="59" id="minute" required>
       </div>
 
       <label>Доход от проекта</label>
-      <input type="number" name="sum_of_proj" required>
+      <input type="number" name="sum_of_proj" id="sum_of_proj" required>
 
       <label>менеджер проекта</label>
-      <input type="text" name="pers_of_proj" required>
+      <input type="text" name="pers_of_proj" id="pers_of_proj" required>
 
       <label>номер телефона</label>
-      <input type="text" name="n_phone" required>
+      <input type="text" name="n_phone" id="n_phone" required>
 
       <label>Зарплата охранника</label>
-      <input type="number" name="sel_emp" required>
+      <input type="number" name="sel_emp" id="sel_emp" required>
 
       <label>Примечание</label>
-      <input type="text" name="nots" required>
+      <input type="text" name="nots" id="nots" required>
 
       <input type="submit" value="Представить">
 
@@ -157,7 +157,27 @@ function submitForm(event, formId, url) {
   event.preventDefault();
   const formData = new FormData(document.getElementById(formId));
   fetch(url, { method: "POST", body: formData })
-    .then(() => alert("Project added successfully"));
+    .then(() => {
+      alert("Проект данных успешно добавлен.");
+      clearFields([
+        "title",
+        "address",
+        "Coordinates",
+        "q_person",
+        "ses_work",
+        "hour",
+        "minute",
+        "sum_of_proj",
+        "pers_of_proj",
+        "n_phone",
+        "sel_emp",
+        "nots"
+      ]);
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("Во время передачи произошла ошибка");
+    });
 }
 </script>
 <script>
@@ -174,6 +194,14 @@ function submitForm(event, formId, url) {
                     window.location.href = "/log_in";
                 }
 
+</script>
+<script>
+  function clearFields(ids) {
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = "";
+    });
+  }
 </script>
 {% endblock %}
 

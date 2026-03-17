@@ -104,25 +104,25 @@ body {
     <form id="empForm" onsubmit="submitForm(event, 'empForm', '/add-emp')">
 
       <label>полное имя</label>
-      <input type="text" name="name" required>
+      <input type="text" name="name" id="name" required>
 
       <label>номер телефона</label>
-      <input type="text" name="num_T" required>
+      <input type="text" name="num_T" id="num_T" required>
 
       <label>дата рождения</label>
-      <input type="text" name="data_prth" required>
+      <input type="text" name="data_prth" id="data_prth" required>
 
       <label>Адрес</label>
-      <input type="text" name="address" required>
+      <input type="text" name="address" id="address" required>
 
       <label>Зарплата</label>
-      <input type="text" name="Salary" required>
+      <input type="text" name="Salary" id="Salary" required>
 
       <label>должность</label>
-      <input type="text" name="Job" required>
+      <input type="text" name="Job" id="Job" required>
 
       <label>Примечание</label>
-      <input type="text" name="nots" required>
+      <input type="text" name="nots" id="nots" required>
 
       <label>📷 Фотография сотрудника</label>
       <input type="file" name="image" accept="image/*"  required>
@@ -137,9 +137,26 @@ body {
 <script>
 function submitForm(event, formId, url) {
   event.preventDefault();
+
   const formData = new FormData(document.getElementById(formId));
+
   fetch(url, { method: "POST", body: formData })
-    .then(() => alert("Employee data submitted successfully"));
+    .then(() => {
+      alert("Данные сотрудника успешно отправлены.");
+      clearFields([
+        "name",
+        "num_T",
+        "data_prth",
+        "address",
+        "Salary",
+        "Job",
+        "nots"
+      ]);
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("Во время передачи произошла ошибка");
+    });
 }
 </script>
 <script>
@@ -156,6 +173,14 @@ function submitForm(event, formId, url) {
                     window.location.href = "/log_in";
                 }
 
+</script>
+<script>
+  function clearFields(ids) {
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = "";
+    });
+  }
 </script>
 {% endblock %}
 
