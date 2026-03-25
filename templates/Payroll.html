@@ -415,11 +415,10 @@ body {
           const row = document.createElement('tr');
           const selEmp = Number(item.projuct_sel_emp || 0);
           total += selEmp;
-
           row.innerHTML = `
   <td data-label="Дата начала">${item.start_day || "-"}</td>
   <td data-label="Время начала">${item.start_time || "-"}</td>
-  <td data-label="Дата окончания">${item.rel_start_date || "-"}</td>
+  <td data-label="real_time">${item.rel_start_date || "-"}</td>
   
   <td data-label="Фото">
     <img src="${item.file_path}"

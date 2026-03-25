@@ -901,7 +901,14 @@ def get_show_work_shift(
             work_shifts.file_path,
             employee.name AS employee_name,
             projuct.title AS projuct_title,
-            employee.Salary AS projuct_sel_emp
+            employee.Salary AS projuct_sel_emp,
+
+            CASE 
+                WHEN DATE(work_shifts.start_day) = CURDATE() THEN 1 
+                ELSE 0 
+            END AS is_today
+
+            
         FROM work_shifts
         JOIN employee ON work_shifts.employee_id_input = employee.id
         JOIN projuct ON work_shifts.project_id_input = projuct.id

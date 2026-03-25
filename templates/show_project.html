@@ -133,14 +133,11 @@ input:checked + .slider:before {
 
 /* ===== Table ===== */
 table {
-  width: 100%;
+  width: 90%;
   max-width: 1200px;
-  margin: 20px auto;
-  border-collapse: collapse;
-  background: var(--card);
-  border-radius: 14px;
+
   overflow: hidden;
-  box-shadow: 0 8px 22px rgba(0,0,0,0.05);
+  
 }
 
 th, td {
@@ -161,9 +158,9 @@ tr:hover {
 
 /* ===== Result Count ===== */
 #result-count {
-  margin-top: 12px;
+  
   font-weight: 600;
-  color: var(--secondary);
+   
 }
 
 /* ===== Bottom Buttons ===== */
@@ -192,7 +189,7 @@ tr:hover {
   }
 
   table {
-    font-size: 13px;
+    font-size: 16px;
     overflow-x: auto;
     display: block;
   }
@@ -254,7 +251,7 @@ tr:hover {
   </div>
   <br>
 <center>
-  <table id="idTable" style="display: none;">
+  <table id="idTable" style="display: none;  margin: 18px;">
     <thead >
       <tr>
         <th><input type="text" placeholder="Product NO" oninput="fetchProducts()" id="project_id" style="display: none;" /></th>
@@ -497,20 +494,31 @@ document.getElementById("updateForm").addEventListener("submit", async function(
         const data = await response.json();
 
         let total = 0;
+        let is_Tod = 0;
+        let def = 0;
         data.forEach((item) => {
           const selEmp = Number(item.projuct_sel_emp || 0);
           total += selEmp;
+
+          const isTod = Number(item.is_today || 0);
+          is_Tod += isTod;
+
+          
         });
 
         return {
           shiftCount: data.length,
           totalValue: total,
+          is_Tody: is_Tod,
+          
         };
       } catch (err) {
         console.error(`Нет соответствующих данных ❌`, err);
         return {
           shiftCount: 0,
           totalValue: 0,
+          is_Tody: 0,
+          
         };
       }
     }
@@ -544,8 +552,10 @@ document.getElementById("updateForm").addEventListener("submit", async function(
         };
 
         if (data.length > 0) {
+          
           for (let key in displayFields) {
             headerRow.innerHTML += `<th>${displayFields[key]}</th>`; 
+            
           }
           headerRow.innerHTML += `<th>Количество смен</th><th>Общая сумма</th><th>историю платежей</th><th> история смены</th><th>статус ОХ в ОБ</th>`;
 
@@ -557,11 +567,13 @@ document.getElementById("updateForm").addEventListener("submit", async function(
 
     let tr = "<tr>";
     for (let key in displayFields) {
-      tr += `<td>${row[key] ?? ""}</td>`;
+      tr += `<td style="background-color: ${workShiftData.is_Tody == 1 ? '#3ae374' : '#ff4d4d'}; color: #3d3d3d; font-weight: bold;">${row[key] ?? ""}</td>`;
     }
 
     tr += `<td>${workShiftData.shiftCount}</td>`;
     tr += `<td>${workShiftData.totalValue}</td>`;
+   
+   
 
     // ✅ لو is_active == 1 نخلي checkbox مفعل
     const checkedAttr = row.is_active == 1 ? "checked" : "";
