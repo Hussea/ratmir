@@ -222,11 +222,11 @@ async function fetchCategories() {
             });
 
         } else {
-            list.innerHTML = "<li>لم يتم العثور على بيانات.</li>";
+            list.innerHTML = "<li>Данные не найдены.</li>";
         }
 
     } catch (error) {
-        console.error("خطأ أثناء جلب البيانات:", error);
+        console.error("Ошибка при получении данных:", error);
     }
 }
 
