@@ -185,16 +185,17 @@ def check_password(password: str = Form(...)):
 @app.post("/add_admin")
 def add_category(name: str = Form(...), 
                  pasword: str = Form(...),
+                 project: str = Form(None),
                  rool: str = Form(...)):
     try:
         conn = get_db_connection()
         cur = conn.cursor()
         query = """
         INSERT INTO users 
-        (username, password, role)
-        VALUES (%s, %s, %s)
+        (username, password, role, project)
+        VALUES (%s, %s, %s, %s)
         """
-        cur.execute(query, (name, pasword, rool))
+        cur.execute(query, (name, pasword, rool, project))
         conn.commit()
         return {"message": "تمت الإضافة بنجاح ✅"}
     except mysql.connector.Error as e:
@@ -517,6 +518,7 @@ def get_categories():
         username = [row[1] for row in rows]
         password = [row[2] for row in rows]
         role = [row[3] for row in rows]
+        project = [row[4] for row in rows]
         conn.close()  # مهم لإغلاق الاتصال
 
         # نرجعهم في JSON يحتوي على مصفوفتين
@@ -524,6 +526,7 @@ def get_categories():
             "idu": idu,
             "username": username,
             "password": password,
+            "project": project,
             "role": role
         }
 
@@ -557,6 +560,8 @@ def get_all_guards(
     id: Optional[int] = Query(None),
     project_id: Optional[int] = Query(None),
     employee_id: Optional[int] = Query(None),
+    project_name: Optional[int] = Query(None),
+    employee_name: Optional[int] = Query(None),
     nots: Optional[float] = Query(None)
 ):
     conn = get_db_connection()
@@ -574,6 +579,12 @@ def get_all_guards(
     if employee_id is not None:
         query += " AND employee_id = %s"
         values.append(employee_id)
+    if project_name is not None:
+        query += " AND project_name = %s"
+        values.append(project_name)
+    if employee_name is not None:
+        query += " AND employee_name = %s"
+        values.append(employee_name)
     
     if nots is not None:
         query += " AND nots = %s"
@@ -1104,7 +1115,8 @@ def login(username: str = Form(...), password: str = Form(...)):
             "success": True,
             "message": "✅ Вход выполнен успешно",
             "role": user["role"],  # ترجع دور المستخدم هنا
-            "username": user["username"]  # ترجع دور المستخدم هنا
+            "username": user["username"],  # ترجع دور المستخدم هنا
+            "project": user["project"]  
         }
     else:
         return {

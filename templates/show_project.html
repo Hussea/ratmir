@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Информация о проекте</title>
+    <title id="tot">Информация о проекте</title>
        {% extends "try.html" %}
 
 </head>
@@ -215,6 +215,29 @@ tr:hover {
 
 <body>
   {% block content %}
+  <script> 
+  document.addEventListener("DOMContentLoaded", function () {
+    let role = sessionStorage.getItem("role");
+    let user = sessionStorage.getItem("username");
+
+    if (role === "admin") {
+
+    } else if (role === "supadmin") {
+
+    } else if (role === "emp") {
+        document.getElementById("id_qrcode").style.display = "none";
+        document.getElementById("id_qrcode1").style.display = "none";
+        document.getElementById("bill1").style.display = "none";
+    } else if (!role) {
+        window.location.href = "/log_in";
+    } else if (role === "formin") {
+        document.getElementById("bar_sidebar").style.display = "none";
+        document.getElementById("bar_sidebar1").style.display = "none";
+        document.getElementById("bill1").style.display = "none";
+        
+    }
+});
+</script>
   <center> 
   <h3><span id="fixedText">Информация о проекте</span> <span id="Postitle"></span></h3>
   <div id="genral_conter">
@@ -525,7 +548,7 @@ document.getElementById("updateForm").addEventListener("submit", async function(
 
     async function fetchProducts() {
       const params = new URLSearchParams();
-
+      
       const fields = ["project_id", "employee_id", "nots0"];
       for (let field of fields) {
         const value = document.getElementById(field)?.value;
@@ -557,14 +580,32 @@ document.getElementById("updateForm").addEventListener("submit", async function(
             headerRow.innerHTML += `<th>${displayFields[key]}</th>`; 
             
           }
-          headerRow.innerHTML += `<th>Количество смен</th><th>Общая сумма</th><th>историю платежей</th><th> история смены</th><th>статус ОХ в ОБ</th>`;
+          headerRow.innerHTML += `<th>Количество смен</th><th>Общая сумма</th><th>историю платежей</th><th>история смены</th><th>началнк</th><th>статус ОХ в ОБ</th>`;
 
         for (let row of data) {
     const rowId = row["id"];
     const employeeId = row["employee_id"];
     const projectId = row["project_id"];
+    const projectName = row["project_name"];
+    const employee_name = row["employee_name"];
+    const rool = "formin";
     const workShiftData = await fetchWorkShiftData(employeeId, projectId);
+    const isOwner = sessionStorage.getItem("username") === employee_name;
+    const isOwner0 = sessionStorage.getItem("role") === "formin";
+     const isOwner1 = sessionStorage.getItem("role") === "admin";
+    let colorp = '#1e272e';
+    let color = 'white';
+    let text = '---&#10006;---';
 
+    if (isOwner&&isOwner0) {
+        color = '#05c46b';
+        colorp = 'white';
+        text = '---&#10004;---';
+    } else if (isOwner1) {
+        color = 'white';
+        colorp = '#485460';
+        text = 'началнк &#8682;';
+    }
     let tr = "<tr>";
     for (let key in displayFields) {
       tr += `<td style="background-color: ${workShiftData.is_Tody == 1 ? '#3ae374' : '#ff4d4d'}; color: #3d3d3d; font-weight: bold;">${row[key] ?? ""}</td>`;
@@ -582,6 +623,8 @@ document.getElementById("updateForm").addEventListener("submit", async function(
     
       <td><a href="/show_salary_history_page?employee_id_input=${employeeId}&project_id_input=${projectId}"><button>историю платежей</button></a></td>
       <td><a href="/Payroll?employee_id_input=${employeeId}&project_id_input=${projectId}"><button>Дата</button></a></td>
+      <td><a href="/?employee_id_input=${employee_name}&project_id_input=${projectName}&rool=${rool}">
+    <button style="background-color:${color}; color:${colorp}; font-weight: bold;"> ${text}</button></a></td>
       <td>
         <label class="switch">
           <input type="checkbox" id="mySwitch" class="mySwitch" data-emp-id="${rowId}" ${checkedAttr}>
@@ -652,16 +695,3 @@ document.querySelectorAll(".mySwitch").forEach(cb => {
 
 </body>
 </html>
-<script> 
-  let role = sessionStorage.getItem("role");
-              if (role === "admin") {
-                   
-               } else if(role === "supadmin") {
-                   
-               }else if(role === "emp") {
-                    document.getElementById("bill1").style.display = "none";
-                    
-                }else if (!role) {  // الشرط الذي أضفته أنت
-                    window.location.href = "/log_in";
-                }
-</script>

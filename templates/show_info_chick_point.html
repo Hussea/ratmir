@@ -480,8 +480,11 @@
 
     } else if (role === "supadmin") {
 
-    } else if (role === "emp") {
-
+    } else if (role === "formin") {
+        document.getElementById("bar_sidebar").style.display = "none";
+        document.getElementById("bar_sidebar1").style.display = "none";        
+    }else if (role === "emp") {
+    window.location.href = "/log_in";
     } else if (!role) {  // الشرط الذي أضفته أنت
       window.location.href = "/log_in";
     }  

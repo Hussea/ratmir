@@ -625,9 +625,13 @@ window.onload = function() {
                 if (role === "admin") {
                    
                 } else if(role === "supadmin") {
-                  document.getElementById("employee-form").style.display = "none";
+                  
                 }else if(role === "emp") {
                     
+                }else if(role === "formin") {
+                    document.getElementById("employee-form").style.display = "none";
+                    document.getElementById("bar_sidebar").style.display = "none";
+                    document.getElementById("bar_sidebar1").style.display = "none";     
                 }else if (!role) {  // الشرط الذي أضفته أنت
                     window.location.href = "/log_in";
                 }

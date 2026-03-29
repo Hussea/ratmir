@@ -203,6 +203,7 @@ async function fetchCategories() {
 
                 // زر الشفت
                 const button2 = document.createElement('button');
+                button2.id = "qrBtn";
                 button2.textContent = "Сгенерировать QR-код";
                 button2.style.backgroundColor = "#0056b3";
                 button2.onclick = () => {
@@ -250,7 +251,7 @@ fetchCategories();
       });
     });
   </script>
-  {% endblock %}
+ 
 </body>
 </html>
 <script>  
@@ -260,8 +261,12 @@ fetchCategories();
                 } else if(role === "supadmin") {
                   
                 }else if(role === "emp") {
-                 document.getElementById("QRBUT").style.display = "none";
+                 document.getElementById("qrBtn").style.display = "none";
+
+                }else if (role === "formin") {
+                  window.location.href = "/log_in";
                 }else if (!role) {  // الشرط الذي أضفته أنت
                     window.location.href = "/log_in";
                 } 
 </script>
+ {% endblock %}

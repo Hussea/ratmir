@@ -137,6 +137,7 @@ body {
 <body>
     {% block content %}
 
+
 <div class="add-admin-page">
   <div class="form-container">
 
@@ -153,6 +154,7 @@ body {
         <option value="admin">Администратор</option>
         <option value="supadmin">Супадмин</option>
         <option value="emp">Бухгалтер</option>
+        <option value="formin" id="opt-formin">начальник смена </option>
       </select>
 
       <label>Пароль</label>
@@ -160,7 +162,7 @@ body {
         <input type="text" id="pasword" name="pasword" id="pasword" required>
         <button type="button" id="generateBtn">Сгенерировть</button>
       </div>
-
+      <input type="text" name="project" id="project" >
       <input type="submit" value="Определите">
 
       <input type="submit"
@@ -177,7 +179,20 @@ body {
     </form>
   </div>
 </div>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const empId = params.get("employee_id_input");
+  const projId = params.get("project_id_input");
+  const rool = params.get("rool");
+  
 
+  document.getElementById("name").value = empId; 
+  document.getElementById("rool").value = rool; 
+  document.getElementById("project").value = projId; 
+  document.getElementById("project").style.display = "none";
+  const option = document.getElementById("opt-formin");
+  option.textContent += projId;
+</script>
 
 <script>
 function submitForm(event, formId, url) {
@@ -189,6 +204,7 @@ function submitForm(event, formId, url) {
       clearFields([
         "name",
         "rool",
+        "project",
         "pasword"
       ]);
     })
@@ -239,9 +255,10 @@ function submitForm(event, formId, url) {
                 if (role === "admin") {
                    
                 } else if(role === "supadmin") {
-                  document.getElementById("category").style.display = "none";
-                  //alert("🚫 У вас нет прав для выполнения этого действия.(Добавить проект)");
+                  window.location.href = "/log_in";
                 }else if(role === "emp") {
+                    window.location.href = "/log_in";
+                }else if(role === "formin") {
                     window.location.href = "/log_in";
                 }else if (!role) {  // الشرط الذي أضفته أنت
                     window.location.href = "/log_in";

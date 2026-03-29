@@ -70,12 +70,13 @@
         const list = document.getElementById('categoryList');
         list.innerHTML = ""; // تفريغ القائمة قبل عرض النتائج الجديدة
 
-       if (data.username && data.password && data.role && Array.isArray(data.username)) {
+       if (data.username && data.password && data.project && data.role && Array.isArray(data.username)) {
       list.innerHTML = ""; // تنظيف القائمة أولاً
 
       data.idu.forEach((idu, index) => {
         const username = data.username[index];
         const password = data.password[index];
+        const project = data.project[index];
         const role = data.role[index];
 
         const li = document.createElement('li');
@@ -94,9 +95,11 @@
         const roleNames = {
           admin: "Директор",
           supadmin: "Зам. директора",
-          emp: "Бухгалтер"
+          emp: "Бухгалтер",
+          formin: "начальник смена"
           };
-
+        const span0 = document.createElement('span');
+        span0.textContent = project;
         const span2 = document.createElement('span');
         span2.textContent = roleNames[role] || "Без роли";
         // نهايه
@@ -159,6 +162,7 @@ button1.onclick = async () => {
         li.appendChild(span);
         li.appendChild(span1);
         li.appendChild(span2);
+        li.appendChild(span0);
         li.appendChild(rightSide);
         list.appendChild(li);
       });
