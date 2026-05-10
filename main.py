@@ -22,7 +22,7 @@ import io
 
 app = FastAPI()
 
-# mount static foldervv
+# mount static folder
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # templates folder
@@ -31,101 +31,192 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/", response_class=HTMLResponse)
 def read_root(request: Request):
-    return templates.TemplateResponse("admen.html", {"request": request})
+
+    return templates.TemplateResponse(
+        request=request,
+        name="admen.html",
+        context={"request": request}
+    )
 
 #----------------------------------------------
-
- 
 @app.get("/try", response_class=HTMLResponse)
 def login_page0(request: Request):
-    return templates.TemplateResponse("try.html", {"request": request})
-
+    return templates.TemplateResponse(
+        request=request,
+        name="try.html",
+        context={"request": request}
+    )
+#----------------------------------------------
 @app.get("/components", response_class=HTMLResponse)
 def login_page1(request: Request):
-    return templates.TemplateResponse("components.html", {"request": request})
-
+    return templates.TemplateResponse(
+        request=request,
+        name="components.html",
+        context={"request": request}
+    )
+#----------------------------------------------
 @app.get("/details", response_class=HTMLResponse)
 def login_page2(request: Request):
-    return templates.TemplateResponse("details.html", {"request": request})
-
+    return templates.TemplateResponse(
+        request=request,
+        name="details.html",
+        context={"request": request}
+    )
+#----------------------------------------------
 @app.get("/fils", response_class=HTMLResponse)
 def login_page3(request: Request):
-    return templates.TemplateResponse("fils.html", {"request": request})
-
+    return templates.TemplateResponse(
+        request=request,
+        name="fils.html",
+        context={"request": request}
+    )
+#----------------------------------------------
 @app.get("/navbar", response_class=HTMLResponse)
 def login_page4(request: Request):
-    return templates.TemplateResponse("navbar.html", {"request": request})
-
+    return templates.TemplateResponse(
+        request=request,
+        name="navbar.html",
+        context={"request": request}
+    )
+#----------------------------------------------
 @app.get("/new_chick_point", response_class=HTMLResponse)
 def login_page5(request: Request):
-    return templates.TemplateResponse("new_chick_point.html", {"request": request})
-
+    return templates.TemplateResponse(
+        request=request,
+        name="new_chick_point.html",
+        context={"request": request}
+    )
+#----------------------------------------------
 @app.get("/Payroll", response_class=HTMLResponse)
 def login_page6(request: Request):
-    return templates.TemplateResponse("Payroll.html", {"request": request})
-
+    return templates.TemplateResponse(
+        request=request,
+        name="Payroll.html",
+        context={"request": request}
+    )
+#----------------------------------------------
 @app.get("/project_list", response_class=HTMLResponse)
 def login_page7(request: Request):
-    return templates.TemplateResponse("project_list.html", {"request": request})
-
+    return templates.TemplateResponse(
+        request=request,
+        name="project_list.html",
+        context={"request": request}
+    )
+#----------------------------------------------
 @app.get("/project_salary_history", response_class=HTMLResponse)
 def login_page8(request: Request):
-    return templates.TemplateResponse("project_salary_history.html", {"request": request})
-
+    return templates.TemplateResponse(
+        request=request,
+        name="project_salary_history.html",
+        context={"request": request}
+    )
+#----------------------------------------------
 @app.get("/show", response_class=HTMLResponse)
 def login_page9(request: Request):
-    return templates.TemplateResponse("show.html", {"request": request})
-
+    return templates.TemplateResponse(
+        request=request,
+        name="show.html",
+        context={"request": request}
+    )
+#----------------------------------------------
 @app.get("/show_admin", response_class=HTMLResponse)
 def login_page10(request: Request):
-    return templates.TemplateResponse("show_admin.html", {"request": request})
-
+    return templates.TemplateResponse(
+        request=request,
+        name="show_admin.html",
+        context={"request": request}
+    )
+#----------------------------------------------
 @app.get("/show_guards", response_class=HTMLResponse)
 def login_page11(request: Request):
-    return templates.TemplateResponse("show_guards.html", {"request": request})
-
+    return templates.TemplateResponse(
+        request=request,
+        name="show_guards.html",
+        context={"request": request}
+    )
+#----------------------------------------------
 @app.get("/show_info_chick_point", response_class=HTMLResponse)
 def login_page12(request: Request):
-    return templates.TemplateResponse("show_info_chick_point.html", {"request": request})
-    
+    return templates.TemplateResponse(
+        request=request,
+        name="show_info_chick_point.html",
+        context={"request": request}
+    )
+#----------------------------------------------    
 @app.get("/show_obxod", response_class=HTMLResponse)
 def login_page13(request: Request):
-    return templates.TemplateResponse("show_obxod.html", {"request": request})
-    
+    return templates.TemplateResponse(
+        request=request,
+        name="show_obxod.html",
+        context={"request": request}
+    )
+#----------------------------------------------    
 @app.get("/show_project", response_class=HTMLResponse)
 def login_page14(request: Request):
-    return templates.TemplateResponse("show_project.html", {"request": request})
-    
+    return templates.TemplateResponse(
+        request=request,
+        name="show_project.html",
+        context={"request": request}
+    )
+#----------------------------------------------    
 @app.get("/show_qr_code_fro_check_point", response_class=HTMLResponse)
 def login_page15(request: Request):
-    return templates.TemplateResponse("show_qr_code_fro_check_point.html", {"request": request})
+    return templates.TemplateResponse(
+        request=request,
+        name="show_qr_code_fro_check_point.html",
+        context={"request": request}
+    )
 
-    
+ #----------------------------------------------   
 @app.get("/show_qr_code_point_project", response_class=HTMLResponse)
 def login_page16(request: Request):
-    return templates.TemplateResponse("show_qr_code_point_project.html", {"request": request})
-
+    return templates.TemplateResponse(
+        request=request,
+        name="show_qr_code_point_project.html",
+        context={"request": request}
+    )
+#----------------------------------------------
 
 
 @app.get("/work_shift", response_class=HTMLResponse)
 def login_page17(request: Request):
-    return templates.TemplateResponse("work_shift.html", {"request": request})
-
+    return templates.TemplateResponse(
+        request=request,
+        name="work_shift.html",
+        context={"request": request}
+    )
+#----------------------------------------------
 @app.get("/admen", response_class=HTMLResponse)
 def login_page18(request: Request):
-    return templates.TemplateResponse("admen.html", {"request": request})
-
+    return templates.TemplateResponse(
+        request=request,
+        name="admen.html",
+        context={"request": request}
+    )
+#----------------------------------------------
 @app.get("/add_emp", response_class=HTMLResponse)
 def login_page19(request: Request):
-    return templates.TemplateResponse("add_emp.html", {"request": request})
-
+    return templates.TemplateResponse(
+        request=request,
+        name="add_emp.html",
+        context={"request": request}
+    )
+#----------------------------------------------
 @app.get("/add_project", response_class=HTMLResponse)
 def login_page20(request: Request):
-    return templates.TemplateResponse("add_project.html", {"request": request})
-
+    return templates.TemplateResponse(
+        request=request,
+        name="add_project.html",
+        context={"request": request}
+    )
+#----------------------------------------------
 @app.get("/log_in", response_class=HTMLResponse)
-def login_page0(request: Request):
-    return templates.TemplateResponse("log_in.html", {"request": request})
+def login_page21(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="log_in.html",
+        context={"request": request}
+    )
 
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
