@@ -63,6 +63,15 @@ def login_page2(request: Request):
         context={"request": request}
     )
 #----------------------------------------------
+@app.get("/show_salary_history_page", response_class=HTMLResponse)
+def login_page2(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="show_salary_history.html",
+        context={"request": request}
+    )
+
+#----------------------------------------------
 @app.get("/fils", response_class=HTMLResponse)
 def login_page3(request: Request):
     return templates.TemplateResponse(
@@ -1181,12 +1190,6 @@ def get_show_salary_history(
     return results
 
 
-@app.get("/show_salary_history_page", response_class=HTMLResponse)
-def show_salary_history_page(request: Request):
-    return templates.TemplateResponse(
-        "show_salary_history.html",  # ملف الـ HTML
-        {"request": request}
-    )
 
 #=========================================================
 @app.post("/login")
