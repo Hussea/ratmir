@@ -62,14 +62,7 @@ def login_page2(request: Request):
         name="details.html",
         context={"request": request}
     )
-#----------------------------------------------
-@app.get("/show_salary_history_page", response_class=HTMLResponse)
-def login_page2(request: Request):
-    return templates.TemplateResponse(
-        request=request,
-        name="show_salary_history.html",
-        context={"request": request}
-    )
+
 
 #----------------------------------------------
 @app.get("/fils", response_class=HTMLResponse)
@@ -226,7 +219,14 @@ def login_page21(request: Request):
         name="log_in.html",
         context={"request": request}
     )
-
+#----------------------------------------------
+@app.get("/show_salary_history_page", response_class=HTMLResponse)
+def login_page22(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="show_salary_history.html",
+        context={"request": request}
+    )
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 #----------------------------------------------
