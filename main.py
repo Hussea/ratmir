@@ -585,11 +585,25 @@ def get_categories():
             p.id,
             p.title,
             p.is_active,
-            COUNT(ws.id) AS shift_count_today
+            COUNT(DISTINCT ws.id) AS shift_count_today,
+            COUNT(DISTINCT chp.id) AS chik_count_today,
+            COUNT(DISTINCT COchp.id) AS COUNT_chik_count,
+            MAX(TIME_FORMAT(chp.timeD, '%H:%i:%s')) AS last_check_time,
+            TIME_FORMAT(TIMEDIFF(CURTIME(), MAX(chp.timeD)), '%H:%i') AS time_since_last_check
         FROM projuct p
+
         LEFT JOIN work_shifts ws 
             ON p.id = ws.project_id_input 
             AND DATE(ws.start_day) = CURDATE()
+
+        LEFT JOIN list_points_checkd chp
+            ON p.id = chp.id_project_point
+            AND DATE(chp.dataD) = CURDATE()
+        
+        LEFT JOIN points_chick COchp
+            ON p.id = COchp.id_project
+            AND 1 = 1
+            
         GROUP BY p.id
     """
 

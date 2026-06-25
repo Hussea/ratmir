@@ -587,8 +587,17 @@ function renderTable() {
   ////////////اضهار و اخفاء  قسم تعديل البيانات ////////////
 
   function show_hade_edt_info() {
-    document.getElementById("genral_conter").style.display = "none";
-    document.getElementById("updateForm").style.display = "block";
+    let result = confirm("Вы хотите отредактировать информацию?");
+    if (result) {
+         
+        document.getElementById("genral_conter").style.display = "none";
+        document.getElementById("updateForm").style.display = "block";
+    } else {
+        
+        document.getElementById("genral_conter").style.display = "block";
+        document.getElementById("updateForm").style.display = "none";
+    }
+    
   }
 
 </script>

@@ -160,6 +160,8 @@ h2 {
 </ul>
 
 <script>
+
+  
 async function fetchCategories() {
     try {
         const response = await fetch(`/get-categories`);
@@ -194,8 +196,24 @@ async function fetchCategories() {
                 span1.textContent = project.shift_count_today + " ох в об";
 
                  // النص
-                const span2 = document.createElement('span1');
-                span2.textContent =  " lost time is 30 mint";
+                 const now = new Date(); 
+                 const time =String(now.getHours()).padStart(2, '0') ;
+
+                 const mentime = time - 7;
+
+                 const resl = mentime / project.chik_count_today ;
+                 
+                const span2 = document.createElement('span');
+                const avreg = project.chik_count_today/project.COUNT_chik_count;
+                const endresl = avreg / mentime ; 
+                // النص
+                const countColor1 = endresl > 2 ? 'red' : endresl < 2 ?'green' : 'yellow';
+                const countColor2 = project.time_since_last_check > '02:00' ? 'red' : project.time_since_last_check < '02:00' ?'green' : 'yellow';
+
+                span2.innerHTML = `
+                    <div >обход ${avreg} раз </div>
+                    <div style="background-color:${countColor2};" >последний ${project.time_since_last_check} назад</div>
+                `;
 
                 // زر المعلومات
                 const button1 = document.createElement('button');
