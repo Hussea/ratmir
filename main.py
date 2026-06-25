@@ -1219,15 +1219,15 @@ def login(username: str = Form(...), password: str = Form(...)):
         }
      #====================================================
 @app.post("/add_chickd_point_datatame")
-def add_chickd_point_datatame(id_check_point: int = Form(...)):
+def add_chickd_point_datatame(id_check_point: int = Form(...), prijectid: int = Form(...)):
     try:
         conn = get_db_connection()
         cur = conn.cursor()
         query = """
-            INSERT INTO list_points_checkd (id_check_point) 
-            VALUES (%s)
+            INSERT INTO list_points_checkd (id_check_point , id_project_point) 
+            VALUES (%s,%s)
         """
-        cur.execute(query, (id_check_point,))
+        cur.execute(query, (id_check_point, prijectid))
         conn.commit()
         print("✅ تم الحفظ بنجاح")
         return {"message": "تمت الإضافة بنجاح ✅"}

@@ -193,6 +193,10 @@ async function fetchCategories() {
                 const span1 = document.createElement('span1');
                 span1.textContent = project.shift_count_today + " ох в об";
 
+                 // النص
+                const span2 = document.createElement('span1');
+                span2.textContent =  " lost time is 30 mint";
+
                 // زر المعلومات
                 const button1 = document.createElement('button');
                 button1.textContent = "Информация";
@@ -217,6 +221,7 @@ async function fetchCategories() {
 
                 li.appendChild(span);
                 li.appendChild(span1);
+                li.appendChild(span2);
                 li.appendChild(rightSide);
                 list.appendChild(li);
             });
